@@ -439,7 +439,7 @@ function analyzeSeries(xs, ys, options = {}) {
   const minY = Math.min(...ys);
   const maxY = Math.max(...ys);
   const stdDev = n > 1 ? Math.sqrt(ys.reduce((sum, value) => sum + (value - meanY) ** 2, 0) / (n - 1)) : 0;
-  const flatThreshold = Math.abs(meanY) * 0.005;
+  const flatThreshold = chosen.type === "exponential" ? 0.005 : Math.abs(meanY) * 0.005;
   const direction = chosen.slope > flatThreshold ? "Rising" : chosen.slope < -flatThreshold ? "Falling" : "Flat";
   const first = ys[0];
   const last = ys[n - 1];

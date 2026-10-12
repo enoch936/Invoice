@@ -13,6 +13,7 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - Currency formatting for USD, ETB, EUR, GBP, and KES
 - Save, load, and delete invoice and quotation drafts in browser local storage
 - Print-friendly documents (choose **Print → Save as PDF**)
+- Privacy notice and terms of use pages, with contact details
 - No framework, package manager, or build step required
 
 ## Run locally
@@ -33,6 +34,8 @@ Invoice/
 ├── invoice.html
 ├── quote.html
 ├── calculators.html
+├── privacy.html
+├── terms.html
 ├── css/
 │   ├── main.css
 │   └── print.css

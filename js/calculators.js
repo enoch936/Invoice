@@ -12,7 +12,13 @@ function show(id, detailId, amount, currency, detail) {
 document.querySelector("#rate-form")?.addEventListener("submit", (event) => {
   event.preventDefault(); const form = event.currentTarget;
   const income = read(form,"income"), expenses = read(form,"expenses"), hours = read(form,"hours"), billable = Math.min(100,read(form,"billable"));
-  if (!hours || !billable) return;
+  if (!hours || !billable) {
+    const mismatch = document.getElementById("rate-result");
+    if (mismatch) mismatch.textContent = "—";
+    const guidance = document.getElementById("rate-detail");
+    if (guidance) guidance.textContent = "Enter work hours per week and billable time above 0 to calculate a rate.";
+    return;
+  }
   const monthlyBillableHours = hours * 52 / 12 * billable / 100;
   const rate = (income + expenses) / monthlyBillableHours;
   const currency = new FormData(form).get("currency");
