@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://enoch936.github.io/Invoice/sitemap.xml
