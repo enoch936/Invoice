@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Prepare a professional freelance quotation with editable items, expiry date, and print-to-PDF support.">
+<title>Quotation Builder — PARCHXA Toolkit</title>
+<link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/print.css">
+<script type="module" src="js/quote.js"></script>
+</head>
+<body>
+<header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links" aria-label="Main navigation"><a href="index.html">Home</a><a href="invoice.html">Invoice</a><a href="calculators.html">Calculators</a></nav></header>
+<main class="container page-main">
+<div class="page-intro"><a class="back-link" href="index.html">← All tools</a><p class="eyebrow">TOOL 03 / WIN THE WORK</p><h1>Quotation builder</h1><p>Outline the proposed work, estimated costs, and quote validity. Print or save the finished quotation as a PDF.</p></div>
+<div class="workspace">
+<section class="editor-panel">
+<div class="panel-heading"><div><p class="eyebrow">PROJECT DETAILS</p><h2>Build your quotation</h2></div><span class="step-chip">EDIT</span></div>
+<form id="quote-form">
+<div class="form-grid">
+<label>Your business / name<input name="business" placeholder="Your business name" autocomplete="organization"></label>
+<label>Client name<input name="client" placeholder="Client or company" required></label>
+<label>Quote number<input name="number" value="QUO-001" required></label>
+<label>Currency<select name="currency"><option value="USD">USD — US Dollar</option><option value="ETB">ETB — Ethiopian Birr</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — Pound Sterling</option><option value="KES">KES — Kenyan Shilling</option></select></label>
+<label>Quote date<input name="date" type="date" required></label>
+<label>Valid until<input name="valid" type="date" required></label>
+</div>
+<div class="form-section-title"><div><p class="eyebrow">SCOPE & COST</p><h3>Proposed items</h3></div><button type="button" id="add-quote-item" class="button button-small button-secondary">＋ Add item</button></div>
+<div id="quote-items" class="line-items"></div>
+<div class="form-grid totals-inputs">
+<label>Discount (%)<input name="discount" type="number" min="0" max="100" step="0.01" value="0"></label>
+<label>Tax (%)<input name="tax" type="number" min="0" max="100" step="0.01" value="0"></label>
+</div>
+<label>Scope, assumptions, and exclusions<textarea name="scope" rows="3" placeholder="Describe what is included, what is excluded, and any assumptions."></textarea></label>
+<label>Payment terms<textarea name="terms" rows="2" placeholder="Example: 40% deposit to begin; remaining balance on delivery."></textarea></label>
+<div class="form-actions"><button class="button button-primary" type="button" id="print-quote">Print / Save PDF ↗</button><button class="button button-secondary" type="button" id="save-quote">Save draft</button></div>
+<p id="quote-status" class="form-status" role="status" aria-live="polite"></p>
+</form>
+<section class="saved-section"><div class="form-section-title"><div><p class="eyebrow">LOCAL STORAGE</p><h3>Saved quotations</h3></div></div><div id="saved-quotes" class="saved-drafts"><p class="muted-copy">Your saved quotations will appear here.</p></div></section>
+</section>
+<section class="preview-panel" aria-label="Quotation preview"><div class="preview-toolbar"><span><span class="status-dot"></span> LIVE PREVIEW</span><span class="preview-hint">Updates as you type</span></div>
+<article class="invoice-paper" id="quote-preview">
+<div class="invoice-top"><div><div class="invoice-brand">PARCHXA<span>.</span></div><p class="invoice-small">PROJECT QUOTATION</p></div><div class="invoice-number"><span>QUOTE NO.</span><strong id="q-number">QUO-001</strong><span>DATE</span><strong id="q-date">—</strong><span>VALID UNTIL</span><strong id="q-valid">—</strong></div></div>
+<div class="invoice-parties"><div><span class="invoice-label">PREPARED BY</span><h3 id="q-business">Your business name</h3></div><div><span class="invoice-label">PREPARED FOR</span><h3 id="q-client">Client name</h3></div></div>
+<div class="invoice-table-wrap"><table class="invoice-table"><thead><tr><th>PROPOSED WORK</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody id="q-preview-items"><tr><td>Service or deliverable</td><td>1</td><td>0.00</td><td>0.00</td></tr></tbody></table></div>
+<div class="invoice-bottom"><div><div class="invoice-notes"><span class="invoice-label">SCOPE & ASSUMPTIONS</span><p id="q-scope">Details to be agreed with the client.</p></div><div class="invoice-notes"><span class="invoice-label">PAYMENT TERMS</span><p id="q-terms">Payment terms to be agreed.</p></div></div><div class="invoice-totals"><div><span>Subtotal</span><strong id="q-subtotal">0.00</strong></div><div><span>Discount</span><strong id="q-discount">−0.00</strong></div><div><span>Tax</span><strong id="q-tax">0.00</strong></div><div class="grand-total"><span>ESTIMATED TOTAL</span><strong id="q-total">USD 0.00</strong></div></div></div>
+<div class="invoice-footer">PREPARED FOR DISCUSSION <span>•</span> PARCHXA TOOLKIT</div>
+</article><p class="preview-disclaimer">A quotation is a proposal, not proof of payment. Confirm scope, currency, applicable taxes, and contractual terms before sending.</p>
+</section>
+</div>
+</main>
+<footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Drafts stay in this browser.</span><span>© <span data-year></span> PARCHXA</span></footer>
+</body></html>
