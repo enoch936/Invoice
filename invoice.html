@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create, save, and print a professional freelance invoice.">
+  <title>Invoice Builder — PARCHXA Toolkit</title>
+  <link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/print.css">
+  <script type="module" src="js/invoice.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links"><a href="index.html">Home</a><a href="calculators.html">Calculators</a></nav></header>
+  <main class="container page-main">
+    <div class="page-intro"><a class="back-link" href="index.html">← All tools</a><p class="eyebrow">TOOL 01 / GET PAID</p><h1>Invoice builder</h1><p>Create a clean invoice, save a draft in this browser, and print it or save it as a PDF.</p></div>
+    <div class="workspace">
+      <section class="editor-panel">
+        <div class="panel-heading"><div><p class="eyebrow">YOUR DETAILS</p><h2>Invoice information</h2></div><span class="step-chip">EDIT</span></div>
+        <form id="invoice-form">
+          <div class="form-grid">
+            <label>Business / your name<input name="business" placeholder="Your business name" autocomplete="organization"></label>
+            <label>Client name<input name="client" placeholder="Client or company" autocomplete="name"></label>
+            <label>Invoice number<input name="number" value="INV-001" required></label>
+            <label>Currency<select name="currency"><option value="USD">USD — US Dollar</option><option value="ETB">ETB — Ethiopian Birr</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — Pound Sterling</option><option value="KES">KES — Kenyan Shilling</option></select></label>
+            <label>Issue date<input name="date" type="date" required></label>
+            <label>Due date<input name="due" type="date"></label>
+          </div>
+          <div class="form-section-title"><div><p class="eyebrow">WHAT YOU DID</p><h3>Line items</h3></div><button type="button" id="add-item" class="button button-small button-secondary">＋ Add item</button></div>
+          <div id="line-items" class="line-items"></div>
+          <div class="form-grid totals-inputs">
+            <label>Discount (%)<input name="discount" type="number" min="0" max="100" step="0.01" value="0"></label>
+            <label>Tax (%)<input name="tax" type="number" min="0" max="100" step="0.01" value="0"></label>
+          </div>
+          <label>Notes / payment instructions<textarea name="notes" rows="3" placeholder="Thank you for your business. Add payment instructions if needed."></textarea></label>
+          <div class="form-actions"><button class="button button-primary" type="button" id="print-invoice">Print / Save PDF ↗</button><button class="button button-secondary" type="button" id="save-draft">Save draft</button></div>
+          <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+        </form>
+        <section class="saved-section"><div class="form-section-title"><div><p class="eyebrow">LOCAL STORAGE</p><h3>Saved drafts</h3></div></div><div id="saved-drafts" class="saved-drafts"><p class="muted-copy">Your saved drafts will appear here.</p></div></section>
+      </section>
+      <section class="preview-panel" aria-label="Invoice preview"><div class="preview-toolbar"><span><span class="status-dot"></span> LIVE PREVIEW</span><span class="preview-hint">Updates as you type</span></div>
+        <article id="invoice-preview" class="invoice-paper">
+          <div class="invoice-top"><div><div class="invoice-brand">PARCHXA<span>.</span></div><p class="invoice-small">INVOICE</p></div><div class="invoice-number"><span>INVOICE NO.</span><strong id="preview-number">INV-001</strong><span>ISSUED</span><strong id="preview-date">—</strong></div></div>
+          <div class="invoice-parties"><div><span class="invoice-label">FROM</span><h3 id="preview-business">Your business name</h3></div><div><span class="invoice-label">BILL TO</span><h3 id="preview-client">Client name</h3><p>Due <span id="preview-due">—</span></p></div></div>
+          <div class="invoice-table-wrap"><table class="invoice-table"><thead><tr><th>DESCRIPTION</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody id="preview-items"><tr><td>Service or product</td><td>1</td><td>0.00</td><td>0.00</td></tr></tbody></table></div>
+          <div class="invoice-bottom"><div class="invoice-notes"><span class="invoice-label">NOTES</span><p id="preview-notes">Thank you for your business.</p></div><div class="invoice-totals"><div><span>Subtotal</span><strong id="preview-subtotal">0.00</strong></div><div><span>Discount</span><strong id="preview-discount">−0.00</strong></div><div><span>Tax</span><strong id="preview-tax">0.00</strong></div><div class="grand-total"><span>TOTAL</span><strong id="preview-total">USD 0.00</strong></div></div></div>
+          <div class="invoice-footer">THANK YOU FOR YOUR BUSINESS <span>•</span> PARCHXA TOOLKIT</div>
+        </article>
+        <p class="preview-disclaimer">This tool creates a document only. It does not collect payments or verify tax compliance.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Drafts stay in this browser.</span><span>© <span data-year></span> PARCHXA</span></footer>
+</body>
+</html>
