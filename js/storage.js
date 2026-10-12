@@ -1,4 +1,4 @@
-﻿const INVOICE_STORAGE = "parchxa.invoiceDrafts.v1";
+const INVOICE_STORAGE = "parchxa.invoiceDrafts.v1";
 const QUOTE_STORAGE = "parchxa.quotationDrafts.v1";
 const SETTINGS_STORAGE = "parchxa.settings.v1";
 

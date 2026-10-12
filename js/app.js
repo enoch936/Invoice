@@ -1,4 +1,4 @@
-﻿document.querySelectorAll("[data-year]").forEach((node) => {
+document.querySelectorAll("[data-year]").forEach((node) => {
   node.textContent = String(new Date().getFullYear());
 });
 const themeToggle = document.querySelector("#theme-toggle");

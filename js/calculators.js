@@ -1,4 +1,4 @@
-﻿import "./app.js";
+import "./app.js";
 const format = (amount, currency) => {
   try { return new Intl.NumberFormat(undefined, { style: "currency", currency, maximumFractionDigits: 2 }).format(Number.isFinite(amount) ? amount : 0); }
   catch { return ${currency} ; }

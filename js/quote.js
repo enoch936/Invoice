@@ -65,7 +65,7 @@ function renderSaved() {
   drafts.forEach((draft) => {
     const row = document.createElement("div"); row.className = "draft-row";
     const info = document.createElement("div"), title = document.createElement("strong"), sub = document.createElement("small");
-    title.textContent = draft.number || "Untitled quote"; sub.textContent = ${draft.client || "No client"} · ; info.append(title,sub);
+    title.textContent = draft.number || "Untitled quote"; sub.textContent = `${draft.client || "No client"} · ${new Date(draft.updatedAt).toLocaleDateString()}`; info.append(title,sub);
     const actions = document.createElement("div"); actions.className = "draft-actions";
     const load = document.createElement("button"); load.type = "button"; load.textContent = "Load"; load.addEventListener("click", () => { setData(draft); status.textContent = "Quotation loaded."; });
     const remove = document.createElement("button"); remove.type = "button"; remove.className = "delete-draft"; remove.textContent = "Delete"; remove.addEventListener("click", () => { localStorage.setItem(QUOTE_STORAGE, JSON.stringify(getQuoteDrafts().filter((d) => d.id !== draft.id))); if (currentId === draft.id) currentId = null; renderSaved(); status.textContent = "Quotation deleted."; });
@@ -97,3 +97,4 @@ const today = new Date(), valid = new Date(today); valid.setDate(valid.getDate()
 if (!form.elements.namedItem("date").value) form.elements.namedItem("date").value = today.toISOString().slice(0,10);
 if (!form.elements.namedItem("valid").value) form.elements.namedItem("valid").value = valid.toISOString().slice(0,10);
 addItem(); render(); renderSaved();
+

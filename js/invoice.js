@@ -12,7 +12,7 @@ const money = (amount, currency) => {
   try {
     return new Intl.NumberFormat(undefined, { style: "currency", currency, currencyDisplay: "code" }).format(Number.isFinite(amount) ? amount : 0);
   } catch {
-    return ${currency} ;
+    return `${currency} ${(Number(amount)||0).toFixed(2)}`;
   }
 };
 const value = (name) => form.elements.namedItem(name)?.value ?? "";
@@ -22,10 +22,10 @@ const escapeHTML = (text) => String(text ?? "").replace(/[&<>"']/g, (char) => ({
 function addLineItem(item = {}) {
   const row = document.createElement("div");
   row.className = "line-item-row";
-  row.innerHTML = <input aria-label="Item description" class="item-description" placeholder="Service / item" value="">
+  row.innerHTML = `<input aria-label="Item description" class="item-description" placeholder="Service / item" value="">
 <input aria-label="Quantity" class="item-quantity" type="number" min="0" step="0.1" value="">
 <input aria-label="Unit price" class="item-price" type="number" min="0" step="0.01" value="">
-<button type="button" class="remove-item" aria-label="Remove line item">×</button>;
+<button type="button" class="remove-item" aria-label="Remove line item">×</button>`;
   row.querySelector(".remove-item").addEventListener("click", () => {
     if (itemHost.children.length > 1) {
       row.remove();
@@ -140,7 +140,7 @@ function renderDrafts() {
     const title = document.createElement("strong");
     title.textContent = draft.number || "Untitled invoice";
     const sub = document.createElement("small");
-    sub.textContent = ${draft.client || "No client"} · ;
+    sub.textContent = `${draft.client || "No client"} · ${new Date(draft.updatedAt).toLocaleDateString()}`;
     info.append(title, sub);
     const actions = document.createElement("div");
     actions.className = "draft-actions";
@@ -216,3 +216,4 @@ if (dateInput && !dateInput.value) dateInput.value = today;
 addLineItem();
 render();
 renderDrafts();
+
