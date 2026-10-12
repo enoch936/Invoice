@@ -5,11 +5,12 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 ## Features
 
 - Responsive landing page
-- Invoice builder with live preview
-- Dynamic line items and automatic subtotal, discount, tax, and total calculations
+- Invoice builder with live preview, dynamic line items, discounts, tax, and totals
+- Quotation builder with proposed items, quote validity, scope notes, and payment terms
+- Freelance calculators for hourly rates, project quotes, and estimated profit
 - Currency formatting for USD, ETB, EUR, GBP, and KES
-- Save, load, and delete invoice drafts in browser local storage
-- Print-friendly invoice layout (choose **Print → Save as PDF**)
+- Save, load, and delete invoice and quotation drafts in browser local storage
+- Print-friendly documents (choose **Print → Save as PDF**)
 - No framework, package manager, or build step required
 
 ## Run locally
@@ -22,30 +23,42 @@ python -m http.server 5500
 
 Open `http://localhost:5500`.
 
-## Structure
+## Project structure
 
 ```text
 Invoice/
 ├── index.html
 ├── invoice.html
-├── css/main.css
-├── css/print.css
+├── quote.html
+├── calculators.html
+├── css/
+│   ├── main.css
+│   └── print.css
 └── js/
     ├── app.js
     ├── invoice.js
+    ├── quote.js
+    ├── calculators.js
     └── storage.js
 ```
 
 ## Data and privacy
 
-Drafts stay in the current browser's local storage. They do not sync across devices. Do not enter passwords, payment-card data, or other sensitive information. This static version does not include accounts, cloud backup, payment processing, or tax compliance.
+Drafts stay in the current browser's local storage and do not sync across devices. Clearing browser data may remove them. Do not enter passwords, payment-card data, or other sensitive information. This static version does not include accounts, cloud backup, payment processing, or tax compliance.
+
+## Current limitations
+
+- This is a static browser app; it has no server or database.
+- Users should verify tax rules, legal invoice requirements, and contractual terms for their jurisdiction.
+- The quotation and invoice tools generate documents but do not sign contracts or collect money.
+- The project has not yet been independently audited or browser-tested across devices.
 
 ## Monetization roadmap
 
 1. Publish the free core tools and measure actual usage.
-2. Add downloadable quotation and proposal templates.
-3. Test a paid template pack or optional premium export features.
-4. Only add accounts and cloud sync after validating demand.
+2. Test paid templates and optional branding/export features.
+3. Validate demand before building accounts, cloud sync, or payment integrations.
+4. Add privacy, terms, support, and clear pricing before accepting payments.
 
 ## License
 
