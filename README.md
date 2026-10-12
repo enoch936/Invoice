@@ -14,6 +14,14 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - Save, load, and delete invoice and quotation drafts in browser local storage
 - Print-friendly documents (choose **Print → Save as PDF**)
 - Privacy notice and terms of use pages, with contact details
+- **Money planner:** tax set-aside, compound growth with year-by-year table, retainer vs hourly, CAGR
+- **Trading risk suite:** position size, liquidation price, break-even win rate, expectancy, Kelly, and a seeded 1,000-path Monte Carlo fan chart (educational, not advice)
+- **Student toolkit:** GPA calculator and required-GPA grade planner
+- Installable PWA with offline support (manifest + service worker)
+- Consent banner, affiliate registry, ad slots and email/tip/premium CTAs (all off until configured)
+- JSON-LD, canonical URLs, FAQ content, sitemap on every tool page
+- Shareable calculator links (state in the URL)
+- Unit-tested quant library (`js/quant.js`, `tests/quant.test.mjs`)
 - No framework, package manager, or build step required
 
 ## Run locally
@@ -41,6 +49,13 @@ Invoice/
 │   └── print.css
 └── js/
     ├── app.js
+    ├── site.js
+    ├── config.js
+    ├── affiliates.js
+    ├── quant.js
+    ├── trading.js
+    ├── money.js
+    ├── student.js
     ├── invoice.js
     ├── quote.js
     ├── calculators.js
@@ -58,6 +73,17 @@ Drafts stay in the current browser's local storage and do not sync across device
 - Users should verify tax rules, legal invoice requirements, and contractual terms for their jurisdiction.
 - The quotation and invoice tools generate documents but do not sign contracts or collect money.
 - The project has not yet been independently audited or browser-tested across devices.
+
+## Turn on monetization
+
+Everything is off by default. Edit `js/config.js` and `js/affiliates.js`:
+
+1. Add your tracked affiliate links to `js/affiliates.js` (empty `url` entries never render). Links get `rel="sponsored noopener"` and a visible disclosure.
+2. Set `adsense.client` to load ads after the visitor accepts the consent banner. Ad slots reserve space to avoid layout shift. Ad networks have their own approval and consent-platform rules.
+3. Set `plausibleDomain` for privacy-friendly analytics, `newsletterUrl`, `tipJarUrl` and `premiumUrl` for lead capture, tips and paid template packs.
+4. Update the privacy page to describe every third party you enable.
+
+Run tests with `node tests/quant.test.mjs`.
 
 ## Monetization roadmap
 

@@ -25,6 +25,9 @@ jobs:
             node --check "$file"
           done
 
+      - name: Run quant unit tests
+        run: node tests/quant.test.mjs
+
       - name: Check local HTML assets
         run: |
           python - <<'PY'
