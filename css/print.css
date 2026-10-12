@@ -1,0 +1,8 @@
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff!important;color:#111!important}
+  .site-header,.page-intro,.editor-panel,.preview-toolbar,.preview-disclaimer,.site-footer{display:none!important}
+  .container,.page-main,.workspace,.preview-panel{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;background:#fff!important;display:block!important}
+  #invoice-preview{margin:0!important;padding:0!important;box-shadow:none!important;min-height:0!important;width:100%!important;color:#111!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .invoice-footer{margin-top:35px}
+}
