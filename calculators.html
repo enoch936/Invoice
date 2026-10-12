@@ -15,5 +15,68 @@
 <form id="profit-form" class="calc-form"><label>Client payment<input name="revenue" type="number" min="0" step="1" value="1000" required></label><label>Hours spent<input name="hours" type="number" min="0" step="0.5" value="15" required></label><label>Your internal hourly cost<input name="rate" type="number" min="0" step="1" value="20" required></label><label>Other direct costs<input name="costs" type="number" min="0" step="1" value="100" required></label><label>Currency<select name="currency"><option value="USD">USD</option><option value="ETB">ETB</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="KES">KES</option></select></label><button class="button button-primary" type="submit">Calculate profit</button></form>
 <div class="result-panel" aria-live="polite"><span>ESTIMATED PROFIT</span><strong id="profit-result">—</strong><p id="profit-detail">Enter your figures to calculate an estimate.</p></div></section>
 </div>
+<section class="advanced-section" id="advanced">
+<div class="section-heading"><div><p class="eyebrow">04 / ADVANCED MATH</p><h2>Scientific &amp; trend calculators</h2></div><p>Real math on the go — exponents, logs, trigonometry, statistics, and trend forecasts.</p></div>
+<div class="advanced-grid">
+<section class="calculator-card sci-calc">
+<div class="sci-toolbar"><p class="eyebrow" style="margin:0">SCIENTIFIC CALCULATOR</p><div class="angle-toggle" role="group" aria-label="Angle unit"><button type="button" data-angle="deg" aria-pressed="true">DEG</button><button type="button" data-angle="rad" aria-pressed="false">RAD</button></div></div>
+<input id="sci-input" class="sci-display" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-label="Expression" placeholder="e.g. sin(30) + log(100)">
+<div id="sci-output" class="sci-output" aria-live="polite">0</div>
+<div class="sci-keys" id="sci-keys">
+<button type="button" class="key-fn" data-ins="sin(">sin</button>
+<button type="button" class="key-fn" data-ins="cos(">cos</button>
+<button type="button" class="key-fn" data-ins="tan(">tan</button>
+<button type="button" class="key-fn" data-ins="ln(">ln</button>
+<button type="button" class="key-fn" data-ins="log(">log</button>
+<button type="button" class="key-fn" data-ins="asin(">asin</button>
+<button type="button" class="key-fn" data-ins="acos(">acos</button>
+<button type="button" class="key-fn" data-ins="atan(">atan</button>
+<button type="button" class="key-fn" data-ins="exp(">exp</button>
+<button type="button" class="key-fn" data-ins="sqrt(">√</button>
+<button type="button" class="key-fn" data-ins="^2">x²</button>
+<button type="button" class="key-fn" data-ins="^">xʸ</button>
+<button type="button" class="key-fn" data-ins="pi">π</button>
+<button type="button" class="key-fn" data-ins="e">e</button>
+<button type="button" class="key-op" data-ins="!">n!</button>
+<button type="button" class="key-op" data-ins="(">(</button>
+<button type="button" class="key-op" data-ins=")">)</button>
+<button type="button" class="key-op" data-ins="%">%</button>
+<button type="button" class="key-fn" data-ins="mod(">mod</button>
+<button type="button" class="key-fn" data-ins="abs(">abs</button>
+<button type="button" class="key-op" data-ins="7">7</button>
+<button type="button" class="key-op" data-ins="8">8</button>
+<button type="button" class="key-op" data-ins="9">9</button>
+<button type="button" class="key-op" data-ins="/">÷</button>
+<button type="button" class="key-util" data-act="backspace" aria-label="Backspace">⌫</button>
+<button type="button" class="key-op" data-ins="4">4</button>
+<button type="button" class="key-op" data-ins="5">5</button>
+<button type="button" class="key-op" data-ins="6">6</button>
+<button type="button" class="key-op" data-ins="*">×</button>
+<button type="button" class="key-util" data-act="clear">C</button>
+<button type="button" class="key-op" data-ins="1">1</button>
+<button type="button" class="key-op" data-ins="2">2</button>
+<button type="button" class="key-op" data-ins="3">3</button>
+<button type="button" class="key-op" data-ins="-">−</button>
+<button type="button" class="key-fn" data-ins="ans">ans</button>
+<button type="button" class="key-op" data-ins="0">0</button>
+<button type="button" class="key-op" data-ins=".">.</button>
+<button type="button" class="key-util" data-act="sign">±</button>
+<button type="button" class="key-op" data-ins="+">+</button>
+<button type="button" class="key-eq" data-act="equals">=</button>
+</div>
+<p class="sci-hint">Supports + − × ÷ ^, roots, sin/cos/tan and inverses, ln/log/log₂, exp, factorial (!), π, e, φ, percent, mod(), abs(), and normal-distribution functions normpdf()/normcdf(). Use DEG/RAD for trigonometry.</p>
+</section>
+<section class="calculator-card trend-calc">
+<form id="trend-form" class="calc-form">
+<label>Data values<textarea name="series" rows="5" spellcheck="false" placeholder="120, 135, 128, 160, 178">120, 135, 128, 160, 178, 175, 210</textarea></label>
+<label>Periods to forecast<input name="forecast" type="number" min="1" max="12" value="3"></label>
+<label>Trend model<select name="model"><option value="auto">Auto (best fit)</option><option value="linear">Linear</option><option value="exponential">Exponential</option></select></label>
+<button class="button button-primary" type="submit">Analyze trend</button>
+</form>
+<div class="result-panel" aria-live="polite"><span>TREND ANALYSIS</span><strong id="trend-result">—</strong><p id="trend-detail">Paste a series of values to see the trend.</p><dl class="stat-grid" id="trend-stats"></dl><div class="forecast-list" id="trend-forecast"></div></div>
+</section>
+</div>
+<p class="sci-hint">Tip: for x/y pairs, put one pair per line like “1, 120”. A single list is treated as evenly spaced periods.</p>
+</section>
 <div class="notice"><strong>Remember:</strong> Real pricing may also depend on local taxes, platform fees, payment fees, scope changes, unpaid admin time, and market demand. Check your own circumstances before committing to a quote.</div></main>
 <footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Clearer numbers, better decisions.</span><span>© <span data-year></span> PARCHXA</span></footer></body></html>

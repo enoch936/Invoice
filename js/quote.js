@@ -12,7 +12,7 @@ const num = (name) => Math.max(0, Number(field(name)) || 0);
 const escapeHTML = (text) => String(text ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const money = (amount, currency) => {
   try { return new Intl.NumberFormat(undefined, { style: "currency", currency, currencyDisplay: "code" }).format(Number.isFinite(amount) ? amount : 0); }
-  catch { return ${currency} ; }
+  catch { return `${currency} ${(Number(amount) || 0).toFixed(2)}`; }
 };
 function getQuoteDrafts() {
   try { const drafts = JSON.parse(localStorage.getItem(QUOTE_STORAGE) || "[]"); return Array.isArray(drafts) ? drafts : []; }
@@ -20,7 +20,7 @@ function getQuoteDrafts() {
 }
 function addItem(item = {}) {
   const row = document.createElement("div"); row.className = "line-item-row";
-  row.innerHTML = <input class="item-description" aria-label="Proposed work description" placeholder="Service / deliverable" value=""><input class="item-quantity" aria-label="Quantity" type="number" min="0" step="0.1" value=""><input class="item-price" aria-label="Unit price" type="number" min="0" step="0.01" value=""><button type="button" class="remove-item" aria-label="Remove item">×</button>;
+  row.innerHTML = `<input class="item-description" aria-label="Proposed work description" placeholder="Service / deliverable" value=""><input class="item-quantity" aria-label="Quantity" type="number" min="0" step="0.1" value=""><input class="item-price" aria-label="Unit price" type="number" min="0" step="0.01" value=""><button type="button" class="remove-item" aria-label="Remove item">×</button>`;
   row.querySelector(".remove-item").addEventListener("click", () => { if (host.children.length > 1) row.remove(); else { row.querySelector(".item-description").value = ""; row.querySelector(".item-quantity").value = "1"; row.querySelector(".item-price").value = "0"; } render(); });
   row.querySelectorAll("input").forEach((input) => input.addEventListener("input", render));
   host.append(row);

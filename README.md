@@ -8,6 +8,8 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - Invoice builder with live preview, dynamic line items, discounts, tax, and totals
 - Quotation builder with proposed items, quote validity, scope notes, and payment terms
 - Freelance calculators for hourly rates, project quotes, and estimated profit
+- Advanced scientific calculator (arithmetic, powers, roots, logs, exp, trigonometry, factorial, constants, normal distribution)
+- Trend calculator with linear/exponential regression, fit quality (R²), statistics, and value forecasting
 - Currency formatting for USD, ETB, EUR, GBP, and KES
 - Save, load, and delete invoice and quotation drafts in browser local storage
 - Print-friendly documents (choose **Print → Save as PDF**)
@@ -39,6 +41,7 @@ Invoice/
     ├── invoice.js
     ├── quote.js
     ├── calculators.js
+    ├── advanced.js
     └── storage.js
 ```
 
