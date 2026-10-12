@@ -57,6 +57,7 @@ function getData() {
     currency: value("currency"),
     date: value("date"),
     due: value("due"),
+    status: value("status") || "draft",
     discount: num("discount"),
     tax: num("tax"),
     notes: value("notes"),
@@ -113,7 +114,7 @@ function render() {
 
 function setData(data) {
   currentDraftId = data.id || null;
-  for (const name of ["business", "client", "number", "currency", "date", "due", "discount", "tax", "notes"]) {
+  for (const name of ["business", "client", "number", "currency", "date", "due", "status", "discount", "tax", "notes"]) {
     if (data[name] !== undefined && form.elements.namedItem(name)) {
       form.elements.namedItem(name).value = data[name];
     }
@@ -124,6 +125,7 @@ function setData(data) {
 }
 
 function renderDrafts() {
+  document.dispatchEvent(new Event("parchxa:drafts"));
   const drafts = getDrafts();
   savedHost.replaceChildren();
   if (!drafts.length) {
@@ -140,7 +142,7 @@ function renderDrafts() {
     const title = document.createElement("strong");
     title.textContent = draft.number || "Untitled invoice";
     const sub = document.createElement("small");
-    sub.textContent = `${draft.client || "No client"} · ${new Date(draft.updatedAt).toLocaleDateString()}`;
+    sub.textContent = `${draft.client || "No client"} · ${(draft.status || "draft").toUpperCase()} · ${new Date(draft.updatedAt).toLocaleDateString()}`;
     info.append(title, sub);
     const actions = document.createElement("div");
     actions.className = "draft-actions";
@@ -217,3 +219,46 @@ addLineItem();
 render();
 renderDrafts();
 
+
+// ---- Share link (data lives in the URL hash; nothing is uploaded) ----
+const b64u = (bytes) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const unb64u = (text) => Uint8Array.from(atob(text.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
+async function pipe(bytes, stream) {
+  const out = new Blob([bytes]).stream().pipeThrough(stream);
+  return new Uint8Array(await new Response(out).arrayBuffer());
+}
+const clean = (v, n = 500) => String(v ?? "").slice(0, n);
+function sanitize(d) {
+  const n = (x, max = 1e12) => Math.min(max, Math.max(0, Number(x) || 0));
+  const currencies = [...form.elements.namedItem("currency").options].map((o) => o.value);
+  return {
+    business: clean(d.business, 120), client: clean(d.client, 120), number: clean(d.number, 40),
+    currency: currencies.includes(d.currency) ? d.currency : "USD",
+    date: /^\d{4}-\d{2}-\d{2}$/.test(d.date) ? d.date : "", due: /^\d{4}-\d{2}-\d{2}$/.test(d.due) ? d.due : "",
+    status: ["draft", "sent", "paid"].includes(d.status) ? d.status : "draft",
+    discount: n(d.discount, 100), tax: n(d.tax, 100), notes: clean(d.notes, 1000),
+    items: (Array.isArray(d.items) ? d.items : []).slice(0, 40).map((i) => ({ description: clean(i?.description, 200), quantity: n(i?.quantity, 1e9), price: n(i?.price, 1e9) })),
+  };
+}
+document.querySelector("#share-invoice")?.addEventListener("click", async () => {
+  try {
+    const { id, updatedAt, ...data } = getData();
+    const raw = new TextEncoder().encode(JSON.stringify(data));
+    const packed = "CompressionStream" in window ? "z" + b64u(await pipe(raw, new CompressionStream("deflate-raw"))) : "r" + b64u(raw);
+    const url = location.origin + location.pathname + "#d=" + packed;
+    if (url.length > 6000) { status.textContent = "Invoice is too large for a share link. Remove some items or notes."; return; }
+    await navigator.clipboard.writeText(url);
+    status.textContent = "Share link copied. Anyone with it can view this invoice.";
+  } catch { status.textContent = "Could not create a share link in this browser."; }
+});
+async function loadShared() {
+  const m = location.hash.match(/^#d=([zr][A-Za-z0-9_-]{1,6000})$/);
+  if (!m) return;
+  try {
+    const bytes = unb64u(m[1].slice(1));
+    const raw = m[1][0] === "z" ? await pipe(bytes, new DecompressionStream("deflate-raw")) : bytes;
+    setData({ ...sanitize(JSON.parse(new TextDecoder().decode(raw))), id: null });
+    status.textContent = "Loaded a shared invoice. Edit freely; your changes stay in this browser.";
+  } catch { status.textContent = "That share link could not be read."; }
+}
+loadShared();

@@ -14,7 +14,7 @@
   <meta name="twitter:description" content="Create, save, and print a professional freelance invoice.">
   <title>Invoice Builder — PARCHXA Toolkit</title>
   <link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/print.css">
-  <script type="module" src="js/invoice.js"></script>
+  <script type="module" src="js/invoice.js"></script><script type="module" src="js/invoice-dashboard.js"></script>
 </head>
 <body>
   <header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links"><a href="index.html">Home</a><a href="quote.html">Quotation</a><a href="calculators.html">Calculators</a></nav></header>
@@ -31,6 +31,7 @@
             <label>Currency<select name="currency"><option value="USD">USD — US Dollar</option><option value="ETB">ETB — Ethiopian Birr</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — Pound Sterling</option><option value="KES">KES — Kenyan Shilling</option></select></label>
             <label>Issue date<input name="date" type="date" required></label>
             <label>Due date<input name="due" type="date"></label>
+            <label>Status<select name="status"><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option></select></label>
           </div>
           <div class="form-section-title"><div><p class="eyebrow">WHAT YOU DID</p><h3>Line items</h3></div><button type="button" id="add-item" class="button button-small button-secondary">＋ Add item</button></div>
           <div id="line-items" class="line-items"></div>
@@ -39,10 +40,12 @@
             <label>Tax (%)<input name="tax" type="number" min="0" max="100" step="0.01" value="0"></label>
           </div>
           <label>Notes / payment instructions<textarea name="notes" rows="3" placeholder="Thank you for your business. Add payment instructions if needed."></textarea></label>
-          <div class="form-actions"><button class="button button-primary" type="button" id="print-invoice">Print / Save PDF ↗</button><button class="button button-secondary" type="button" id="save-draft">Save draft</button></div>
+          <div class="form-actions"><button class="button button-primary" type="button" id="print-invoice">Print / Save PDF ↗</button><button class="button button-secondary" type="button" id="save-draft">Save draft</button><button class="button button-secondary" type="button" id="share-invoice">Copy share link</button></div>
           <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
         </form>
         <section class="saved-section"><div class="form-section-title"><div><p class="eyebrow">LOCAL STORAGE</p><h3>Saved drafts</h3></div></div><div id="saved-drafts" class="saved-drafts"><p class="muted-copy">Your saved drafts will appear here.</p></div></section>
+        <section class="saved-section" id="dashboard"><div class="form-section-title"><div><p class="eyebrow">REVENUE DASHBOARD</p><h3>Your saved invoices</h3></div></div><div id="dash-stats" class="dash-stats"></div><canvas id="dash-chart" class="chart" height="200" role="img" aria-label="Paid revenue by month"></canvas><p class="muted-copy">Built from drafts saved in this browser. Set status to Paid to count revenue. Totals are shown per currency.</p></section>
+        <section class="saved-section"><p class="muted-copy">Share links contain the invoice data inside the link itself (nothing is uploaded). Anyone with the link can read it, so avoid sensitive details.</p></section>
       </section>
       <section class="preview-panel" aria-label="Invoice preview"><div class="preview-toolbar"><span><span class="status-dot"></span> LIVE PREVIEW</span><span class="preview-hint">Updates as you type</span></div>
         <article id="invoice-preview" class="invoice-paper">
@@ -55,6 +58,7 @@
         <p class="preview-disclaimer">This tool creates a document only. It does not collect payments or verify tax compliance.</p>
       </section>
     </div>
+  <div data-affiliates="invoice"></div><div data-support></div>
   </main>
   <footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Drafts stay in this browser.</span><nav class="footer-links" aria-label="Legal and contact"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="privacy.html#contact">Contact</a></nav><span>© <span data-year></span> PARCHXA</span></footer>
 </body>

@@ -11,7 +11,7 @@ const getConsent = () => { try { return localStorage.getItem(CONSENT_KEY); } cat
 const setConsent = (v) => { try { localStorage.setItem(CONSENT_KEY, v); } catch {} };
 
 // Shared navigation (adds the new tools to every page)
-const NAV = [["invoice.html", "Invoice"], ["quote.html", "Quotation"], ["calculators.html", "Calculators"], ["money.html", "Money"], ["trading.html", "Trading"], ["student.html", "Student"]];
+const NAV = [["invoice.html", "Invoice"], ["quote.html", "Quotation"], ["calculators.html", "Calculators"], ["money.html", "Money"], ["trading.html", "Risk"], ["chart.html", "Charts"], ["student.html", "Student"], ["convert.html", "Convert"]];
 const nav = document.querySelector(".nav-links");
 if (nav) {
   nav.replaceChildren(...NAV.map(([href, label]) => {

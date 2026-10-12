@@ -20,6 +20,10 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - Installable PWA with offline support (manifest + service worker)
 - Consent banner, affiliate registry, ad slots and email/tip/premium CTAs (all off until configured)
 - JSON-LD, canonical URLs, FAQ content, sitemap on every tool page
+- **Live chart & backtester:** candlesticks (Binance public API, labelled demo fallback), EMA/RSI, signal markers, confluence score, no-look-ahead backtest with fees, trade table and CSV export
+- **Invoice upgrades:** draft/sent/paid status, revenue dashboard, copy-link sharing (data stays inside the link)
+- **Programmatic SEO:** 56 currency converter pages, 11 hourly-to-salary pages and hub pages, each with unique copy, FAQ and JSON-LD
+- **Rest & Remembrance:** sanitized `?name=&dates=&message=&theme=` memorial pages with candle animation and share card
 - Shareable calculator links (state in the URL)
 - Unit-tested quant library (`js/quant.js`, `tests/quant.test.mjs`)
 - No framework, package manager, or build step required
@@ -84,6 +88,10 @@ Everything is off by default. Edit `js/config.js` and `js/affiliates.js`:
 4. Update the privacy page to describe every third party you enable.
 
 Run tests with `node tests/quant.test.mjs`.
+
+## Not built yet
+
+- Next.js migration, `html2pdf` export, premium license validation, WebSocket multi-pane charts, ambient audio for memorial pages, and country tax estimators (these need verified data).
 
 ## Monetization roadmap
 

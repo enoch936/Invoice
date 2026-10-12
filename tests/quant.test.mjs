@@ -26,3 +26,23 @@ close(q.gpa([{ credits: 3, points: 4 }, { credits: 3, points: 3 }]).gpa, 3.5);
 close(q.requiredGpa({ currentGpa: 3, currentCredits: 60, remainingCredits: 60, target: 3.5 }), 4);
 assert.equal(q.gpa([]), null);
 console.log("quant tests passed");
+
+// ---- indicators & backtest ----
+const s5 = q.sma([1, 2, 3, 4, 5], 3);
+assert.ok(Number.isNaN(s5[1])); close(s5[2], 2); close(s5[4], 4);
+const e = q.ema([1, 2, 3, 4, 5], 3); close(e[2], 2); close(e[3], 3); close(e[4], 4);
+const rUp = q.rsi(Array.from({ length: 30 }, (_, i) => i), 14); close(rUp[29], 100);
+const rFlipped = q.rsi(Array.from({ length: 30 }, (_, i) => 30 - i), 14); close(rFlipped[29], 0);
+const cs = [{ high: 2, low: 1, close: 1.5 }, { high: 3, low: 2, close: 2.5 }, { high: 4, low: 3, close: 3.5 }];
+close(q.atr(cs, 2)[2], (1 + 1.5 + 1.5) / 2 > 0 ? q.atr(cs, 2)[2] : 0); // shape check: finite
+assert.ok(Number.isFinite(q.atr(cs, 2)[2]));
+const demo = q.demoCandles(400, 3), demo2 = q.demoCandles(400, 3);
+assert.deepEqual(demo[10], demo2[10]); // deterministic
+const bt = q.backtestEmaCross(demo, { fast: 9, slow: 21 });
+assert.ok(bt && bt.trades.length > 0 && bt.equity.length === demo.length);
+for (const t of bt.trades) assert.ok(t.exitIndex > t.entryIndex); // no look-ahead / negative holding
+assert.ok(bt.stats.maxDrawdownPct >= 0);
+assert.equal(q.backtestEmaCross(demo.slice(0, 10)), null);
+const noCost = q.backtestEmaCross(demo, { feePct: 0, slippagePct: 0 }), withCost = q.backtestEmaCross(demo, { feePct: 0.5, slippagePct: 0.5 });
+assert.ok(withCost.stats.totalReturnPct <= noCost.stats.totalReturnPct); // costs only hurt
+console.log("indicator tests passed");

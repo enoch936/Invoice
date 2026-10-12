@@ -132,3 +132,122 @@ export function requiredGpa({ currentGpa, currentCredits, remainingCredits, targ
   if (!(remainingCredits > 0) || !(currentCredits >= 0)) return NaN;
   return (target * (currentCredits + remainingCredits) - currentGpa * currentCredits) / remainingCredits;
 }
+
+// ---------------- Indicators & backtesting ----------------
+/** Simple moving average. Returns array aligned to input; leading values are NaN. */
+export function sma(values, period) {
+  const out = new Array(values.length).fill(NaN);
+  if (!(period >= 1)) return out;
+  let sum = 0;
+  for (let i = 0; i < values.length; i++) {
+    sum += values[i];
+    if (i >= period) sum -= values[i - period];
+    if (i >= period - 1) out[i] = sum / period;
+  }
+  return out;
+}
+
+/** Exponential moving average, seeded with the SMA of the first `period` values. alpha = 2/(period+1). */
+export function ema(values, period) {
+  const out = new Array(values.length).fill(NaN);
+  if (!(period >= 1) || values.length < period) return out;
+  const k = 2 / (period + 1);
+  let prev = values.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  out[period - 1] = prev;
+  for (let i = period; i < values.length; i++) { prev = values[i] * k + prev * (1 - k); out[i] = prev; }
+  return out;
+}
+
+/** Wilder RSI. */
+export function rsi(values, period = 14) {
+  const out = new Array(values.length).fill(NaN);
+  if (values.length <= period) return out;
+  let gain = 0, loss = 0;
+  for (let i = 1; i <= period; i++) { const d = values[i] - values[i - 1]; if (d >= 0) gain += d; else loss -= d; }
+  gain /= period; loss /= period;
+  out[period] = loss === 0 ? 100 : 100 - 100 / (1 + gain / loss);
+  for (let i = period + 1; i < values.length; i++) {
+    const d = values[i] - values[i - 1];
+    gain = (gain * (period - 1) + Math.max(d, 0)) / period;
+    loss = (loss * (period - 1) + Math.max(-d, 0)) / period;
+    out[i] = loss === 0 ? 100 : 100 - 100 / (1 + gain / loss);
+  }
+  return out;
+}
+
+/** Average True Range (Wilder). candles: [{high, low, close}] */
+export function atr(candles, period = 14) {
+  const out = new Array(candles.length).fill(NaN);
+  if (candles.length <= period) return out;
+  const tr = candles.map((c, i) => (i === 0 ? c.high - c.low : Math.max(c.high - c.low, Math.abs(c.high - candles[i - 1].close), Math.abs(c.low - candles[i - 1].close))));
+  let prev = tr.slice(1, period + 1).reduce((a, b) => a + b, 0) / period;
+  out[period] = prev;
+  for (let i = period + 1; i < candles.length; i++) { prev = (prev * (period - 1) + tr[i]) / period; out[i] = prev; }
+  return out;
+}
+
+/**
+ * Long-only EMA-crossover strategy with RSI filter and fixed fee+slippage per side.
+ * Signals use the CLOSE of bar i and fill at the OPEN of bar i+1 (no look-ahead).
+ * Returns trades, equity curve (per bar, starting 1) and summary stats.
+ */
+export function backtestEmaCross(candles, { fast = 9, slow = 21, rsiMax = 70, feePct = 0.1, slippagePct = 0.05 } = {}) {
+  if (!Array.isArray(candles) || candles.length < slow + 5 || !(fast < slow)) return null;
+  const closes = candles.map((c) => c.close), f = ema(closes, fast), s = ema(closes, slow), r = rsi(closes, 14);
+  const cost = (feePct + slippagePct) / 100;
+  const trades = [], signals = [], equity = new Array(candles.length).fill(1);
+  let eq = 1, entry = null;
+  for (let i = 1; i < candles.length; i++) {
+    equity[i] = entry ? eq * (candles[i].close / entry.price) : eq;
+    if (!Number.isFinite(s[i - 1]) || !Number.isFinite(f[i - 1])) continue;
+    const up = f[i - 1] <= s[i - 1] && f[i] > s[i], down = f[i - 1] >= s[i - 1] && f[i] < s[i];
+    if (i + 1 >= candles.length) continue;
+    if (!entry && up && !(r[i] > rsiMax)) {
+      const price = candles[i + 1].open * (1 + cost);
+      entry = { index: i + 1, price, time: candles[i + 1].time };
+      signals.push({ index: i, side: "buy" });
+    } else if (entry && down) {
+      const price = candles[i + 1].open * (1 - cost);
+      const ret = price / entry.price - 1;
+      eq *= 1 + ret;
+      trades.push({ entryIndex: entry.index, exitIndex: i + 1, entryTime: entry.time, exitTime: candles[i + 1].time, entry: entry.price, exit: price, returnPct: ret * 100 });
+      signals.push({ index: i, side: "sell" });
+      entry = null;
+      equity[i] = eq;
+    }
+  }
+  return { trades, signals, equity, stats: summarize(trades, equity, candles) };
+}
+
+export function summarize(trades, equity, candles) {
+  const wins = trades.filter((t) => t.returnPct > 0), losses = trades.filter((t) => t.returnPct <= 0);
+  const gw = wins.reduce((a, t) => a + t.returnPct, 0), gl = -losses.reduce((a, t) => a + t.returnPct, 0);
+  let peak = 1, maxDd = 0;
+  for (const e of equity) { peak = Math.max(peak, e); maxDd = Math.max(maxDd, 1 - e / peak); }
+  const rets = []; for (let i = 1; i < equity.length; i++) rets.push(equity[i] / equity[i - 1] - 1);
+  const mean = rets.reduce((a, b) => a + b, 0) / (rets.length || 1);
+  const sd = Math.sqrt(rets.reduce((a, b) => a + (b - mean) ** 2, 0) / (rets.length || 1));
+  const down = Math.sqrt(rets.reduce((a, b) => a + Math.min(0, b) ** 2, 0) / (rets.length || 1));
+  return {
+    trades: trades.length,
+    winRate: trades.length ? wins.length / trades.length * 100 : NaN,
+    profitFactor: gl > 0 ? gw / gl : (gw > 0 ? Infinity : NaN),
+    expectancyPct: trades.length ? trades.reduce((a, t) => a + t.returnPct, 0) / trades.length : NaN,
+    totalReturnPct: (equity[equity.length - 1] - 1) * 100,
+    maxDrawdownPct: maxDd * 100,
+    sharpePerBar: sd > 0 ? mean / sd : NaN,
+    sortinoPerBar: down > 0 ? mean / down : NaN,
+    bars: candles.length,
+  };
+}
+
+/** Deterministic synthetic candles for offline/demo mode. Clearly labelled as demo in the UI. */
+export function demoCandles(n = 300, seed = 11, start = 100) {
+  const rand = rng(seed), out = []; let price = start, t = Date.UTC(2024, 0, 1);
+  for (let i = 0; i < n; i++) {
+    const drift = Math.sin(i / 25) * 0.4, open = price, close = Math.max(1, open * (1 + (rand() - 0.5) * 0.03 + drift / 100));
+    const high = Math.max(open, close) * (1 + rand() * 0.01), low = Math.min(open, close) * (1 - rand() * 0.01);
+    out.push({ time: t + i * 3600000, open, high, low, close, volume: 100 + rand() * 900 }); price = close;
+  }
+  return out;
+}

@@ -30,3 +30,18 @@
 @media(max-width:620px){.tool-grid.tool-grid-4{grid-template-columns:1fr}.consent-banner{inset:auto 8px 8px 8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media print{.consent-banner,.compliance-bar,.aff-wrap,.support-strip,.ad-slot{display:none!important}}
+
+/* ---- charts, signals, memorial, dashboard ---- */
+.chart.tall{height:420px}.chart-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+.inline{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}.inline select{background:#0b1220;color:var(--text);border:1px solid #2a3850;border-radius:8px;padding:8px}
+.seg{display:flex;gap:4px;flex-wrap:wrap}.seg button{background:#0b1220;color:var(--muted);border:1px solid #2a3850;border-radius:8px;padding:7px 10px;font-size:12px;cursor:pointer}.seg button[aria-pressed="true"]{color:#111827;background:var(--accent);border-color:var(--accent)}
+.form-status.warn{color:#f5b942}
+.meter-track{height:10px;border-radius:99px;background:#0b1220;border:1px solid var(--line);overflow:hidden;margin:10px 0}.meter{height:100%;width:0;background:linear-gradient(90deg,#ff6b6b,#f5b942,#3ecf8e);transition:width .3s}
+.calculator-card h2 small{font-size:14px;color:var(--muted)}.plain-list{list-style:none;padding:0;margin:8px 0;font-size:12px;color:var(--muted)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}.stat{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#0b1220}.stat span{display:block;font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}.stat strong{font:700 18px Manrope,sans-serif}
+#trade-head th{cursor:pointer}.dash-stats{margin:6px 0 10px}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.memorial{text-align:center;padding:36px 16px;border-radius:20px;border:1px solid var(--line);background:#0b1120;color:#f4efe6}.memorial[data-theme="dawn"]{background:#f6e7d4;color:#2b2118}.memorial[data-theme="forest"]{background:#10281f}
+.memorial .eyebrow{color:#ffb52e}.m-name{font:700 clamp(30px,6vw,52px)/1.15 Georgia,serif;margin:6px 0}.m-dates{opacity:.8;margin:0 0 14px}.m-msg{max-width:520px;margin:0 auto 10px;font-style:italic;overflow-wrap:anywhere}
+.memorial .muted-copy{color:inherit;opacity:.75}.memorial .actions-row{justify-content:center;flex-wrap:wrap}.memorial canvas{max-width:100%}
+[hidden]{display:none!important}
