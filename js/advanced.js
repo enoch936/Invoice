@@ -174,6 +174,7 @@ function evaluateExpression(source, context) {
         return applyFunction(token.value, args);
       }
       if (token.value === "ans") return context.ans || 0;
+      if (context.vars && Object.prototype.hasOwnProperty.call(context.vars, token.value)) return context.vars[token.value];
       if (token.value in CONSTANTS) return CONSTANTS[token.value];
       throw new Error(`Unknown name "${token.value}"`);
     }

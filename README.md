@@ -22,50 +22,78 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - JSON-LD, canonical URLs, FAQ content, sitemap on every tool page
 - **Live chart & backtester:** candlesticks (Binance public API, labelled demo fallback), EMA/RSI, signal markers, confluence score, no-look-ahead backtest with fees, trade table and CSV export
 - **Invoice upgrades:** draft/sent/paid status, revenue dashboard, copy-link sharing (data stays inside the link)
-- **Programmatic SEO:** 56 currency converter pages, 11 hourly-to-salary pages and hub pages, each with unique copy, FAQ and JSON-LD
+- **Programmatic SEO:** 56 currency converter pages, 11 hourly-to-salary pages, 13 crypto profit calculator pages, and hub pages — each with unique copy, FAQ and JSON-LD
 - **Rest & Remembrance:** sanitized `?name=&dates=&message=&theme=` memorial pages with candle animation and share card
+- **Advanced math:** scientific calculator, descriptive statistics, correlation, linear/polynomial regression, Welch/paired t-tests, chi-square, a function plotter (numeric derivative + integral), 2×2–n×n matrix arithmetic and base converter
+- **Money planner upgrades:** fixed-rate loan amortization with a yearly schedule, VAT/sales-tax add-or-extract, margin vs markup and break-even volume
+- **Crypto profit calculators:** programmatically generated `profit-<coin>.html` pages (BTC, ETH, SOL, XRP, ADA, DOGE, BNB, LTC, DOT, MATIC, LINK, TRX) with net P/L after fees, ROI, break-even price and a what-if table
+- **Command palette** (⌘K / Ctrl-K, or `/`) to jump between every tool and action
+- **Viral share cards:** canvas-rendered, branded PNGs generated locally and shared via the Web Share API
+- **Local-first analytics** (ring buffer + Web Vitals + scroll depth) that only forwards to Plausible/Umami after consent
+- **Security hardening:** every URL param and stored value is validated, plus a site-wide `Content-Security-Policy` meta
 - Shareable calculator links (state in the URL)
 - Unit-tested quant library (`js/quant.js`, `tests/quant.test.mjs`)
-- No framework, package manager, or build step required
+- No framework and no runtime dependencies; a small Node toolchain handles generation and verification only
+
+## Toolchain (Node ≥ 20, zero dependencies)
+
+```bash
+node tools/generate.mjs        # regenerate the profit-*.html family + sitemap.xml
+node tools/apply-head.mjs      # (re)apply the CSP/security meta to every page
+node tools/serve.mjs           # local dev server at http://localhost:8080
+node tests/quant.test.mjs      # unit tests
+node tools/verify.mjs          # everything CI runs: syntax, tests, generator drift, CSP, assets, JSON-LD, sitemap
+```
+
+`npm run verify` is an alias for the last command. CI (`.github/workflows/validate.yml`) runs it on every push and pull request.
 
 ## Run locally
 
-JavaScript ES modules work best through a local web server. In VS Code, use Live Server, or run:
+JavaScript ES modules work best through a local web server. Use the built-in one:
 
 ```bash
-python -m http.server 5500
+node tools/serve.mjs
 ```
 
-Open `http://localhost:5500`.
+Open `http://localhost:8080`. (`python -m http.server 8080` also works.)
 
 ## Project structure
 
 ```text
 Invoice/
-├── index.html
-├── invoice.html
-├── quote.html
-├── calculators.html
-├── privacy.html
-├── terms.html
+├── index.html, invoice.html, quote.html, calculators.html, money.html,
+│   trading.html, chart.html, math.html, student.html, memorial.html,
+│   convert.html, rates.html, profit.html, offline.html, privacy.html, terms.html
+├── profit-<coin>.html            # generated programmatic-SEO pages
+├── convert-<from>-to-<to>.html   # generated currency pairs
+├── rates-<cur>-hourly-to-salary.html
 ├── css/
 │   ├── main.css
+│   ├── pro.css                   # monetization, command palette, toasts, products
 │   └── print.css
-└── js/
-    ├── app.js
-    ├── site.js
-    ├── config.js
-    ├── affiliates.js
-    ├── quant.js
-    ├── trading.js
-    ├── money.js
-    ├── student.js
-    ├── invoice.js
-    ├── quote.js
-    ├── calculators.js
-    ├── advanced.js
-    └── storage.js
+├── icons/
+│   ├── icon.svg
+│   └── og.svg
+├── js/
+│   ├── app.js, site.js           # shared runtime + boot
+│   ├── config.js, nav.js         # site config and the single tool registry
+│   ├── sanitize.js               # input hardening used everywhere
+│   ├── analytics.js              # local-first event buffer + Web Vitals
+│   ├── sharecard.js              # canvas share-card renderer
+│   ├── command-palette.js        # ⌘K palette
+│   ├── products.js, affiliates.js, money.js
+│   ├── quant.js                  # pure, unit-tested math/risk engine
+│   ├── advanced.js, math.js      # scientific calculator + math suite
+│   ├── trading.js, chart.js, profit.js
+│   ├── invoice.js, quote.js, calculators.js, invoice-dashboard.js
+│   ├── student.js, convert.js, rates.js, memorial.js, storage.js
+│   └── ...
+├── tools/                        # Node generators, dev server and verifier
+├── tests/quant.test.mjs
+├── sw.js, manifest.webmanifest, offline.html, .nojekyll
+└── sitemap.xml, robots.txt
 ```
+
 
 ## Data and privacy
 
@@ -87,11 +115,12 @@ Everything is off by default. Edit `js/config.js` and `js/affiliates.js`:
 3. Set `plausibleDomain` for privacy-friendly analytics, `newsletterUrl`, `tipJarUrl` and `premiumUrl` for lead capture, tips and paid template packs.
 4. Update the privacy page to describe every third party you enable.
 
-Run tests with `node tests/quant.test.mjs`.
+Run tests with `node tests/quant.test.mjs` (or `node tools/verify.mjs` for the full check).
 
 ## Not built yet
 
 - Next.js migration, `html2pdf` export, premium license validation, WebSocket multi-pane charts, ambient audio for memorial pages, and country tax estimators (these need verified data).
+- Live spot prices on the profit pages (they take user-entered prices by design) and PNG social images (currently an SVG preview).
 
 ## Monetization roadmap
 

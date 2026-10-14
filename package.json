@@ -1,0 +1,23 @@
+{
+  "name": "parchxa-toolkit",
+  "version": "2.0.0",
+  "private": true,
+  "description": "PARCHXA — free, private, client-side tools for freelancers, students and traders. Static site, zero runtime dependencies.",
+  "type": "module",
+  "homepage": "https://enoch936.github.io/Invoice/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enoch936/Invoice.git"
+  },
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node tests/quant.test.mjs",
+    "generate": "node tools/generate.mjs",
+    "head": "node tools/apply-head.mjs",
+    "verify": "node tools/verify.mjs",
+    "serve": "node tools/serve.mjs"
+  }
+}

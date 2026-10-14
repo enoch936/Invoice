@@ -1,1 +1,26 @@
-{"name":"PARCHXA Toolkit","short_name":"PARCHXA","description":"Invoices, quotes, freelance, trading-risk and student calculators that run in your browser.","start_url":"./index.html","scope":"./","display":"standalone","background_color":"#0b1120","theme_color":"#0b1120","icons":[{"src":"icons/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "name": "PARCHXA Toolkit",
+  "short_name": "PARCHXA",
+  "description": "Client-side invoices, quotes, freelance, trading-risk, money, math and student calculators. Free, private, no sign-up.",
+  "id": "/Invoice/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0b1120",
+  "theme_color": "#0b1120",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["finance", "productivity", "business", "education", "utilities"],
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "New invoice", "short_name": "Invoice", "url": "./invoice.html" },
+    { "name": "New quotation", "short_name": "Quote", "url": "./quote.html" },
+    { "name": "Money planner", "short_name": "Money", "url": "./money.html" },
+    { "name": "Trading risk suite", "short_name": "Risk", "url": "./trading.html" }
+  ]
+}

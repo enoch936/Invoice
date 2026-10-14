@@ -1,13 +1,13 @@
 import "./app.js";
 import "./site.js";
+import { sanitizeText, containsProfanity } from "./sanitize.js";
 const $ = (id) => document.getElementById(id);
-const BAD = /\b(fuck\w*|shit\w*|bitch\w*|cunt\w*|nigg\w*|fag\w*|slut\w*|whore\w*|retard\w*|asshole\w*)\b/i;
 const THEMES = ["dawn", "night", "forest"];
-const strip = (s, n) => String(s ?? "").replace(/[\u0000-\u001f\u007f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, n);
+const strip = sanitizeText;
 const p = new URLSearchParams(location.search);
 const name = strip(p.get("name"), 60), dates = strip(p.get("dates"), 40), message = strip(p.get("message"), 280);
 const theme = THEMES.includes(p.get("theme")) ? p.get("theme") : "night";
-const flagged = BAD.test(name + " " + dates + " " + message);
+const flagged = containsProfanity(name, dates, message);
 const view = $("view"), compose = $("compose");
 const KEY = "parchxa.candles.v1";
 const counts = () => { try { const v = JSON.parse(localStorage.getItem(KEY) || "{}"); return v && typeof v === "object" ? v : {}; } catch { return {}; } };
@@ -48,7 +48,7 @@ if (name && !flagged) {
     e.preventDefault(); const f = e.currentTarget.elements;
     const n = strip(f.name.value, 60), d = strip(f.dates.value, 40), m = strip(f.message.value, 280);
     if (!n) { $("warn").textContent = "Please enter a name."; return; }
-    if (BAD.test(n + " " + d + " " + m)) { $("warn").textContent = "That text can't be used on a memorial page. Please edit it and try again."; return; }
+    if (containsProfanity(n, d, m)) { $("warn").textContent = "That text can't be used on a memorial page. Please edit it and try again."; return; }
     const q = new URLSearchParams({ name: n }); if (d) q.set("dates", d); if (m) q.set("message", m); q.set("theme", THEMES.includes(f.theme.value) ? f.theme.value : "night");
     location.search = q.toString();
   });

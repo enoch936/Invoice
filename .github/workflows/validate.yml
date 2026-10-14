@@ -1,9 +1,17 @@
-name: Validate static site
+name: Validate
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
@@ -17,53 +25,5 @@ jobs:
         with:
           node-version: 22
 
-      - name: Check JavaScript syntax
-        run: |
-          set -eu
-          for file in js/*.js; do
-            echo "Checking $file"
-            node --check "$file"
-          done
-
-      - name: Run quant unit tests
-        run: node tests/quant.test.mjs
-
-      - name: Check local HTML assets
-        run: |
-          python - <<'PY'
-          from html.parser import HTMLParser
-          from pathlib import Path
-          from urllib.parse import urlparse
-
-          root = Path(".").resolve()
-          pages = sorted(root.glob("*.html"))
-          failures = []
-
-          class AssetChecker(HTMLParser):
-              def __init__(self, page):
-                  super().__init__()
-                  self.page = page
-
-              def handle_starttag(self, tag, attrs):
-                  attrs = dict(attrs)
-                  for attr in ("href", "src"):
-                      value = attrs.get(attr)
-                      if not value:
-                          continue
-                      parsed = urlparse(value)
-                      if parsed.scheme or parsed.netloc or value.startswith(("#", "data:", "mailto:", "tel:", "javascript:")):
-                          continue
-                      target = (self.page.parent / parsed.path).resolve()
-                      if not target.exists():
-                          failures.append(f"{self.page}: missing {attr}={value}")
-
-          for page in pages:
-              checker = AssetChecker(page)
-              checker.feed(page.read_text(encoding="utf-8"))
-              checker.close()
-
-          if failures:
-              print("\n".join(failures))
-              raise SystemExit(1)
-          print(f"Checked local asset references in {len(pages)} HTML pages.")
-          PY
+      - name: Verify (syntax, tests, generator, security meta, assets, JSON-LD, sitemap)
+        run: node tools/verify.mjs
