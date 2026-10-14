@@ -10,6 +10,7 @@ import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { SECURITY_META } from "./csp.mjs";
+import { buildCalculatorPages } from "./calc-pages.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ORIGIN = "https://enoch936.github.io/Invoice";
@@ -236,7 +237,7 @@ ${FOOTER}
 
 // ---------------------------------------------------------------- sitemap
 const PRIMARY_ORDER = [
-  "", "invoice.html", "quote.html", "calculators.html", "money.html", "trading.html",
+  "", "invoice.html", "quote.html", "calculators.html", "directory.html", "money.html", "trading.html",
   "chart.html", "terminal.html", "math.html", "student.html", "memorial.html", "convert.html", "rates.html",
   "profit.html", "privacy.html", "terms.html",
 ];
@@ -278,6 +279,9 @@ ${lines.join("\n")}
 const outputs = new Map();
 for (const c of COINS) outputs.set(`profit-${c.slug}.html`, coinPage(c));
 outputs.set("profit.html", hubPage());
+
+// Calculator catalog pages + directory (defined in the pure catalog, see tools/calc-pages.mjs).
+for (const [file, content] of buildCalculatorPages()) outputs.set(file, content);
 
 // The sitemap must know about pages written in this same run, so pass their filenames in.
 let drift = 0, written = 0;

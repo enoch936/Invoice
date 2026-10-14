@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crypto liquidation price calculator — PARCHXA</title>
+<meta name="description" content="Estimate the liquidation price of a leveraged long or short crypto position and how far the market must move to reach it.">
+<link rel="canonical" href="https://enoch936.github.io/Invoice/crypto-liquidation.html">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b1120">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.twelvedata.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is; object-src 'none'; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="Crypto liquidation price calculator — PARCHXA"><meta property="og:description" content="Estimate the liquidation price of a leveraged long or short crypto position and how far the market must move to reach it."><meta property="og:url" content="https://enoch936.github.io/Invoice/crypto-liquidation.html"><meta property="og:image" content="https://enoch936.github.io/Invoice/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PARCHXA Toolkit — free tools for independent work">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Crypto liquidation price calculator — PARCHXA"><meta name="twitter:description" content="Estimate the liquidation price of a leveraged long or short crypto position and how far the market must move to reach it."><meta name="twitter:image" content="https://enoch936.github.io/Invoice/icons/og.png">
+<link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css"><link rel="stylesheet" href="css/calc.css">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"Crypto liquidation price calculator","url":"https://enoch936.github.io/Invoice/crypto-liquidation.html","applicationCategory":"UtilityApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Estimate the liquidation price of a leveraged long or short crypto position and how far the market must move to reach it."},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why is the liquidation price not just the leverage?","acceptedAnswer":{"@type":"Answer","text":"The exchange keeps a maintenance margin to cover the position, so liquidation happens a little closer than the pure 1/leverage point."}},{"@type":"Question","name":"Is a liquidation avoidable?","acceptedAnswer":{"@type":"Answer","text":"Adding margin or reducing the position can push the liquidation price further away, but leverage always keeps the risk of a total loss for the margin used."}},{"@type":"Question","name":"Does this work for shorts?","acceptedAnswer":{"@type":"Answer","text":"Yes. Choose short and the formula flips, so liquidation sits above the entry price."}}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Tools","item":"https://enoch936.github.io/Invoice/"},{"@type":"ListItem","position":2,"name":"Calculators","item":"https://enoch936.github.io/Invoice/directory.html"},{"@type":"ListItem","position":3,"name":"Crypto liquidation price calculator","item":"https://enoch936.github.io/Invoice/crypto-liquidation.html"}]}]</script>
+<script type="module" src="js/calc/runner.js"></script>
+</head>
+<body>
+<header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links" aria-label="Main navigation"></nav></header>
+<main class="container page-main">
+<div class="page-intro">
+<a class="back-link" href="directory.html">← All calculators</a>
+<p class="eyebrow">TRADING, FOREX &amp; CRYPTO CALCULATOR</p>
+<h1>Crypto liquidation price calculator</h1>
+<p>Leverage magnifies both gains and losses. Enter the entry price, leverage and maintenance rate to see where an isolated position is estimated to liquidate.</p>
+</div>
+<section id="calc" class="calculator-card wide" data-calc-slug="crypto-liquidation">
+<noscript><div class="notice">This calculator runs in your browser with JavaScript. The formula, a worked example and the worked assumptions are shown below so you can still use the method by hand.</div></noscript>
+</section>
+<div class="notice"><strong>Estimates only.</strong> Results depend on the inputs you provide and the assumptions listed below. This is an educational tool, not financial, tax or investment advice.</div>
+<div data-ad-slot class="ad-reserve" aria-hidden="true"></div>
+<section class="content-block"><h2>Formula</h2><p><code>Long: L = entry × (1 − 1/leverage + m).  Short: L = entry × (1 + 1/leverage − m)</code></p></section>
+<section class="content-block"><h2>Worked example</h2><ol><li>Long 10× at $100 with a 0.5% maintenance margin rate.</li><li>Liquidation = 100 × (1 − 0.10 + 0.005) = $90.50.</li><li>That is a 9.5% fall; at 20× it would be 100 × (1 − 0.05 + 0.005) = $95.50, only 4.5% away.</li></ol></section>
+<section class="content-block"><h2>Assumptions and limitations</h2><ul><li>Isolated margin with a fixed maintenance margin rate; cross margin and tiered maintenance rates are not modelled.</li><li>Funding payments, fees, slippage and any margin added or removed while the trade is open are ignored.</li><li>Exchanges use a mark price and their own rules, so the real trigger price will differ from this estimate.</li></ul></section>
+<section class="content-block"><h2>Frequently asked questions</h2><details><summary>Why is the liquidation price not just the leverage?</summary><p>The exchange keeps a maintenance margin to cover the position, so liquidation happens a little closer than the pure 1/leverage point.</p></details><details><summary>Is a liquidation avoidable?</summary><p>Adding margin or reducing the position can push the liquidation price further away, but leverage always keeps the risk of a total loss for the margin used.</p></details><details><summary>Does this work for shorts?</summary><p>Yes. Choose short and the formula flips, so liquidation sits above the entry price.</p></details></section>
+<section class="content-block"><h2>Related calculators</h2><ul class="dir-related"><li><a href="crypto-profit.html">Crypto profit calculator</a></li><li><a href="position-size.html">Position size calculator</a></li><li><a href="risk-reward.html">Risk-reward ratio calculator</a></li><li><a href="crypto-fees.html">Crypto trading fees calculator</a></li><li><a href="directory.html">All calculators</a></li></ul></section>
+<div data-support></div>
+<p class="updated">Last updated 2026-10-14 · Built by PARCHXA · Educational estimates, not advice</p>
+</main>
+<footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Useful tools for independent work.</span><nav class="footer-links" aria-label="Legal and contact"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="privacy.html#contact">Contact</a></nav><span>© <span data-year></span> PARCHXA</span></footer>
+</body>
+</html>

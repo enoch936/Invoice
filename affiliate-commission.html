@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Affiliate commission calculator — PARCHXA</title>
+<meta name="description" content="Estimate affiliate earnings from monthly sales, order value and commission rate, after refunds and chargebacks.">
+<link rel="canonical" href="https://enoch936.github.io/Invoice/affiliate-commission.html">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b1120">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.twelvedata.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is; object-src 'none'; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="Affiliate commission calculator — PARCHXA"><meta property="og:description" content="Estimate affiliate earnings from monthly sales, order value and commission rate, after refunds and chargebacks."><meta property="og:url" content="https://enoch936.github.io/Invoice/affiliate-commission.html"><meta property="og:image" content="https://enoch936.github.io/Invoice/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PARCHXA Toolkit — free tools for independent work">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Affiliate commission calculator — PARCHXA"><meta name="twitter:description" content="Estimate affiliate earnings from monthly sales, order value and commission rate, after refunds and chargebacks."><meta name="twitter:image" content="https://enoch936.github.io/Invoice/icons/og.png">
+<link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css"><link rel="stylesheet" href="css/calc.css">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"Affiliate commission calculator","url":"https://enoch936.github.io/Invoice/affiliate-commission.html","applicationCategory":"UtilityApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Estimate affiliate earnings from monthly sales, order value and commission rate, after refunds and chargebacks."},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why deduct refunds?","acceptedAnswer":{"@type":"Answer","text":"Most affiliate programmes claw back commission when an order is refunded or charged back, so gross numbers overstate what you keep."}},{"@type":"Question","name":"Are there recurring commissions?","acceptedAnswer":{"@type":"Answer","text":"Some programmes pay on renewals. Add those separately, since this calculator models a single upfront payout."}},{"@type":"Question","name":"Should I use average or actual order value?","acceptedAnswer":{"@type":"Answer","text":"Use a realistic average. If a few large orders dominate, consider modelling them separately."}}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Tools","item":"https://enoch936.github.io/Invoice/"},{"@type":"ListItem","position":2,"name":"Calculators","item":"https://enoch936.github.io/Invoice/directory.html"},{"@type":"ListItem","position":3,"name":"Affiliate commission calculator","item":"https://enoch936.github.io/Invoice/affiliate-commission.html"}]}]</script>
+<script type="module" src="js/calc/runner.js"></script>
+</head>
+<body>
+<header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links" aria-label="Main navigation"></nav></header>
+<main class="container page-main">
+<div class="page-intro">
+<a class="back-link" href="directory.html">← All calculators</a>
+<p class="eyebrow">WEBSITE &amp; CREATOR INCOME CALCULATOR</p>
+<h1>Affiliate commission calculator</h1>
+<p>Affiliate income depends on how many orders you refer, their value and the commission rate. See the gross and net payout.</p>
+</div>
+<section id="calc" class="calculator-card wide" data-calc-slug="affiliate-commission">
+<noscript><div class="notice">This calculator runs in your browser with JavaScript. The formula, a worked example and the worked assumptions are shown below so you can still use the method by hand.</div></noscript>
+</section>
+<div class="notice"><strong>Estimates only.</strong> Results depend on the inputs you provide and the assumptions listed below. This is an educational tool, not financial, tax or investment advice.</div>
+<div data-ad-slot class="ad-reserve" aria-hidden="true"></div>
+<section class="content-block"><h2>Formula</h2><p><code>Net = Orders × Order value × Commission% × (1 − Refund%)</code></p></section>
+<section class="content-block"><h2>Worked example</h2><ol><li>200 affiliate referrals convert in a month.</li><li>The average order is $80 and the commission rate is 30%.</li><li>Gross = 200 × 80 × 0.30 = $4,800.</li><li>With 5% refunds, net = 4,800 × 0.95 = $4,560 a month.</li></ol></section>
+<section class="content-block"><h2>Assumptions and limitations</h2><ul><li>The order value, commission rate and refund rate are treated as flat averages across the month.</li><li>Refunds are assumed to reverse the commission in full, which not every programme does.</li><li>Results depend on conversion and refund behaviour that will vary — this is an estimate and no income is guaranteed.</li></ul></section>
+<section class="content-block"><h2>Frequently asked questions</h2><details><summary>Why deduct refunds?</summary><p>Most affiliate programmes claw back commission when an order is refunded or charged back, so gross numbers overstate what you keep.</p></details><details><summary>Are there recurring commissions?</summary><p>Some programmes pay on renewals. Add those separately, since this calculator models a single upfront payout.</p></details><details><summary>Should I use average or actual order value?</summary><p>Use a realistic average. If a few large orders dominate, consider modelling them separately.</p></details></section>
+<section class="content-block"><h2>Related calculators</h2><ul class="dir-related"><li><a href="website-profit.html">Website profit calculator</a></li><li><a href="cpc.html">CPC calculator</a></li><li><a href="traffic-for-revenue.html">Traffic for revenue calculator</a></li><li><a href="directory.html">All calculators</a></li></ul></section>
+<div data-support></div>
+<p class="updated">Last updated 2026-10-14 · Built by PARCHXA · Educational estimates, not advice</p>
+</main>
+<footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Useful tools for independent work.</span><nav class="footer-links" aria-label="Legal and contact"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="privacy.html#contact">Contact</a></nav><span>© <span data-year></span> PARCHXA</span></footer>
+</body>
+</html>

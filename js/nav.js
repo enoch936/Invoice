@@ -9,6 +9,7 @@ export const TOOLS = [
   { href: "invoice.html", label: "Invoice builder", group: "Get paid", nav: true, keywords: "invoice bill receipt client tax vat discount pdf status dashboard", desc: "Live-preview invoices with tax, discounts and a revenue dashboard." },
   { href: "quote.html", label: "Quotation builder", group: "Get paid", nav: true, keywords: "quote quotation proposal estimate scope terms", desc: "Scope, pricing and terms in one clean quotation." },
   { href: "calculators.html", label: "Freelance calculators", group: "Price work", nav: true, keywords: "hourly rate project price profit margin contingency billable", desc: "Hourly rate, project quote and profit estimates." },
+  { href: "directory.html", label: "All calculators", group: "Price work", nav: true, keywords: "calculator directory finance loan interest business freelance trading crypto forex math statistics converter date health search", desc: "Search every PARCHXA calculator — finance, business, website income, trading, maths and more." },
   { href: "money.html", label: "Money planner", group: "Money", nav: true, keywords: "tax set-aside compound interest cagr retainer loan amortization vat", desc: "Tax set-aside, compound growth, loans, VAT and margins." },
   { href: "trading.html", label: "Trading risk suite", group: "Trading", nav: true, keywords: "position size liquidation kelly expectancy monte carlo risk of ruin var cvar", desc: "Position size, liquidation, Kelly, ruin and Monte Carlo." },
   { href: "chart.html", label: "Live chart & backtester", group: "Trading", nav: true, keywords: "candlestick ema rsi backtest signals confluence walk-forward", desc: "Candles, signals and a fee-aware backtester." },
@@ -22,13 +23,14 @@ export const TOOLS = [
 ];
 
 /** Hrefs shown in the top navigation, in order. */
-export const NAV_HREFS = ["invoice.html", "quote.html", "calculators.html", "money.html", "trading.html", "chart.html", "terminal.html", "math.html", "student.html"];
+export const NAV_HREFS = ["invoice.html", "quote.html", "directory.html", "calculators.html", "money.html", "trading.html", "chart.html", "terminal.html", "math.html", "student.html"];
 
 /** Short labels for the top navigation. */
 export const NAV_LABELS = {
   "invoice.html": "Invoice",
   "quote.html": "Quotation",
-  "calculators.html": "Calculators",
+  "directory.html": "Calculators",
+  "calculators.html": "Freelance",
   "money.html": "Money",
   "trading.html": "Risk",
   "chart.html": "Charts",

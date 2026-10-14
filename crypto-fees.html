@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crypto trading fees calculator — PARCHXA</title>
+<meta name="description" content="Add up cryptocurrency trading fees across many trades and see the total cost as a percentage of the total volume you traded.">
+<link rel="canonical" href="https://enoch936.github.io/Invoice/crypto-fees.html">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b1120">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.twelvedata.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is; object-src 'none'; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="Crypto trading fees calculator — PARCHXA"><meta property="og:description" content="Add up cryptocurrency trading fees across many trades and see the total cost as a percentage of the total volume you traded."><meta property="og:url" content="https://enoch936.github.io/Invoice/crypto-fees.html"><meta property="og:image" content="https://enoch936.github.io/Invoice/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PARCHXA Toolkit — free tools for independent work">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Crypto trading fees calculator — PARCHXA"><meta name="twitter:description" content="Add up cryptocurrency trading fees across many trades and see the total cost as a percentage of the total volume you traded."><meta name="twitter:image" content="https://enoch936.github.io/Invoice/icons/og.png">
+<link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css"><link rel="stylesheet" href="css/calc.css">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"Crypto trading fees calculator","url":"https://enoch936.github.io/Invoice/crypto-fees.html","applicationCategory":"UtilityApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Add up cryptocurrency trading fees across many trades and see the total cost as a percentage of the total volume you traded."},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why do fees matter so much?","acceptedAnswer":{"@type":"Answer","text":"They are paid on every trade whether it wins or loses. Many small trades can quietly cost more than the profit a strategy earns."}},{"@type":"Question","name":"What is a maker versus taker fee?","acceptedAnswer":{"@type":"Answer","text":"A taker fee applies when your order fills immediately against the book; a maker fee is usually lower and applies when you add liquidity with a resting limit order."}},{"@type":"Question","name":"Should I include spreads?","acceptedAnswer":{"@type":"Answer","text":"Yes, ideally. The spread is an extra cost on every fill; this calculator covers only the explicit fee you enter."}}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Tools","item":"https://enoch936.github.io/Invoice/"},{"@type":"ListItem","position":2,"name":"Calculators","item":"https://enoch936.github.io/Invoice/directory.html"},{"@type":"ListItem","position":3,"name":"Crypto trading fees calculator","item":"https://enoch936.github.io/Invoice/crypto-fees.html"}]}]</script>
+<script type="module" src="js/calc/runner.js"></script>
+</head>
+<body>
+<header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links" aria-label="Main navigation"></nav></header>
+<main class="container page-main">
+<div class="page-intro">
+<a class="back-link" href="directory.html">← All calculators</a>
+<p class="eyebrow">TRADING, FOREX &amp; CRYPTO CALCULATOR</p>
+<h1>Crypto trading fees calculator</h1>
+<p>Fees are easy to ignore trade by trade and expensive over a year. Enter your trade size, fee rate and number of trades to see the true cost.</p>
+</div>
+<section id="calc" class="calculator-card wide" data-calc-slug="crypto-fees">
+<noscript><div class="notice">This calculator runs in your browser with JavaScript. The formula, a worked example and the worked assumptions are shown below so you can still use the method by hand.</div></noscript>
+</section>
+<div class="notice"><strong>Estimates only.</strong> Results depend on the inputs you provide and the assumptions listed below. This is an educational tool, not financial, tax or investment advice.</div>
+<div data-ad-slot class="ad-reserve" aria-hidden="true"></div>
+<section class="content-block"><h2>Formula</h2><p><code>Total fees = trade amount × fee% × number of trades</code></p></section>
+<section class="content-block"><h2>Worked example</h2><ol><li>20 trades of $5,000 at a 0.1% fee.</li><li>Fee per trade = 5,000 × 0.1% = $5.00.</li><li>Total = 5 × 20 = $100 on $100,000 of volume, an effective cost of 0.1%.</li></ol></section>
+<section class="content-block"><h2>Assumptions and limitations</h2><ul><li>Every trade is the same size and pays the same fee rate.</li><li>A round trip (a buy and a sell) counts as two trades if your exchange charges both sides.</li><li>Spreads, slippage, funding and withdrawal fees are excluded; tiered or maker/taker schedules may change the rate over time.</li></ul></section>
+<section class="content-block"><h2>Frequently asked questions</h2><details><summary>Why do fees matter so much?</summary><p>They are paid on every trade whether it wins or loses. Many small trades can quietly cost more than the profit a strategy earns.</p></details><details><summary>What is a maker versus taker fee?</summary><p>A taker fee applies when your order fills immediately against the book; a maker fee is usually lower and applies when you add liquidity with a resting limit order.</p></details><details><summary>Should I include spreads?</summary><p>Yes, ideally. The spread is an extra cost on every fill; this calculator covers only the explicit fee you enter.</p></details></section>
+<section class="content-block"><h2>Related calculators</h2><ul class="dir-related"><li><a href="crypto-profit.html">Crypto profit calculator</a></li><li><a href="crypto-dca.html">Crypto DCA calculator</a></li><li><a href="crypto-liquidation.html">Crypto liquidation price calculator</a></li><li><a href="directory.html">All calculators</a></li></ul></section>
+<div data-support></div>
+<p class="updated">Last updated 2026-10-14 · Built by PARCHXA · Educational estimates, not advice</p>
+</main>
+<footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Useful tools for independent work.</span><nav class="footer-links" aria-label="Legal and contact"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="privacy.html#contact">Contact</a></nav><span>© <span data-year></span> PARCHXA</span></footer>
+</body>
+</html>

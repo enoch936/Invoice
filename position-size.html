@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Position size calculator — PARCHXA</title>
+<meta name="description" content="Work out the forex position size in lots and units so a stop-loss only risks a set percentage of your account balance on each trade.">
+<link rel="canonical" href="https://enoch936.github.io/Invoice/position-size.html">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b1120">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.twelvedata.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is; object-src 'none'; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="Position size calculator — PARCHXA"><meta property="og:description" content="Work out the forex position size in lots and units so a stop-loss only risks a set percentage of your account balance on each trade."><meta property="og:url" content="https://enoch936.github.io/Invoice/position-size.html"><meta property="og:image" content="https://enoch936.github.io/Invoice/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PARCHXA Toolkit — free tools for independent work">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Position size calculator — PARCHXA"><meta name="twitter:description" content="Work out the forex position size in lots and units so a stop-loss only risks a set percentage of your account balance on each trade."><meta name="twitter:image" content="https://enoch936.github.io/Invoice/icons/og.png">
+<link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css"><link rel="stylesheet" href="css/calc.css">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"Position size calculator","url":"https://enoch936.github.io/Invoice/position-size.html","applicationCategory":"UtilityApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Work out the forex position size in lots and units so a stop-loss only risks a set percentage of your account balance on each trade."},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why risk only a small percentage?","acceptedAnswer":{"@type":"Answer","text":"Small, consistent risk keeps a losing streak survivable. Losing 1% ten times in a row costs about 10% of the account; risking 10% each time would nearly wipe it out."}},{"@type":"Question","name":"How do I find the pip value per lot?","acceptedAnswer":{"@type":"Answer","text":"Use the forex pip value calculator for the pair, or check your broker's contract specification."}},{"@type":"Question","name":"Should I round the size down?","acceptedAnswer":{"@type":"Answer","text":"Yes — rounding down keeps the risk at or below your limit. Rounding up quietly increases the amount at risk."}}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Tools","item":"https://enoch936.github.io/Invoice/"},{"@type":"ListItem","position":2,"name":"Calculators","item":"https://enoch936.github.io/Invoice/directory.html"},{"@type":"ListItem","position":3,"name":"Position size calculator","item":"https://enoch936.github.io/Invoice/position-size.html"}]}]</script>
+<script type="module" src="js/calc/runner.js"></script>
+</head>
+<body>
+<header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links" aria-label="Main navigation"></nav></header>
+<main class="container page-main">
+<div class="page-intro">
+<a class="back-link" href="directory.html">← All calculators</a>
+<p class="eyebrow">TRADING, FOREX &amp; CRYPTO CALCULATOR</p>
+<h1>Position size calculator</h1>
+<p>Position sizing keeps any single loss small. Enter your balance, the percentage you are willing to risk and the stop distance to see how many lots to trade.</p>
+</div>
+<section id="calc" class="calculator-card wide" data-calc-slug="position-size">
+<noscript><div class="notice">This calculator runs in your browser with JavaScript. The formula, a worked example and the worked assumptions are shown below so you can still use the method by hand.</div></noscript>
+</section>
+<div class="notice"><strong>Estimates only.</strong> Results depend on the inputs you provide and the assumptions listed below. This is an educational tool, not financial, tax or investment advice.</div>
+<div data-ad-slot class="ad-reserve" aria-hidden="true"></div>
+<section class="content-block"><h2>Formula</h2><p><code>Lots = (balance × risk%) / (stop in pips × pip value per lot)</code></p></section>
+<section class="content-block"><h2>Worked example</h2><ol><li>Balance $10,000, risking 1%, stop 25 pips, pip value $10 per lot.</li><li>Risk amount = 10,000 × 1% = $100; risk per lot = 25 × $10 = $250.</li><li>Lots = 100 / 250 = 0.40 lots, or about 40,000 units.</li></ol></section>
+<section class="content-block"><h2>Assumptions and limitations</h2><ul><li>The pip value per lot is constant and already known for the pair and lot size you trade.</li><li>Both entry and stop are assumed to fill at the exact prices given; real fills can slip, especially in fast markets.</li><li>Spread, commission, swap/funding and slippage are excluded from the risk estimate.</li></ul></section>
+<section class="content-block"><h2>Frequently asked questions</h2><details><summary>Why risk only a small percentage?</summary><p>Small, consistent risk keeps a losing streak survivable. Losing 1% ten times in a row costs about 10% of the account; risking 10% each time would nearly wipe it out.</p></details><details><summary>How do I find the pip value per lot?</summary><p>Use the forex pip value calculator for the pair, or check your broker's contract specification.</p></details><details><summary>Should I round the size down?</summary><p>Yes — rounding down keeps the risk at or below your limit. Rounding up quietly increases the amount at risk.</p></details></section>
+<section class="content-block"><h2>Related calculators</h2><ul class="dir-related"><li><a href="forex-pip-value.html">Forex pip value calculator</a></li><li><a href="risk-reward.html">Risk-reward ratio calculator</a></li><li><a href="crypto-liquidation.html">Crypto liquidation price calculator</a></li><li><a href="crypto-profit.html">Crypto profit calculator</a></li><li><a href="directory.html">All calculators</a></li></ul></section>
+<div data-support></div>
+<p class="updated">Last updated 2026-10-14 · Built by PARCHXA · Educational estimates, not advice</p>
+</main>
+<footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Useful tools for independent work.</span><nav class="footer-links" aria-label="Legal and contact"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="privacy.html#contact">Contact</a></nav><span>© <span data-year></span> PARCHXA</span></footer>
+</body>
+</html>

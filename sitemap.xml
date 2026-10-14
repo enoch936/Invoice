@@ -4,6 +4,7 @@
   <url><loc>https://enoch936.github.io/Invoice/invoice.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/quote.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/calculators.html</loc><lastmod>2026-10-12</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/directory.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/money.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/trading.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/chart.html</loc><lastmod>2026-10-12</lastmod></url>
@@ -16,6 +17,22 @@
   <url><loc>https://enoch936.github.io/Invoice/profit.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/privacy.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/terms.html</loc><lastmod>2026-10-12</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/affiliate-commission.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/age.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/amortization.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/apr.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/average.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/billable-utilization.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/bmi.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/bmr-tdee.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/break-even.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/burn-runway.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/business-days.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/cac.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/cagr.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/churn.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/compound-interest.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/contribution-margin.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/convert-etb-to-eur.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/convert-etb-to-gbp.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/convert-etb-to-inr.html</loc><lastmod>2026-10-12</lastmod></url>
@@ -72,6 +89,43 @@
   <url><loc>https://enoch936.github.io/Invoice/convert-zar-to-kes.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/convert-zar-to-ngn.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/convert-zar-to-usd.html</loc><lastmod>2026-10-12</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/cpc.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/cpm.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/creator-hourly.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/credit-card-payoff.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/crypto-dca.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/crypto-fees.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/crypto-liquidation.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/crypto-profit.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/ctr.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/date-difference.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/debt-avalanche.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/debt-snowball.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/discount.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/dti.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/emergency-fund.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/forex-pip-value.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/freelance-rate.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/future-value.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/inflation.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/inventory-turnover.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/loan-affordability.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/loan-payment.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/loan-payoff.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/ltv.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/market-cap-fdv.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/markup.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/mean-median-mode.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/mortgage-payment.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/mrr-arr.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/net-worth.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/npv.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/page-rpm.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/percentage-change.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/percentage.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/permutations-combinations.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/position-size.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/present-value.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-bitcoin.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-bnb.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-cardano.html</loc><lastmod>2026-10-14</lastmod></url>
@@ -79,11 +133,14 @@
   <url><loc>https://enoch936.github.io/Invoice/profit-dogecoin.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-ethereum.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-litecoin.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/profit-margin.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-polkadot.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-polygon.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-solana.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-tron.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/profit-xrp.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/project-quote.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/quadratic.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/rates-aed-hourly-to-salary.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/rates-aud-hourly-to-salary.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/rates-cad-hourly-to-salary.html</loc><lastmod>2026-10-12</lastmod></url>
@@ -95,4 +152,16 @@
   <url><loc>https://enoch936.github.io/Invoice/rates-ngn-hourly-to-salary.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/rates-usd-hourly-to-salary.html</loc><lastmod>2026-10-12</lastmod></url>
   <url><loc>https://enoch936.github.io/Invoice/rates-zar-hourly-to-salary.html</loc><lastmod>2026-10-12</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/ratio.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/risk-reward.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/roi.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/sales-tax.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/savings-goal.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/simple-interest.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/standard-deviation.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/traffic-for-revenue.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/unit-converter.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/vat.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/website-profit.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://enoch936.github.io/Invoice/youtube-revenue.html</loc><lastmod>2026-10-14</lastmod></url>
 </urlset>
