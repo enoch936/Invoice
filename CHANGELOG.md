@@ -3,6 +3,22 @@
 All notable changes to the PARCHXA toolkit are documented here.
 The project is a zero-build static site; "releases" are just commits to `main`.
 
+## [2.1.0] — 2026-10-14
+
+### Changed
+
+- **No synthetic market data anywhere.** The live chart used to fall back to a deterministic
+  synthetic candle series when the Binance feed was unreachable. It now shows an explicit error
+  state with a **Retry** button and never substitutes fabricated prices.
+  - `js/chart.js`: removed the demo path and the `demo` state; `load()` keeps previously loaded
+    **real** candles for the same symbol/timeframe, otherwise clears the chart and renders an
+    "unavailable" empty state. Added `Retry live data` button (`chart.html`).
+  - `js/quant.js`: removed the `demoCandles()` export so no synthetic-data generator ships in the app.
+  - `tests/quant.test.mjs`: the deterministic candle generator now lives in the test file as a
+    fixture, so tests stay green without exposing synthetic data in production code.
+  - Copy on `chart.html` (notice, "How it works", FAQ, JSON-LD) updated to state that no substitute
+    data is ever shown. `README.md` updated to match.
+
 ## [2.0.2] — 2026-10-14
 
 ### Added

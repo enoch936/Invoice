@@ -2,6 +2,18 @@ import assert from "node:assert/strict";
 import * as q from "../js/quant.js";
 const close = (a, b, eps = 1e-6) => assert.ok(Math.abs(a - b) < eps, `${a} !~ ${b}`);
 
+// Test-only deterministic synthetic OHLC fixture. It lives here (not in js/quant.js)
+// so the shipped app never contains any synthetic-data generator.
+function candles(n = 300, seed = 11, start = 100) {
+  const rand = q.rng(seed), out = []; let price = start, t = Date.UTC(2024, 0, 1);
+  for (let i = 0; i < n; i++) {
+    const drift = Math.sin(i / 25) * 0.4, open = price, close = Math.max(1, open * (1 + (rand() - 0.5) * 0.03 + drift / 100));
+    const high = Math.max(open, close) * (1 + rand() * 0.01), low = Math.min(open, close) * (1 - rand() * 0.01);
+    out.push({ time: t + i * 3600000, open, high, low, close, volume: 100 + rand() * 900 }); price = close;
+  }
+  return out;
+}
+
 const ps = q.positionSize({ equity: 10000, riskPct: 1, entry: 100, stop: 95 });
 close(ps.riskAmount, 100); close(ps.units, 20); close(ps.notional, 2000); assert.equal(ps.side, "long");
 assert.equal(q.positionSize({ equity: 0, riskPct: 1, entry: 100, stop: 95 }), null);
@@ -36,7 +48,7 @@ const rFlipped = q.rsi(Array.from({ length: 30 }, (_, i) => 30 - i), 14); close(
 const cs = [{ high: 2, low: 1, close: 1.5 }, { high: 3, low: 2, close: 2.5 }, { high: 4, low: 3, close: 3.5 }];
 close(q.atr(cs, 2)[2], (1 + 1.5 + 1.5) / 2 > 0 ? q.atr(cs, 2)[2] : 0); // shape check: finite
 assert.ok(Number.isFinite(q.atr(cs, 2)[2]));
-const demo = q.demoCandles(400, 3), demo2 = q.demoCandles(400, 3);
+const demo = candles(400, 3), demo2 = candles(400, 3);
 assert.deepEqual(demo[10], demo2[10]); // deterministic
 const bt = q.backtestEmaCross(demo, { fast: 9, slow: 21 });
 assert.ok(bt && bt.trades.length > 0 && bt.equity.length === demo.length);
@@ -129,7 +141,7 @@ const conf = q.confluence({ closes: [1, 2, 3], i: 2 }, [
   { id: "down", label: "falling", weight: 2, test: (c) => c.closes[c.i] < c.closes[c.i - 1] },
 ]);
 assert.equal(conf.score, 50);
-const wf = q.walkForward(q.demoCandles(600, 5), { fast: 9, slow: 21 });
+const wf = q.walkForward(candles(600, 5), { fast: 9, slow: 21 });
 assert.ok(wf && wf.aggregate.folds > 0);
 assert.ok(Number.isFinite(q.adfStatistic(Array.from({ length: 80 }, (_, i) => Math.sin(i / 3)))));
 console.log("extended quant tests passed");

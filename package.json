@@ -1,6 +1,6 @@
 {
   "name": "parchxa-toolkit",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "PARCHXA — free, private, client-side tools for freelancers, students and traders. Static site, zero runtime dependencies.",
   "type": "module",

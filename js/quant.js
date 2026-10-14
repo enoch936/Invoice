@@ -241,17 +241,6 @@ export function summarize(trades, equity, candles) {
   };
 }
 
-/** Deterministic synthetic candles for offline/demo mode. Clearly labelled as demo in the UI. */
-export function demoCandles(n = 300, seed = 11, start = 100) {
-  const rand = rng(seed), out = []; let price = start, t = Date.UTC(2024, 0, 1);
-  for (let i = 0; i < n; i++) {
-    const drift = Math.sin(i / 25) * 0.4, open = price, close = Math.max(1, open * (1 + (rand() - 0.5) * 0.03 + drift / 100));
-    const high = Math.max(open, close) * (1 + rand() * 0.01), low = Math.min(open, close) * (1 - rand() * 0.01);
-    out.push({ time: t + i * 3600000, open, high, low, close, volume: 100 + rand() * 900 }); price = close;
-  }
-  return out;
-}
-
 // ============================================================
 // Statistics (pure, NaN-safe, ignores non-finite inputs)
 // ============================================================

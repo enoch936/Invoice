@@ -20,7 +20,7 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - Installable PWA with offline support (manifest + service worker)
 - Consent banner, affiliate registry, ad slots and email/tip/premium CTAs (all off until configured)
 - JSON-LD, canonical URLs, FAQ content, sitemap on every tool page
-- **Live chart & backtester:** candlesticks (Binance public API, labelled demo fallback), EMA/RSI, signal markers, confluence score, no-look-ahead backtest with fees, trade table and CSV export
+- **Live chart & backtester:** candlesticks (Binance public API, real data only — an explicit error state when the feed is unavailable, never substitute prices), EMA/RSI, signal markers, confluence score, no-look-ahead backtest with fees, trade table and CSV export
 - **Invoice upgrades:** draft/sent/paid status, revenue dashboard, copy-link sharing (data stays inside the link)
 - **Programmatic SEO:** 56 currency converter pages, 11 hourly-to-salary pages, 13 crypto profit calculator pages, and hub pages — each with unique copy, FAQ and JSON-LD
 - **Rest & Remembrance:** sanitized `?name=&dates=&message=&theme=` memorial pages with candle animation and share card

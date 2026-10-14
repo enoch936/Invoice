@@ -1,12 +1,14 @@
 import "./app.js";
 import "./site.js";
-import { ema, rsi, backtestEmaCross, demoCandles } from "./quant.js";
+import { ema, rsi, backtestEmaCross } from "./quant.js";
 
 const $ = (id) => document.getElementById(id);
 const SYMBOLS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "DOGEUSDT"];
 const INTERVALS = ["1m", "5m", "15m", "1h", "4h", "1d", "1w"];
 const HOSTS = ["https://data-api.binance.vision", "https://api.binance.com"];
-const st = { symbol: "BTCUSDT", interval: "1h", candles: [], demo: false, ws: null, live: false, log: false };
+// No synthetic fallback: if the live feed is unreachable we show an explicit error state,
+// never substitute prices. `st.key` tracks which symbol+interval the loaded candles belong to.
+const st = { symbol: "BTCUSDT", interval: "1h", key: "", candles: [], ws: null, live: false, log: false };
 const fmt = (n, d = 2) => (Number.isFinite(n) ? n.toLocaleString(undefined, { maximumFractionDigits: d }) : "—");
 const cache = new Map();
 
@@ -66,7 +68,7 @@ function draw() {
   g.fillStyle = muted; g.fillText("RSI 14", L + 4, rsiTop + 12);
   const lastC = all[all.length - 1];
   g.fillText(new Date(vis[0].time).toLocaleDateString(), L, h - 6); g.fillText(new Date(lastC.time).toLocaleString(), w - R - 120, h - 6);
-  c.setAttribute("aria-label", `${st.symbol} ${st.interval} candlestick chart${st.demo ? " (demo data)" : ""}. Last close ${fmt(lastC.close, 4)}. EMA ${fast} is ${f[all.length - 1] > s[all.length - 1] ? "above" : "below"} EMA ${slow}. RSI ${fmt(r[all.length - 1], 1)}.`);
+  c.setAttribute("aria-label", `${st.symbol} ${st.interval} candlestick chart. Last close ${fmt(lastC.close, 4)}. EMA ${fast} is ${f[all.length - 1] > s[all.length - 1] ? "above" : "below"} EMA ${slow}. RSI ${fmt(r[all.length - 1], 1)}.`);
   renderSignals(all, f, s, r, bt);
 }
 
@@ -103,14 +105,50 @@ function readParams() {
 }
 
 async function load() {
-  $("status").textContent = "Loading " + st.symbol + " " + st.interval + "…";
-  try { st.candles = await fetchCandles(st.symbol, st.interval); st.demo = false; $("status").textContent = "Live market data from Binance public API. May be delayed or unavailable in some regions."; }
-  catch { st.candles = demoCandles(400, 11, 100); st.demo = true; $("status").textContent = "DEMO DATA: live feed unavailable (offline, blocked or rate limited). Synthetic prices for illustration only."; }
-  $("status").className = "form-status" + (st.demo ? " warn" : "");
-  draw(); if (st.live && !st.demo) connect();
+  const key = st.symbol + st.interval;
+  const hadData = st.key === key && st.candles.length > 0;
+  setStatus("Loading " + st.symbol + " " + st.interval + "…", "");
+  hideRetry();
+  try {
+    const data = await fetchCandles(st.symbol, st.interval);
+    st.candles = data; st.key = key;
+    setStatus(`Live market data from Binance public API — ${st.symbol} ${st.interval}, ${data.length} candles, loaded ${new Date().toLocaleTimeString()}. May be delayed or unavailable in some regions.`, "");
+    draw(); if (st.live) connect();
+  } catch {
+    // Never fabricate prices. Keep previously loaded real candles for the same symbol/interval if we have them.
+    if (!hadData) { st.candles = []; st.key = key; }
+    const offline = navigator.onLine === false;
+    setStatus(`Could not load live data — ${offline ? "you appear to be offline" : "the market feed is blocked, rate limited or unreachable"}. No substitute or simulated prices are shown.`, "warn");
+    showRetry();
+    if (st.candles.length) draw(); else { emptyState("Live market data unavailable"); clearStats(); }
+  }
+}
+function setStatus(text, cls) { const el = $("status"); if (!el) return; el.textContent = text; el.className = "form-status" + (cls ? " " + cls : ""); }
+function showRetry() { const b = $("retry"); if (b) b.hidden = false; }
+function hideRetry() { const b = $("retry"); if (b) b.hidden = true; }
+function clearStats() {
+  $("score").textContent = "—"; $("meter").style.width = "0%";
+  $("score-detail").textContent = "No market data loaded.";
+  $("score-parts").replaceChildren(); $("bt-stats").replaceChildren("Nothing to backtest without live candles.");
+  window.__trades = []; renderTrades();
+}
+function emptyState(msg) {
+  const c = $("price"); if (!c) return;
+  const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = 420;
+  c.width = w * dpr; c.height = h * dpr;
+  const g = c.getContext("2d"); g.scale(dpr, dpr); g.clearRect(0, 0, w, h);
+  const css = getComputedStyle(document.documentElement);
+  const muted = css.getPropertyValue("--muted").trim() || "#9ba9bd", line = css.getPropertyValue("--line").trim() || "#26334a";
+  g.strokeStyle = line; g.setLineDash([6, 6]); g.strokeRect(40, 60, w - 80, h - 120); g.setLineDash([]);
+  g.fillStyle = muted; g.font = "14px sans-serif"; g.textAlign = "center";
+  g.fillText(msg, w / 2, h / 2 - 6);
+  g.font = "12px sans-serif";
+  g.fillText("Reconnect and press Retry — real prices only, no demo data.", w / 2, h / 2 + 16);
+  g.textAlign = "start";
+  c.setAttribute("aria-label", msg);
 }
 function connect() {
-  disconnect(); if (st.demo) return;
+  disconnect(); if (!st.candles.length) return;
   try {
     const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${st.symbol.toLowerCase()}@kline_${st.interval}`); st.ws = ws;
     ws.onmessage = (ev) => { try { const k = JSON.parse(ev.data).k; if (!k) return; const cd = { time: k.t, open: +k.o, high: +k.h, low: +k.l, close: +k.c, volume: +k.v }; if (![cd.open, cd.high, cd.low, cd.close].every(Number.isFinite)) return; const last = st.candles[st.candles.length - 1]; if (last && last.time === cd.time) st.candles[st.candles.length - 1] = cd; else st.candles.push(cd); if (st.candles.length > 600) st.candles.shift(); schedule(); } catch {} };
@@ -122,6 +160,7 @@ let raf = 0; const schedule = () => { if (!raf) raf = requestAnimationFrame(() =
 
 function fillControls() {
   SYMBOLS.forEach((s) => $("symbol").add(new Option(s.replace("USDT", "/USDT"), s)));
+  const retry = $("retry"); if (retry) retry.onclick = load;
   const bar = $("intervals"); INTERVALS.forEach((i) => { const b = Object.assign(document.createElement("button"), { type: "button", textContent: i }); b.setAttribute("aria-pressed", String(i === st.interval)); b.onclick = () => { st.interval = i; [...bar.children].forEach((x) => x.setAttribute("aria-pressed", String(x === b))); load(); }; bar.append(b); });
   $("symbol").onchange = () => { st.symbol = $("symbol").value; load(); };
   $("scale").onclick = (e) => { st.log = !st.log; e.target.textContent = st.log ? "Scale: log" : "Scale: linear"; draw(); };
