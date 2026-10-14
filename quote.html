@@ -34,6 +34,30 @@
 <label>Quote date<input name="date" type="date" required></label>
 <label>Valid until<input name="valid" type="date" required></label>
 </div>
+<div class="form-section-title"><div><p class="eyebrow">PREPARED BY</p><h3>Business details</h3></div><span class="step-chip">OPTIONAL</span></div>
+<div class="form-grid">
+<label class="span-2">Business address<input name="business-address" autocomplete="street-address" placeholder="Street, building, PO box"></label>
+<label>City<input name="business-city" autocomplete="address-level2" placeholder="City / town"></label>
+<label>Country<select name="business-country" data-country><option value="">Select country…</option></select></label>
+<label>Email<input name="business-email" type="email" autocomplete="email" placeholder="you@yourbusiness.com"></label>
+<label>Phone<input name="business-phone" type="tel" autocomplete="tel" placeholder="+251 900 000 000"></label>
+<label class="span-2">Tax / VAT / TIN ID<input name="business-tax" autocomplete="off" placeholder="Optional tax registration number"></label>
+</div>
+<div class="form-section-title"><div><p class="eyebrow">PREPARED FOR</p><h3>Client details</h3></div><span class="step-chip">OPTIONAL</span></div>
+<div class="form-grid">
+<label class="span-2">Client address<input name="client-address" autocomplete="street-address" placeholder="Street, building, PO box"></label>
+<label>City<input name="client-city" autocomplete="address-level2" placeholder="City / town"></label>
+<label>Country<select name="client-country" data-country><option value="">Select country…</option></select></label>
+<label>Email<input name="client-email" type="email" autocomplete="email" placeholder="client@example.com"></label>
+<label>Phone<input name="client-phone" type="tel" autocomplete="tel" placeholder="+251 900 000 000"></label>
+<label class="span-2">Client tax / VAT / TIN ID<input name="client-tax" autocomplete="off" placeholder="Optional tax registration number"></label>
+</div>
+<div class="form-section-title"><div><p class="eyebrow">BRANDING</p><h3>Logo (optional)</h3></div><span class="step-chip">OPTIONAL</span></div>
+<div class="form-grid">
+<label>Logo image URL<input name="logo-url" id="logo-url" type="url" inputmode="url" autocomplete="off" placeholder="https://example.com/logo.png"></label>
+<label>Or upload from your device<input type="file" id="logo-file" accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml"></label>
+</div>
+<p class="field-hint">Paste an image link or choose a file. A chosen file stays in this browser and is embedded in the document — it is never uploaded. <button type="button" class="button button-small button-secondary" id="logo-clear">Remove logo</button></p>
 <div class="form-section-title"><div><p class="eyebrow">SCOPE & COST</p><h3>Proposed items</h3></div><button type="button" id="add-quote-item" class="button button-small button-secondary">＋ Add item</button></div>
 <div id="quote-items" class="line-items"></div>
 <div class="form-grid totals-inputs">
@@ -49,8 +73,8 @@
 </section>
 <section class="preview-panel" aria-label="Quotation preview"><div class="preview-toolbar"><span><span class="status-dot"></span> LIVE PREVIEW</span><span class="preview-hint">Updates as you type</span></div>
 <article class="invoice-paper" id="quote-preview">
-<div class="invoice-top"><div><div class="invoice-brand">PARCHXA<span>.</span></div><p class="invoice-small">PROJECT QUOTATION</p></div><div class="invoice-number"><span>QUOTE NO.</span><strong id="q-number">QUO-001</strong><span>DATE</span><strong id="q-date">—</strong><span>VALID UNTIL</span><strong id="q-valid">—</strong></div></div>
-<div class="invoice-parties"><div><span class="invoice-label">PREPARED BY</span><h3 id="q-business">Your business name</h3></div><div><span class="invoice-label">PREPARED FOR</span><h3 id="q-client">Client name</h3></div></div>
+<div class="invoice-top"><div><img id="q-logo" class="invoice-logo" alt="Business logo" hidden><div class="invoice-brand">PARCHXA<span>.</span></div><p class="invoice-small">PROJECT QUOTATION</p></div><div class="invoice-number"><span>QUOTE NO.</span><strong id="q-number">QUO-001</strong><span>DATE</span><strong id="q-date">—</strong><span>VALID UNTIL</span><strong id="q-valid">—</strong></div></div>
+<div class="invoice-parties"><div><span class="invoice-label">PREPARED BY</span><h3 id="q-business">Your business name</h3><p id="q-business-address" hidden></p><p id="q-business-contact" hidden></p><p id="q-business-tax" hidden></p></div><div><span class="invoice-label">PREPARED FOR</span><h3 id="q-client">Client name</h3><p id="q-client-address" hidden></p><p id="q-client-contact" hidden></p><p id="q-client-tax" hidden></p></div></div>
 <div class="invoice-table-wrap"><table class="invoice-table"><thead><tr><th>PROPOSED WORK</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody id="q-preview-items"><tr><td>Service or deliverable</td><td>1</td><td>0.00</td><td>0.00</td></tr></tbody></table></div>
 <div class="invoice-bottom"><div><div class="invoice-notes"><span class="invoice-label">SCOPE & ASSUMPTIONS</span><p id="q-scope">Details to be agreed with the client.</p></div><div class="invoice-notes"><span class="invoice-label">PAYMENT TERMS</span><p id="q-terms">Payment terms to be agreed.</p></div></div><div class="invoice-totals"><div><span>Subtotal</span><strong id="q-subtotal">0.00</strong></div><div><span>Discount</span><strong id="q-discount">−0.00</strong></div><div><span>Tax</span><strong id="q-tax">0.00</strong></div><div class="grand-total"><span>ESTIMATED TOTAL</span><strong id="q-total">USD 0.00</strong></div></div></div>
 <div class="invoice-footer">PREPARED FOR DISCUSSION <span>•</span> PARCHXA TOOLKIT</div>

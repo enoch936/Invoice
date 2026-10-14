@@ -1,4 +1,5 @@
 ﻿import { getDrafts, saveDraft, deleteDraft } from "./storage.js";
+import { populateCountrySelects, readParty, fillParty, renderParty } from "./parties.js";
 import "./app.js";
 
 const QUOTE_STORAGE = "parchxa.quotationDrafts.v1";
@@ -6,7 +7,11 @@ const form = document.querySelector("#quote-form");
 const host = document.querySelector("#quote-items");
 const savedHost = document.querySelector("#saved-quotes");
 const status = document.querySelector("#quote-status");
+const logoUrlInput = document.querySelector("#logo-url");
+const logoFileInput = document.querySelector("#logo-file");
+const logoClear = document.querySelector("#logo-clear");
 let currentId = null;
+let logo = "";
 const field = (name) => form.elements.namedItem(name)?.value ?? "";
 const num = (name) => Math.max(0, Number(field(name)) || 0);
 const escapeHTML = (text) => String(text ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -33,9 +38,32 @@ function items() {
   }));
 }
 function data() {
-  return { id: currentId, business: field("business"), client: field("client"), number: field("number"), currency: field("currency"), date: field("date"), valid: field("valid"), discount: num("discount"), tax: num("tax"), scope: field("scope"), terms: field("terms"), items: items(), updatedAt: new Date().toISOString() };
+  return { id: currentId, business: field("business"), client: field("client"), number: field("number"), currency: field("currency"), date: field("date"), valid: field("valid"), discount: num("discount"), tax: num("tax"), scope: field("scope"), terms: field("terms"), items: items(), businessDetails: readParty(form, "business"), clientDetails: readParty(form, "client"), logo, updatedAt: new Date().toISOString() };
 }
+// ---- Logo: a remote image URL or a local file embedded as a data URL ----
+function setLogo(value, note) {
+  logo = typeof value === "string" ? value : "";
+  if (logoUrlInput) logoUrlInput.value = /^https?:\/\//i.test(logo) ? logo : "";
+  if (logoFileInput) logoFileInput.value = "";
+  if (note) status.textContent = note;
+  render();
+}
+logoUrlInput?.addEventListener("change", () => setLogo(logoUrlInput.value.trim(), logoUrlInput.value.trim() ? "Logo set from URL." : "Logo removed."));
+logoFileInput?.addEventListener("change", () => {
+  const file = logoFileInput.files?.[0];
+  if (!file) return;
+  if (!/^image\//i.test(file.type)) { status.textContent = "Choose an image file (PNG, JPG, GIF, WebP or SVG)."; logoFileInput.value = ""; return; }
+  if (file.size > 1500000) { status.textContent = "That image is larger than 1.5 MB. Use a smaller file or paste a URL."; logoFileInput.value = ""; return; }
+  const reader = new FileReader();
+  reader.onload = () => { logo = String(reader.result || ""); if (logoUrlInput) logoUrlInput.value = ""; logoFileInput.value = ""; render(); status.textContent = "Logo added from file."; };
+  reader.onerror = () => { status.textContent = "Could not read that image."; };
+  reader.readAsDataURL(file);
+});
+logoClear?.addEventListener("click", () => { logo = ""; if (logoUrlInput) logoUrlInput.value = ""; if (logoFileInput) logoFileInput.value = ""; render(); status.textContent = "Logo removed."; });
+
 function render() {
+  const logoImg = document.getElementById("q-logo");
+  if (logoImg) { if (logo) { logoImg.src = logo; logoImg.hidden = false; } else { logoImg.removeAttribute("src"); logoImg.hidden = true; } }
   const d = data(), subtotal = d.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
   const discount = subtotal * Math.min(100, d.discount) / 100;
   const tax = (subtotal - discount) * Math.min(100, d.tax) / 100;
@@ -45,6 +73,7 @@ function render() {
   put("q-business", d.business || "Your business name"); put("q-client", d.client || "Client name");
   put("q-scope", d.scope || "Details to be agreed with the client."); put("q-terms", d.terms || "Payment terms to be agreed.");
   put("q-subtotal", money(subtotal,d.currency)); put("q-discount", "−" + money(discount,d.currency)); put("q-tax", money(tax,d.currency)); put("q-total", money(total,d.currency)); put("q-grand", money(total,d.currency));
+  renderParty("q-business", d.businessDetails); renderParty("q-client", d.clientDetails);
   const tbody = document.querySelector("#q-preview-items"); if (tbody) { tbody.replaceChildren();
     d.items.forEach((item) => {
       const tr = document.createElement("tr");
@@ -57,6 +86,10 @@ function render() {
 function setData(d) {
   currentId = d.id || null;
   for (const name of ["business","client","number","currency","date","valid","discount","tax","scope","terms"]) if (d[name] !== undefined && form.elements.namedItem(name)) form.elements.namedItem(name).value = d[name];
+  logo = typeof d.logo === "string" ? d.logo : "";
+  if (logoUrlInput) logoUrlInput.value = /^https?:\/\//i.test(logo) ? logo : "";
+  if (logoFileInput) logoFileInput.value = "";
+  fillParty(form, "business", d.businessDetails); fillParty(form, "client", d.clientDetails);
   host.replaceChildren(); (d.items?.length ? d.items : [{}]).forEach(addItem); render();
 }
 function renderSaved() {
@@ -86,7 +119,7 @@ document.querySelector("#save-quote")?.addEventListener("click", () => {
 document.querySelector("#print-quote")?.addEventListener("click", () => { render(); window.print(); });
 document.querySelector("#clear-quote")?.addEventListener("click", () => {
   if (confirm("Clear all quotation fields?")) {
-    form.reset(); currentId = null; host.replaceChildren(); addItem();
+    form.reset(); currentId = null; logo = ""; if (logoUrlInput) logoUrlInput.value = ""; if (logoFileInput) logoFileInput.value = ""; host.replaceChildren(); addItem();
     const today = new Date(), valid = new Date(today); valid.setDate(valid.getDate()+14);
     form.elements.namedItem("date").value = today.toISOString().slice(0,10);
     form.elements.namedItem("valid").value = valid.toISOString().slice(0,10);
@@ -96,5 +129,6 @@ document.querySelector("#clear-quote")?.addEventListener("click", () => {
 const today = new Date(), valid = new Date(today); valid.setDate(valid.getDate()+14);
 if (!form.elements.namedItem("date").value) form.elements.namedItem("date").value = today.toISOString().slice(0,10);
 if (!form.elements.namedItem("valid").value) form.elements.namedItem("valid").value = valid.toISOString().slice(0,10);
+populateCountrySelects(form);
 addItem(); render(); renderSaved();
 

@@ -1,4 +1,5 @@
 ﻿import { getDrafts, saveDraft, deleteDraft } from "./storage.js";
+import { populateCountrySelects, readParty, fillParty, renderParty, sanitizeParty } from "./parties.js";
 import "./app.js";
 
 const form = document.querySelector("#invoice-form");
@@ -6,7 +7,11 @@ const itemHost = document.querySelector("#line-items");
 const status = document.querySelector("#form-status");
 const savedHost = document.querySelector("#saved-drafts");
 const currencySelect = document.querySelector("#invoice-currency") || form.elements.namedItem("currency");
+const logoUrlInput = document.querySelector("#logo-url");
+const logoFileInput = document.querySelector("#logo-file");
+const logoClear = document.querySelector("#logo-clear");
 let currentDraftId = null;
+let logo = "";
 
 const money = (amount, currency) => {
   try {
@@ -62,11 +67,39 @@ function getData() {
     tax: num("tax"),
     notes: value("notes"),
     items: readItems(),
+    businessDetails: readParty(form, "business"),
+    clientDetails: readParty(form, "client"),
+    logo,
     updatedAt: new Date().toISOString()
   };
 }
 
+// ---- Logo: a remote image URL or a local file embedded as a data URL ----
+function setLogo(value, note) {
+  logo = typeof value === "string" ? value : "";
+  if (logoUrlInput) logoUrlInput.value = /^https?:\/\//i.test(logo) ? logo : "";
+  if (logoFileInput) logoFileInput.value = "";
+  if (note) status.textContent = note;
+  render();
+}
+logoUrlInput?.addEventListener("change", () => setLogo(logoUrlInput.value.trim(), logoUrlInput.value.trim() ? "Logo set from URL." : "Logo removed."));
+logoFileInput?.addEventListener("change", () => {
+  const file = logoFileInput.files?.[0];
+  if (!file) return;
+  if (!/^image\//i.test(file.type)) { status.textContent = "Choose an image file (PNG, JPG, GIF, WebP or SVG)."; logoFileInput.value = ""; return; }
+  if (file.size > 1500000) { status.textContent = "That image is larger than 1.5 MB. Use a smaller file or paste a URL."; logoFileInput.value = ""; return; }
+  const reader = new FileReader();
+  reader.onload = () => { logo = String(reader.result || ""); if (logoUrlInput) logoUrlInput.value = ""; logoFileInput.value = ""; render(); status.textContent = "Logo added from file."; };
+  reader.onerror = () => { status.textContent = "Could not read that image."; };
+  reader.readAsDataURL(file);
+});
+logoClear?.addEventListener("click", () => { logo = ""; if (logoUrlInput) logoUrlInput.value = ""; if (logoFileInput) logoFileInput.value = ""; render(); status.textContent = "Logo removed."; });
+
 function render() {
+  const logoImg = document.getElementById("preview-logo");
+  if (logoImg) {
+    if (logo) { logoImg.src = logo; logoImg.hidden = false; } else { logoImg.removeAttribute("src"); logoImg.hidden = true; }
+  }
   const data = getData();
   const currency = data.currency;
   const subtotal = data.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
@@ -87,6 +120,8 @@ function render() {
   text("preview-discount", "−" + money(discount, currency));
   text("preview-tax", money(tax, currency));
   text("preview-total", money(total, currency));
+  renderParty("preview-business", data.businessDetails);
+  renderParty("preview-client", data.clientDetails);
   const grand = document.getElementById("preview-grand");
   if (grand) grand.textContent = money(total, currency);
   const tbody = document.querySelector("#preview-items");
@@ -119,6 +154,11 @@ function setData(data) {
       form.elements.namedItem(name).value = data[name];
     }
   }
+  logo = typeof data.logo === "string" ? data.logo : "";
+  if (logoUrlInput) logoUrlInput.value = /^https?:\/\//i.test(logo) ? logo : "";
+  if (logoFileInput) logoFileInput.value = "";
+  fillParty(form, "business", data.businessDetails);
+  fillParty(form, "client", data.clientDetails);
   itemHost.replaceChildren();
   (data.items?.length ? data.items : [{}]).forEach(addLineItem);
   render();
@@ -202,6 +242,9 @@ document.querySelector("#clear-form")?.addEventListener("click", () => {
   if (confirm("Clear all invoice fields?")) {
     form.reset();
     currentDraftId = null;
+    logo = "";
+    if (logoUrlInput) logoUrlInput.value = "";
+    if (logoFileInput) logoFileInput.value = "";
     itemHost.replaceChildren();
     addLineItem();
     const today = new Date().toISOString().slice(0, 10);
@@ -215,6 +258,7 @@ const today = new Date().toISOString().slice(0, 10);
 const dateInput = form.elements.namedItem("date");
 if (dateInput && !dateInput.value) dateInput.value = today;
 
+populateCountrySelects(form);
 addLineItem();
 render();
 renderDrafts();
@@ -237,6 +281,9 @@ function sanitize(d) {
     date: /^\d{4}-\d{2}-\d{2}$/.test(d.date) ? d.date : "", due: /^\d{4}-\d{2}-\d{2}$/.test(d.due) ? d.due : "",
     status: ["draft", "sent", "paid"].includes(d.status) ? d.status : "draft",
     discount: n(d.discount, 100), tax: n(d.tax, 100), notes: clean(d.notes, 1000),
+    logo: (typeof d.logo === "string" && d.logo.length <= 1200000 && /^(https?:\/\/|data:image\/(png|jpeg|jpg|gif|webp|svg\+xml))/i.test(d.logo)) ? d.logo : "",
+    businessDetails: sanitizeParty(d.businessDetails),
+    clientDetails: sanitizeParty(d.clientDetails),
     items: (Array.isArray(d.items) ? d.items : []).slice(0, 40).map((i) => ({ description: clean(i?.description, 200), quantity: n(i?.quantity, 1e9), price: n(i?.price, 1e9) })),
   };
 }
@@ -246,7 +293,7 @@ document.querySelector("#share-invoice")?.addEventListener("click", async () => 
     const raw = new TextEncoder().encode(JSON.stringify(data));
     const packed = "CompressionStream" in window ? "z" + b64u(await pipe(raw, new CompressionStream("deflate-raw"))) : "r" + b64u(raw);
     const url = location.origin + location.pathname + "#d=" + packed;
-    if (url.length > 6000) { status.textContent = "Invoice is too large for a share link. Remove some items or notes."; return; }
+    if (url.length > 6000) { status.textContent = /^data:/.test(data.logo || "") ? "A locally uploaded logo is too big for a share link. Paste an image URL, or share without the logo." : "Invoice is too large for a share link. Remove some items or notes."; return; }
     await navigator.clipboard.writeText(url);
     status.textContent = "Share link copied. Anyone with it can view this invoice.";
   } catch { status.textContent = "Could not create a share link in this browser."; }
