@@ -237,7 +237,7 @@ ${FOOTER}
 // ---------------------------------------------------------------- sitemap
 const PRIMARY_ORDER = [
   "", "invoice.html", "quote.html", "calculators.html", "money.html", "trading.html",
-  "chart.html", "math.html", "student.html", "memorial.html", "convert.html", "rates.html",
+  "chart.html", "terminal.html", "math.html", "student.html", "memorial.html", "convert.html", "rates.html",
   "profit.html", "privacy.html", "terms.html",
 ];
 

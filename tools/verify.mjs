@@ -13,7 +13,7 @@
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, resolve, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,10 +27,18 @@ function runNode(args) {
 
 // 1. syntax
 step("Checking JavaScript syntax");
-const jsFiles = readdirSync(join(ROOT, "js")).filter((f) => f.endsWith(".js")).sort();
+function walkJs(dir, out = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) walkJs(full, out);
+    else if (entry.name.endsWith(".js")) out.push(full);
+  }
+  return out;
+}
+const jsFiles = walkJs(join(ROOT, "js")).sort();
 for (const file of jsFiles) {
-  const res = spawnSync(process.execPath, ["--check", join("js", file)], { cwd: ROOT, stdio: "inherit" });
-  if (res.status !== 0) failures.push(`syntax error in js/${file}`);
+  const res = spawnSync(process.execPath, ["--check", file], { cwd: ROOT, stdio: "inherit" });
+  if (res.status !== 0) failures.push(`syntax error in ${relative(ROOT, file)}`);
 }
 const toolFiles = readdirSync(join(ROOT, "tools")).filter((f) => f.endsWith(".mjs")).sort();
 for (const file of ["sw.js", ...toolFiles.map((f) => join("tools", f))]) {
