@@ -5,6 +5,17 @@ The project is a zero-build static site; "releases" are just commits to `main`.
 
 ## [2.1.0] — 2026-10-14
 
+### Added
+
+- **Live market data on the trading page** (`trading.html` → `js/trading.js`): a new
+  “LIVE MARKET DATA” panel pulls **real** candles from Binance's public API (500 × 1h, with host
+  fallback), shows the live price, ATR(14) and annualised realised volatility, and **measures** the
+  actual win rate, reward:risk and expectancy of a simple EMA-crossover rule on those candles.
+  Two buttons push those real numbers into the tools: *Use live price in position size* (entry +
+  1.5×ATR stop, and the liquidation entry) and *Use measured edge in edge & Monte Carlo*. If the feed
+  is unreachable it shows an explicit error — never substitute data.
+- **“Does this use live market data?”** FAQ on the trading page (HTML + JSON-LD).
+
 ### Changed
 
 - **No synthetic market data anywhere.** The live chart used to fall back to a deterministic
@@ -18,6 +29,13 @@ The project is a zero-build static site; "releases" are just commits to `main`.
     fixture, so tests stay green without exposing synthetic data in production code.
   - Copy on `chart.html` (notice, "How it works", FAQ, JSON-LD) updated to state that no substitute
     data is ever shown. `README.md` updated to match.
+- **Crypto profit pages start empty** (`tools/generate.mjs`, `js/profit.js`): the buy price, sell
+  price and quantity fields no longer carry example values. Empty fields compute nothing (`—`) and
+  no hidden defaults are applied. *Use live price* now fills the next empty price field with the
+  current Binance quote. Shareable URL state only records fields you actually filled.
+- **Trading page price fields start empty** (`trading.html`): entry/stop/target and the liquidation
+  entry are no longer pre-filled; use the live panel or type your own. The page gained a live
+  “MODEL OUTPUT (SIMULATION)” label on the Monte Carlo result and clearer model wording.
 
 ## [2.0.2] — 2026-10-14
 

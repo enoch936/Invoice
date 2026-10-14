@@ -1,6 +1,6 @@
 import "./app.js";
 import "./site.js";
-import { positionSize, rMultiples, breakevenWinRate, expectancyR, kelly, liquidationPrice, monteCarlo } from "./quant.js";
+import { positionSize, rMultiples, breakevenWinRate, expectancyR, kelly, liquidationPrice, monteCarlo, backtestEmaCross, atr, historicalVolatility } from "./quant.js";
 
 const $ = (id) => document.getElementById(id);
 const val = (form, name) => Number(form.elements[name]?.value);
@@ -30,6 +30,7 @@ function calcSize() {
 function calcLiq() {
   const f = $("liq-form");
   const lev = val(f, "leverage"), entry = val(f, "lentry"), side = f.elements.side.value, mmr = val(f, "mmr") / 100;
+  if (!(entry > 0)) { set("liq-result", "—"); set("liq-detail", "Enter an entry price (or load the live price above) and a leverage of at least 1."); return; }
   const price = liquidationPrice({ entry, leverage: lev, side, mmr });
   set("liq-result", fmt(price));
   set("liq-detail", Number.isFinite(price) ? `≈ ${fmt(Math.abs(price - entry) / entry * 100)}% against your entry. Exchanges use different formulas; always verify on your venue.` : "Enter an entry price and leverage of at least 1.");
@@ -79,3 +80,125 @@ for (const [id, fn] of Object.entries(run)) {
   fn();
 }
 let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(calcMc, 150); });
+
+// ---------------------------------------------------------------- live market data
+// Real Binance candles measured into the calculators below. Never simulated, never pre-filled.
+const MARKET_SYMBOLS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "DOGEUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "TRXUSDT", "POLUSDT"];
+const MARKET_HOSTS = ["https://data-api.binance.vision", "https://api.binance.com"];
+
+async function fetchKlines(symbol, interval = "1h", limit = 500) {
+  let lastErr;
+  for (const host of MARKET_HOSTS) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 6000);
+        const res = await fetch(`${host}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`, { signal: ctrl.signal });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = (await res.json())
+          .map((k) => ({ time: k[0], open: +k[1], high: +k[2], low: +k[3], close: +k[4], volume: +k[5] }))
+          .filter((c) => [c.open, c.high, c.low, c.close].every(Number.isFinite));
+        if (data.length < 60) throw new Error("short series");
+        return data;
+      } catch (e) { lastErr = e; await new Promise((r) => setTimeout(r, 400 * (attempt + 1))); }
+    }
+  }
+  throw lastErr;
+}
+
+function tile(k, v) {
+  const d = document.createElement("div");
+  d.className = "stat";
+  d.append(Object.assign(document.createElement("span"), { textContent: k }), Object.assign(document.createElement("strong"), { textContent: String(v) }));
+  return d;
+}
+
+let marketData = null;
+
+async function loadMarket() {
+  const status = $("market-status"), stats = $("market-stats"), actions = $("market-actions");
+  if (!status || !stats) return;
+  const symbol = $("market-symbol")?.value || "BTCUSDT";
+  status.classList.remove("warn");
+  status.textContent = "Loading live " + symbol + " candles from Binance…";
+  actions.hidden = true;
+  $("market-load").disabled = true;
+  try {
+    const candles = await fetchKlines(symbol, "1h", 500);
+    const closes = candles.map((c) => c.close);
+    const price = candles[candles.length - 1].close;
+    const atrArr = atr(candles, 14), atrLast = atrArr[atrArr.length - 1];
+    const volArr = historicalVolatility(closes, { period: 24, periodsPerYear: 24 * 365 }), vol = volArr[volArr.length - 1];
+    const bt = backtestEmaCross(candles, { fast: 9, slow: 21 });
+    const m = bt?.stats, trades = bt?.trades ?? [];
+    const wins = trades.filter((x) => x.returnPct > 0), losses = trades.filter((x) => x.returnPct <= 0);
+    const avgWin = wins.length ? wins.reduce((a, x) => a + x.returnPct, 0) / wins.length : NaN;
+    const avgLoss = losses.length ? Math.abs(losses.reduce((a, x) => a + x.returnPct, 0) / losses.length) : NaN;
+    const rr = avgLoss > 0 ? avgWin / avgLoss : NaN;
+    marketData = { symbol, price, atr: atrLast, vol, winRate: m?.winRate, rr, trades: trades.length, expectancyPct: m?.expectancyPct };
+    const dp = price < 10 ? 4 : 2;
+    stats.replaceChildren(
+      tile("Last price (USD)", fmt(price, price < 10 ? 6 : 2)),
+      tile("ATR(14)", Number.isFinite(atrLast) ? `${fmt(atrLast, atrLast < 10 ? 4 : 2)} (${fmt((atrLast / price) * 100, 2)}%)` : "—"),
+      tile("Realised volatility (annualised)", Number.isFinite(vol) ? fmt(vol, 1) + "%" : "—"),
+      tile("Backtest trades", String(trades.length)),
+      tile("Measured win rate", Number.isFinite(m?.winRate) ? fmt(m.winRate, 1) + "%" : "—"),
+      tile("Measured reward:risk", Number.isFinite(marketData.rr) ? fmt(marketData.rr, 2) : "—"),
+      tile("Expectancy / trade", Number.isFinite(m?.expectancyPct) ? fmt(m.expectancyPct, 3) + "%" : "—"),
+    );
+    const when = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    status.textContent = `Live market data from Binance public API — ${symbol} 1h, ${candles.length} candles, loaded ${when}. Real prices, no substitutes.`;
+    actions.hidden = false;
+  } catch {
+    marketData = null;
+    stats.replaceChildren();
+    const offline = navigator.onLine === false;
+    status.textContent = `Could not load live data — ${offline ? "you appear to be offline" : "the market feed is blocked, rate limited or unreachable"}. Real prices only: no simulated or substitute numbers are shown. Enter your own values below.`;
+    status.classList.add("warn");
+  } finally {
+    $("market-load").disabled = false;
+  }
+}
+
+function useLivePriceForSize() {
+  if (!marketData) return;
+  const f = $("size-form"), p = marketData.price, atrLast = marketData.atr;
+  const dp = p < 10 ? 4 : 2;
+  const stop = Number.isFinite(atrLast) && atrLast > 0 ? Math.max(0, p - 1.5 * atrLast) : p * 0.98;
+  f.elements.entry.value = String(Number(p.toFixed(dp)));
+  f.elements.stop.value = String(Number(stop.toFixed(stop < 10 ? 4 : 2)));
+  f.elements.target.value = "";
+  const lf = $("liq-form");
+  if (lf?.elements.lentry) lf.elements.lentry.value = String(Number(p.toFixed(dp)));
+  calcSize(); calcLiq(); syncUrl();
+  scrollTo0("size-form");
+}
+
+function useMeasuredEdge() {
+  if (!marketData || !Number.isFinite(marketData.winRate) || !Number.isFinite(marketData.rr)) return;
+  const win = Math.round(marketData.winRate * 10) / 10, rr = Math.round(marketData.rr * 100) / 100;
+  for (const id of ["edge-form", "mc-form"]) {
+    const f = $(id); if (!f) continue;
+    if (f.elements.win) f.elements.win.value = String(win);
+    if (f.elements.rr) f.elements.rr.value = String(rr);
+  }
+  calcEdge(); calcMc(); syncUrl();
+  scrollTo0("mc-form");
+}
+
+function scrollTo0(id) {
+  const el = $(id)?.closest(".calculator-card") || $(id);
+  try { el?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { /* ignore */ }
+}
+
+const marketSel = $("market-symbol");
+if (marketSel) {
+  MARKET_SYMBOLS.forEach((s) => marketSel.add(new Option(s.replace("USDT", "/USDT"), s)));
+  marketSel.addEventListener("change", loadMarket);
+  $("market-load").addEventListener("click", loadMarket);
+  $("use-market-prices").addEventListener("click", useLivePriceForSize);
+  $("use-market-edge").addEventListener("click", useMeasuredEdge);
+  loadMarket();
+}
+

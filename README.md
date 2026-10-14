@@ -15,7 +15,7 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - Print-friendly documents (choose **Print → Save as PDF**)
 - Privacy notice and terms of use pages, with contact details
 - **Money planner:** tax set-aside, compound growth with year-by-year table, retainer vs hourly, CAGR
-- **Trading risk suite:** position size, liquidation price, break-even win rate, expectancy, Kelly, and a seeded 1,000-path Monte Carlo fan chart (educational, not advice)
+- **Trading risk suite:** position size, liquidation price, break-even win rate, expectancy, Kelly, and a seeded 1,000-path Monte Carlo fan chart (educational, not advice). A **live market data** panel pulls real Binance candles and measures the actual win rate / reward:risk of a simple EMA-crossover rule, then loads those real numbers into the tools — no simulated or pre-filled prices.
 - **Student toolkit:** GPA calculator and required-GPA grade planner
 - Installable PWA with offline support (manifest + service worker)
 - Consent banner, affiliate registry, ad slots and email/tip/premium CTAs (all off until configured)
@@ -26,7 +26,7 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - **Rest & Remembrance:** sanitized `?name=&dates=&message=&theme=` memorial pages with candle animation and share card
 - **Advanced math:** scientific calculator, descriptive statistics, correlation, linear/polynomial regression, Welch/paired t-tests, chi-square, a function plotter (numeric derivative + integral), 2×2–n×n matrix arithmetic and base converter
 - **Money planner upgrades:** fixed-rate loan amortization with a yearly schedule, VAT/sales-tax add-or-extract, margin vs markup and break-even volume
-- **Crypto profit calculators:** programmatically generated `profit-<coin>.html` pages (BTC, ETH, SOL, XRP, ADA, DOGE, BNB, LTC, DOT, MATIC, LINK, TRX) with net P/L after fees, ROI, break-even price and a what-if table — plus a one-click **live price** from Binance's public API (no key, no tracking)
+- **Crypto profit calculators:** programmatically generated `profit-<coin>.html` pages (BTC, ETH, SOL, XRP, ADA, DOGE, BNB, LTC, DOT, MATIC, LINK, TRX) with net P/L after fees, ROI, break-even price and a what-if table. Fields start **empty** (no example prices) and a one-click **live price** from Binance's public API (no key, no tracking) fills the next empty price field
 - **Custom 404 page** (`404.html`) that GitHub Pages serves automatically, with a command-palette search trigger and links to every major tool
 - **Command palette** (⌘K / Ctrl-K, or `/`) to jump between every tool and action
 - **Viral share cards:** canvas-rendered, branded PNGs generated locally and shared via the Web Share API

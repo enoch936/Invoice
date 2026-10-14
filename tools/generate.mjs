@@ -135,7 +135,6 @@ function coinPage(c) {
   const title = `${c.name} Profit Calculator (${c.symbol}): Fees, ROI & Break-even — PARCHXA`;
   const description = `Work out your ${c.name} (${c.symbol}) profit or loss in USD, including trading fees, percentage return and the break-even sell price. Free, private, runs in your browser.`;
   const canonical = `profit-${c.slug}.html`;
-  const exitDefault = Math.round(c.entry * 1.25 * 100) / 100;
   const related = c.related.filter((s) => bySlug[s]).map((s) => {
     const r = bySlug[s];
     return `<a href="profit-${r.slug}.html">${r.name} (${r.symbol}) profit</a>`;
@@ -143,7 +142,7 @@ function coinPage(c) {
 
   const faq = [
     { q: `How do I calculate profit on ${c.name} (${c.symbol})?`, a: `Subtract your total cost from your total proceeds. This page uses (sell price − buy price) × quantity, then removes estimated fees on both sides, and shows the net result and the percentage return.` },
-    { q: `Does this use a live ${c.symbol} price?`, a: "Only if you ask it to. You normally enter your own buy and sell prices so the result matches exactly what you paid and received. The optional “Use live price” button fills the current ${c.symbol} market price from Binance's public API so you can start from today's quote." },
+    { q: `Does this use a live ${c.symbol} price?`, a: `Only if you ask it to, and nothing is pre-filled. You enter your own buy and sell prices so the result matches exactly what you paid and received. The optional “Use live price” button fills the next empty price field with the current ${c.symbol} market price from Binance's public API so you can start from today's quote, then adjust it to your own trade.` },
     { q: "What fees should I include?", a: "Exchange maker/taker fees, any spread you paid, and network or withdrawal fees if you moved the coins. A round-trip estimate is usually enough for planning; check your own trade history for exact figures." },
     { q: "How is the break-even sell price calculated?", a: "It is the sell price at which net profit after fees is zero, so it sits above your buy price by roughly the round-trip fee. Trading exactly at break-even still loses nothing but earns nothing." },
     { q: "Is this tax advice?", a: "No. Capital-gains rules vary by country and holding period, and many jurisdictions treat each disposal separately. Use these numbers as a starting point and confirm with a qualified professional." },
@@ -170,9 +169,9 @@ ${HEADER}
 <div class="page-intro"><a class="back-link" href="profit.html">← All profit calculators</a><p class="eyebrow">CRYPTO PROFIT / ${c.symbol}</p><h1>${c.name} (${c.symbol}) profit <span class="text-gradient">calculator</span></h1><p>Enter your buy price, sell price and quantity to see net profit or loss in USD after fees, your return and the break-even sell price — using ${c.tagline}.</p></div>
 <form class="calculator-card calc-form" data-coin="${esc(c.name)}" data-symbol="${esc(c.symbol)}" data-slug="${esc(c.slug)}" novalidate>
   <div class="form-row">
-    <label>Buy price (USD)<input name="entry" id="entry" type="number" min="0" step="any" value="${c.entry}" required></label>
-    <label>Sell price (USD)<input name="exit" id="exit" type="number" min="0" step="any" value="${exitDefault}" required></label>
-    <label>Quantity (${c.symbol})<input name="quantity" id="quantity" type="number" min="0" step="any" value="1" required></label>
+    <label>Buy price (USD)<input name="entry" id="entry" type="number" min="0" step="any" placeholder="0.00" required></label>
+    <label>Sell price (USD)<input name="exit" id="exit" type="number" min="0" step="any" placeholder="0.00" required></label>
+    <label>Quantity (${c.symbol})<input name="quantity" id="quantity" type="number" min="0" step="any" placeholder="0" required></label>
     <label>Trading fees round trip (%)<input name="fee" id="fee" type="number" min="0" max="25" step="0.01" value="0.1"></label>
     <label>Direction<select name="side" id="side"><option value="long">Long (buy then sell)</option><option value="short">Short (sell then buy)</option></select></label>
   </div>
