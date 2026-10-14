@@ -972,3 +972,237 @@ export function chiSquareGoodness(observed, expected) {
   const df = o.length - 1;
   return { chi2, df, p: 1 - chiSquareCdf(chi2, df), expected: e };
 }
+
+// ============================================================
+// Chart transforms & terminal indicators
+// Pure, deterministic, NaN-safe. These power the charting terminal
+// (js/terminal/indicators.js) and are unit-tested in tests/quant.test.mjs.
+// ============================================================
+
+/**
+ * EMA that tolerates leading NaN values (e.g. the EMA of an EMA).
+ * Seeding begins at the first index with a full window of finite values.
+ */
+function emaFinite(values, period) {
+  const out = new Array(values?.length ?? 0).fill(NaN);
+  if (!Array.isArray(values) || !(period >= 1)) return out;
+  const k = 2 / (period + 1);
+  let prev = NaN, sum = 0, seen = 0;
+  for (let i = 0; i < values.length; i++) {
+    const v = Number(values[i]);
+    if (!Number.isFinite(v)) { continue; }
+    if (seen < period) {
+      sum += v; seen++;
+      if (seen === period) { prev = sum / period; out[i] = prev; }
+      continue;
+    }
+    prev = v * k + prev * (1 - k);
+    out[i] = prev;
+  }
+  return out;
+}
+
+/** Double EMA (DEMA) = 2·EMA − EMA(EMA). Lag-reduced moving average. */
+export function dema(values, period) {
+  const e1 = emaFinite(values, period), e2 = emaFinite(e1, period);
+  return e1.map((v, i) => (Number.isFinite(v) && Number.isFinite(e2[i]) ? 2 * v - e2[i] : NaN));
+}
+
+/** Triple EMA (TEMA) = 3·EMA − 3·EMA(EMA) + EMA(EMA(EMA)). */
+export function tema(values, period) {
+  const e1 = emaFinite(values, period), e2 = emaFinite(e1, period), e3 = emaFinite(e2, period);
+  return e1.map((v, i) => (Number.isFinite(v) && Number.isFinite(e2[i]) && Number.isFinite(e3[i]) ? 3 * v - 3 * e2[i] + e3[i] : NaN));
+}
+
+/**
+ * Heikin-Ashi transform of source candles. The result is a *derived* series —
+ * it is NOT exchange-reported OHLC and must be labelled as such in the UI.
+ */
+export function heikinAshi(candles) {
+  const a = Array.isArray(candles) ? candles : [];
+  const out = [];
+  let prevOpen = NaN, prevClose = NaN;
+  for (let i = 0; i < a.length; i++) {
+    const c = a[i];
+    if (![c.open, c.high, c.low, c.close].every(Number.isFinite)) { out.push(null); continue; }
+    const close = (c.open + c.high + c.low + c.close) / 4;
+    const open = !Number.isFinite(prevOpen) ? (c.open + c.close) / 2 : (prevOpen + prevClose) / 2;
+    out.push({
+      time: c.time, open, close,
+      high: Math.max(c.high, open, close),
+      low: Math.min(c.low, open, close),
+      volume: Number.isFinite(c.volume) ? c.volume : 0,
+    });
+    prevOpen = open; prevClose = close;
+  }
+  return out;
+}
+
+/**
+ * Renko bricks derived from close prices (deterministic, documented algorithm).
+ * When `boxSize` <= 0 it is derived from the average true range of the source.
+ * A single box reverses direction (1-box reversal). `time` is the source candle time.
+ */
+export function renko(candles, { boxSize = 0, period = 14 } = {}) {
+  const a = Array.isArray(candles) ? candles.filter((c) => Number.isFinite(c.close)) : [];
+  if (a.length < 2) return [];
+  let s = num(boxSize);
+  if (!(s > 0)) {
+    const at = atr(a, Math.min(Math.max(2, period), Math.max(2, a.length - 1))).filter(Number.isFinite);
+    s = at.length ? at.reduce((x, y) => x + y, 0) / at.length : 0;
+  }
+  if (!(s > 0)) return [];
+  const bricks = [];
+  let base = a[0].close;
+  for (let i = 1; i < a.length; i++) {
+    const p = a[i].close;
+    for (let guard = 0; p >= base + s && guard < 10000; guard++) {
+      const close = base + s;
+      bricks.push({ time: a[i].time, open: base, high: close, low: base, close, dir: 1 });
+      base = close;
+    }
+    for (let guard = 0; p <= base - s && guard < 10000; guard++) {
+      const close = base - s;
+      bricks.push({ time: a[i].time, open: base, high: base, low: close, close, dir: -1 });
+      base = close;
+    }
+  }
+  return bricks;
+}
+
+/** Commodity Channel Index: (TP − SMA(TP)) / (0.015 · mean deviation). */
+export function cci(candles, period = 20) {
+  const n = candles?.length ?? 0, out = new Array(n).fill(NaN);
+  if (!Array.isArray(candles) || n < period) return out;
+  const tp = candles.map((c) => ((Number.isFinite(c.high) ? c.high : c.close) + (Number.isFinite(c.low) ? c.low : c.close) + c.close) / 3);
+  const m = sma(tp, period);
+  for (let i = period - 1; i < n; i++) {
+    let dev = 0;
+    for (let j = i - period + 1; j <= i; j++) dev += Math.abs(tp[j] - m[i]);
+    dev /= period;
+    out[i] = dev > 0 ? (tp[i] - m[i]) / (0.015 * dev) : 0;
+  }
+  return out;
+}
+
+/** Williams %R, ranged −100..0 (0 = close at the period high). */
+export function williamsR(candles, period = 14) {
+  const n = candles?.length ?? 0, out = new Array(n).fill(NaN);
+  if (!Array.isArray(candles) || n < period) return out;
+  for (let i = period - 1; i < n; i++) {
+    let hi = -Infinity, lo = Infinity;
+    for (let j = i - period + 1; j <= i; j++) { hi = Math.max(hi, candles[j].high); lo = Math.min(lo, candles[j].low); }
+    out[i] = hi > lo ? ((hi - candles[i].close) / (hi - lo)) * -100 : -50;
+  }
+  return out;
+}
+
+/** Rate of change over `period` bars, in percent. */
+export function roc(values, period = 12) {
+  const n = values?.length ?? 0, out = new Array(n).fill(NaN);
+  if (!Array.isArray(values) || n <= period) return out;
+  for (let i = period; i < n; i++) out[i] = Number.isFinite(values[i]) && values[i - period] ? ((values[i] / values[i - period]) - 1) * 100 : NaN;
+  return out;
+}
+
+/** Absolute momentum over `period` bars (price difference). */
+export function momentum(values, period = 10) {
+  const n = values?.length ?? 0, out = new Array(n).fill(NaN);
+  if (!Array.isArray(values) || n <= period) return out;
+  for (let i = period; i < n; i++) out[i] = values[i] - values[i - period];
+  return out;
+}
+
+/** Accumulation/Distribution line (cumulative money-flow volume). */
+export function accumulationDistribution(candles) {
+  const n = candles?.length ?? 0, out = new Array(n).fill(NaN);
+  if (!Array.isArray(candles) || !n) return out;
+  let acc = 0;
+  for (let i = 0; i < n; i++) {
+    const c = candles[i], range = c.high - c.low;
+    const mfm = range > 0 ? ((c.close - c.low) - (c.high - c.close)) / range : 0;
+    acc += mfm * (Number.isFinite(c.volume) ? c.volume : 0);
+    out[i] = acc;
+  }
+  return out;
+}
+
+/** Chaikin Money Flow: period-sum of money-flow volume over period-sum of volume. */
+export function chaikinMoneyFlow(candles, period = 20) {
+  const n = candles?.length ?? 0, out = new Array(n).fill(NaN);
+  if (!Array.isArray(candles) || n < period) return out;
+  const mfv = candles.map((c) => {
+    const range = c.high - c.low;
+    const mfm = range > 0 ? ((c.close - c.low) - (c.high - c.close)) / range : 0;
+    return mfm * (Number.isFinite(c.volume) ? c.volume : 0);
+  });
+  for (let i = period - 1; i < n; i++) {
+    let sf = 0, sv = 0;
+    for (let j = i - period + 1; j <= i; j++) { sf += mfv[j]; sv += Number.isFinite(candles[j].volume) ? candles[j].volume : 0; }
+    out[i] = sv > 0 ? sf / sv : 0;
+  }
+  return out;
+}
+
+/** Anchored VWAP starting at `startIndex` (cumulative from the anchor). */
+export function anchoredVwap(candles, startIndex = 0) {
+  const n = candles?.length ?? 0, out = new Array(n).fill(NaN);
+  if (!Array.isArray(candles) || !n) return out;
+  let pv = 0, vv = 0;
+  for (let i = Math.max(0, startIndex | 0); i < n; i++) {
+    const c = candles[i];
+    const tp = ((Number.isFinite(c.high) ? c.high : c.close) + (Number.isFinite(c.low) ? c.low : c.close) + c.close) / 3;
+    const v = Number.isFinite(c.volume) ? c.volume : 0;
+    pv += tp * v; vv += v;
+    out[i] = vv > 0 ? pv / vv : tp;
+  }
+  return out;
+}
+
+/**
+ * Pivot swing highs/lows. Index i is a swing high when high[i] is the strict max
+ * of the window [i−left, i+right]. Returns index lists for annotation/market-structure.
+ */
+export function swingPoints(candles, { left = 2, right = 2 } = {}) {
+  const a = Array.isArray(candles) ? candles : [];
+  const highs = [], lows = [];
+  const L = Math.max(1, Math.abs(left | 0)), R = Math.max(1, Math.abs(right | 0));
+  for (let i = L; i < a.length - R; i++) {
+    let isHigh = true, isLow = true;
+    for (let j = i - L; j <= i + R; j++) {
+      if (j === i) continue;
+      if (a[j].high >= a[i].high) isHigh = false;
+      if (a[j].low <= a[i].low) isLow = false;
+    }
+    if (isHigh) highs.push(i);
+    if (isLow) lows.push(i);
+  }
+  return { highs, lows };
+}
+
+/**
+ * Least-squares regression channel over the whole series, with ± `mult` ×
+ * standard-error bands. A single regression fit, drawn across the visible range.
+ */
+export function regressionChannel(values, { mult = 2 } = {}) {
+  const a = Array.isArray(values) ? values.map(Number) : [];
+  const n = a.length;
+  const middle = new Array(n).fill(NaN), upper = new Array(n).fill(NaN), lower = new Array(n).fill(NaN);
+  const res = { middle, upper, lower, slope: NaN, intercept: NaN, r2: NaN };
+  const pts = [];
+  for (let i = 0; i < n; i++) if (Number.isFinite(a[i])) pts.push([i, a[i]]);
+  if (pts.length < 2) return res;
+  const mx = mean(pts.map((p) => p[0])), my = mean(pts.map((p) => p[1]));
+  let sxy = 0, sxx = 0, syy = 0;
+  for (const [x, y] of pts) { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; syy += (y - my) ** 2; }
+  if (!(sxx > 0)) return res;
+  const slope = sxy / sxx, intercept = my - slope * mx;
+  let se = 0;
+  for (const [x, y] of pts) se += (y - (intercept + slope * x)) ** 2;
+  se = Math.sqrt(se / Math.max(1, pts.length - 2));
+  for (let i = 0; i < n; i++) {
+    const m = intercept + slope * i;
+    middle[i] = m; upper[i] = m + mult * se; lower[i] = m - mult * se;
+  }
+  return { middle, upper, lower, slope, intercept, r2: syy > 0 ? (sxy * sxy) / (sxx * syy) : NaN };
+}

@@ -161,3 +161,43 @@ const chi2 = q.chiSquareGoodness([40, 10, 10]);
 assert.ok(chi2.chi2 > 0 && chi2.p < 0.001);
 close(q.incompleteBeta(1, 1, 0.5), 0.5, 1e-9);
 console.log("inferential stats tests passed");
+
+// ---- chart transforms & terminal indicators ----
+const ha1 = q.heikinAshi([{ time: 1, open: 10, high: 12, low: 9, close: 11 }]);
+close(ha1[0].open, 10.5); close(ha1[0].close, 10.5); close(ha1[0].high, 12); close(ha1[0].low, 9);
+const ha2 = q.heikinAshi([{ time: 1, open: 10, high: 12, low: 9, close: 11 }, { time: 2, open: 11, high: 13, low: 10, close: 12 }]);
+close(ha2[1].close, 11.5); close(ha2[1].open, 10.5); close(ha2[1].high, 13); close(ha2[1].low, 10);
+assert.deepEqual(q.heikinAshi([]), []);
+
+const rk = q.renko([
+  { time: 1, open: 10, high: 11, low: 9, close: 10 },
+  { time: 2, open: 10, high: 13, low: 10, close: 12 },
+  { time: 3, open: 12, high: 15, low: 12, close: 14 },
+], { boxSize: 2 });
+assert.equal(rk.length, 2); // 10 → 12 → 14
+assert.ok(rk.every((b) => b.dir === 1));
+close(rk[0].open, 10); close(rk[0].close, 12); close(rk[1].open, 12); close(rk[1].close, 14);
+assert.ok(rk.every((b) => Math.abs(Math.abs(b.close - b.open) - 2) < 1e-9));
+assert.deepEqual(q.renko([{ time: 1, open: 1, high: 1, low: 1, close: 1 }]), []);
+
+close(q.dema(Array.from({ length: 60 }, () => 5), 10).at(-1), 5); // DEMA of a constant is that constant
+// TEMA needs a three-stage warm-up, so early values are NaN and late values are finite.
+assert.ok(Number.isNaN(q.tema(Array.from({ length: 60 }, (_, i) => i + 1), 10)[5]));
+assert.ok(Number.isFinite(q.tema(Array.from({ length: 90 }, (_, i) => i + 1), 10).at(-1)));
+
+const cciSeries = q.cci(demo, 20);
+assert.ok(Number.isFinite(cciSeries.at(-1)));
+const wr = q.williamsR(demo, 14);
+assert.ok(wr.at(-1) <= 0 && wr.at(-1) >= -100);
+close(q.roc([10, 11, 12, 13], 1)[3], 13 / 12 * 100 - 100, 1e-9);
+close(q.momentum([10, 11, 12, 13], 2)[3], 2);
+assert.ok(Number.isFinite(q.accumulationDistribution(demo).at(-1)));
+assert.ok(Number.isFinite(q.chaikinMoneyFlow(demo, 20).at(-1)));
+assert.ok(Number.isFinite(q.anchoredVwap(demo, 0).at(-1)));
+const sw = q.swingPoints(demo, { left: 2, right: 2 });
+assert.ok(Array.isArray(sw.highs) && Array.isArray(sw.lows));
+for (const i of sw.highs) assert.ok(i >= 2 && i < demo.length - 2);
+const rc = q.regressionChannel(demo.map((c) => c.close), { mult: 2 });
+assert.ok(Number.isFinite(rc.slope) && rc.middle.every(Number.isFinite) && rc.upper[10] > rc.middle[10] && rc.lower[10] < rc.middle[10]);
+assert.ok(Number.isFinite(rc.r2) && rc.r2 >= 0 && rc.r2 <= 1);
+console.log("chart transform & terminal indicator tests passed");
