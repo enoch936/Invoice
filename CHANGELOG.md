@@ -3,6 +3,27 @@
 All notable changes to the PARCHXA toolkit are documented here.
 The project is a zero-build static site; "releases" are just commits to `main`.
 
+## [2.0.1] — 2026-10-14
+
+### Added
+
+- **Real social preview image:** `icons/og.png` (1200×630) rendered by the new dependency-free
+  `tools/og-image.mjs` (built-in 5×7 bitmap font + a minimal PNG encoder over `zlib`). Replaces the
+  SVG placeholder, which most crawlers ignore.
+- **`tools/apply-og.mjs`:** idempotent codemod that adds `og:image` / `twitter:image` to every page
+  and upgrades `twitter:card` to `summary_large_image`. Runs in `--check` mode in CI via
+  `tools/verify.mjs`.
+
+### Changed
+
+- `package.json`, `tools/og-image.mjs` and the toolchain docs now cover four generators/verifiers.
+- `tools/verify.mjs` also validates OG-image tags and that each referenced image file exists.
+- Service worker cache bumped to `parchxa-v5` (caches `icons/og.png`).
+
+### Removed
+
+- `icons/og.svg` (superseded by the generated PNG).
+
 ## [2.0.0] — 2026-10-14
 
 A large depth-and-quality pass: a much bigger math/risk engine, a new advanced-math tool, deeper

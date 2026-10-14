@@ -118,8 +118,8 @@ function head({ title, description, canonical, jsonld, script }) {
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0b1120">
 ${SECURITY_META}
-<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:url" content="${url}"><meta property="og:image" content="${ORIGIN}/icons/og.svg">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="${description}"><meta name="twitter:image" content="${ORIGIN}/icons/og.svg">
+<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:url" content="${url}"><meta property="og:image" content="${ORIGIN}/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PARCHXA Toolkit — free tools for independent work">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="${description}"><meta name="twitter:image" content="${ORIGIN}/icons/og.png">
 <link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css">
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 <script type="module" src="${script}"></script>`;

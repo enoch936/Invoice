@@ -32,11 +32,12 @@ for (const file of jsFiles) {
   const res = spawnSync(process.execPath, ["--check", join("js", file)], { cwd: ROOT, stdio: "inherit" });
   if (res.status !== 0) failures.push(`syntax error in js/${file}`);
 }
-for (const file of ["sw.js", "tools/generate.mjs", "tools/apply-head.mjs", "tools/verify.mjs", "tools/csp.mjs"]) {
+const toolFiles = readdirSync(join(ROOT, "tools")).filter((f) => f.endsWith(".mjs")).sort();
+for (const file of ["sw.js", ...toolFiles.map((f) => join("tools", f))]) {
   const res = spawnSync(process.execPath, ["--check", file], { cwd: ROOT, stdio: "inherit" });
   if (res.status !== 0) failures.push(`syntax error in ${file}`);
 }
-console.log(`  checked ${jsFiles.length} js files + service worker + tools`);
+console.log(`  checked ${jsFiles.length} js files, service worker, ${toolFiles.length} tools`);
 
 // 2. tests
 step("Running unit tests");
@@ -50,13 +51,19 @@ if (!runNode(["tools/generate.mjs", "--check"])) failures.push("generated pages/
 step("Checking security meta on every page");
 if (!runNode(["tools/apply-head.mjs", "--check"])) failures.push("pages missing the security meta");
 
-// 5-7. per-page static checks
-step("Checking local assets, JSON-LD and sitemap coverage");
+// 5. social preview image
+step("Checking social preview tags on every page");
+if (!runNode(["tools/apply-og.mjs", "--check"])) failures.push("pages missing social preview tags");
+
+// 6-9. per-page static checks
+step("Checking local assets, JSON-LD, OG images and sitemap coverage");
 const pages = readdirSync(ROOT).filter((f) => f.endsWith(".html")).sort();
 const PRIVATE = new Set(["offline.html"]);
+const ORIGIN = "https://enoch936.github.io/Invoice";
 const sitemap = existsSync(join(ROOT, "sitemap.xml")) ? readFileSync(join(ROOT, "sitemap.xml"), "utf8") : "";
 const ldJsonRe = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;
 const attrRe = /\b(?:href|src)\s*=\s*"([^"]+)"/g;
+const imageRe = /<meta (?:property="og:image"|name="twitter:image") content="([^"]+)"/g;
 
 for (const page of pages) {
   const html = readFileSync(join(ROOT, page), "utf8");
@@ -72,6 +79,13 @@ for (const page of pages) {
   for (const match of html.matchAll(ldJsonRe)) {
     try { JSON.parse(match[1]); }
     catch (error) { failures.push(`${page}: invalid JSON-LD (${error.message})`); }
+  }
+
+  for (const match of html.matchAll(imageRe)) {
+    let value = match[1].trim();
+    if (value.startsWith(ORIGIN)) value = value.slice(ORIGIN.length).replace(/^\//, "");
+    else if (/^[a-z][a-z0-9+.-]*:/i.test(value)) continue; // external URL — not our asset
+    if (!existsSync(resolve(ROOT, value))) failures.push(`${page}: missing OG image ${match[1]}`);
   }
 
   if (!PRIVATE.has(page) && !sitemap.includes(`/${page === "index.html" ? "" : page}</loc>`)) {

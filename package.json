@@ -17,6 +17,8 @@
     "test": "node tests/quant.test.mjs",
     "generate": "node tools/generate.mjs",
     "head": "node tools/apply-head.mjs",
+    "ogimage": "node tools/og-image.mjs",
+    "ogmeta": "node tools/apply-og.mjs",
     "verify": "node tools/verify.mjs",
     "serve": "node tools/serve.mjs"
   }
