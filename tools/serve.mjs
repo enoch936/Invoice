@@ -34,8 +34,15 @@ createServer(async (req, res) => {
   const clean = decodeURIComponent(pathname).replace(/\/$/, "/index.html");
   const file = fileFor(clean) || fileFor(clean + ".html") || fileFor(clean + "/index.html");
   if (!file) {
-    res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
-    res.end("404 Not found");
+    // Mirror GitHub Pages: serve the custom 404 page when it exists, else a plain 404.
+    const notFound = fileFor("/404.html");
+    if (notFound) {
+      res.writeHead(404, { "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });
+      res.end(await readFile(notFound));
+    } else {
+      res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
+      res.end("404 Not found");
+    }
     return;
   }
   try {
