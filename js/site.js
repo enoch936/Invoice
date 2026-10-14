@@ -7,6 +7,7 @@ import { NAV } from "./nav.js";
 import { track, observeWebVitals, observeScrollDepth, trackClicks } from "./analytics.js";
 import { initCommandPalette } from "./command-palette.js";
 import { wireShareCards } from "./sharecard.js";
+import "./ui.js";
 
 const CONSENT_KEY = "parchxa.consent.v1";
 
