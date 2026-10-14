@@ -58,7 +58,7 @@ if (!runNode(["tools/apply-og.mjs", "--check"])) failures.push("pages missing so
 // 6-9. per-page static checks
 step("Checking local assets, JSON-LD, OG images and sitemap coverage");
 const pages = readdirSync(ROOT).filter((f) => f.endsWith(".html")).sort();
-const PRIVATE = new Set(["offline.html"]);
+const PRIVATE = new Set(["offline.html", "404.html"]);
 const ORIGIN = "https://enoch936.github.io/Invoice";
 const sitemap = existsSync(join(ROOT, "sitemap.xml")) ? readFileSync(join(ROOT, "sitemap.xml"), "utf8") : "";
 const ldJsonRe = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;

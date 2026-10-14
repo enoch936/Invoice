@@ -143,7 +143,7 @@ function coinPage(c) {
 
   const faq = [
     { q: `How do I calculate profit on ${c.name} (${c.symbol})?`, a: `Subtract your total cost from your total proceeds. This page uses (sell price − buy price) × quantity, then removes estimated fees on both sides, and shows the net result and the percentage return.` },
-    { q: `Does this use a live ${c.symbol} price?`, a: "No. You enter your own buy and sell prices so the result is exactly what you paid and received. That avoids relying on a delayed or exchange-specific quote." },
+    { q: `Does this use a live ${c.symbol} price?`, a: "Only if you ask it to. You normally enter your own buy and sell prices so the result matches exactly what you paid and received. The optional “Use live price” button fills the current ${c.symbol} market price from Binance's public API so you can start from today's quote." },
     { q: "What fees should I include?", a: "Exchange maker/taker fees, any spread you paid, and network or withdrawal fees if you moved the coins. A round-trip estimate is usually enough for planning; check your own trade history for exact figures." },
     { q: "How is the break-even sell price calculated?", a: "It is the sell price at which net profit after fees is zero, so it sits above your buy price by roughly the round-trip fee. Trading exactly at break-even still loses nothing but earns nothing." },
     { q: "Is this tax advice?", a: "No. Capital-gains rules vary by country and holding period, and many jurisdictions treat each disposal separately. Use these numbers as a starting point and confirm with a qualified professional." },
@@ -177,7 +177,8 @@ ${HEADER}
     <label>Direction<select name="side" id="side"><option value="long">Long (buy then sell)</option><option value="short">Short (sell then buy)</option></select></label>
   </div>
   <div class="result-panel" aria-live="polite"><span>NET PROFIT / LOSS (USD)</span><strong id="out">—</strong><p id="detail"></p></div>
-  <div class="actions-row"><button type="button" id="swap-prices" class="button button-secondary button-small">Swap buy / sell</button><button type="button" class="button button-secondary button-small" data-share-card="profit-${esc(c.slug)}" data-share-headline="${esc(c.symbol)} P/L">Create share card</button></div>
+  <div class="actions-row"><button type="button" id="live-price" class="button button-secondary button-small">Use live price</button><button type="button" id="swap-prices" class="button button-secondary button-small">Swap buy / sell</button><button type="button" class="button button-secondary button-small" data-share-card="profit-${esc(c.slug)}" data-share-headline="${esc(c.symbol)} P/L">Create share card</button></div>
+  <p class="live-note" id="live-note" role="status" aria-live="polite"></p>
   <div class="table-wrap"><table class="data-table"><thead><tr><th>Sell price</th><th>Net P/L</th><th>Return</th></tr></thead><tbody id="tbl"></tbody></table></div>
 </form>
 <div class="notice"><strong>Estimates only.</strong> Figures exclude spread, slippage, network and withdrawal fees unless you include them, and ignore tax. Not financial or tax advice.</div>
@@ -242,7 +243,7 @@ const PRIMARY_ORDER = [
 ];
 
 function buildSitemap(extraPages = []) {
-  const exclude = new Set(["offline.html"]);
+  const exclude = new Set(["offline.html", "404.html"]);
   const files = new Set([
     ...readdirSync(ROOT).filter((f) => f.endsWith(".html")),
     ...extraPages,

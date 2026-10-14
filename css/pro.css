@@ -81,4 +81,9 @@ body.cmdk-open{overflow:hidden}
 .lead-magnet{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin:30px 0;padding:18px 20px;border:1px solid #b5f36d40;border-radius:16px;background:linear-gradient(120deg,#101827,#0d1a14)}
 .lead-copy h3{margin:0 0 4px;font:700 16px Manrope,sans-serif}.lead-copy p{margin:0;color:var(--muted);font-size:12px}
 
+.live-note{color:var(--muted);font-size:12px;margin:10px 0 0;min-height:1em}
+.live-note.is-error{color:#ff9a9a}
+.cmd-hint{color:var(--muted);font-size:12px;margin-top:14px}
+kbd{font:inherit;font-size:11px;background:#0b1220;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 6px;color:var(--text)}
+
 @media print{.cmdk,.toast-host,.products-wrap,.lead-magnet,.cmd-trigger{display:none!important}}

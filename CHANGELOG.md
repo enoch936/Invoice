@@ -3,6 +3,22 @@
 All notable changes to the PARCHXA toolkit are documented here.
 The project is a zero-build static site; "releases" are just commits to `main`.
 
+## [2.0.2] — 2026-10-14
+
+### Added
+
+- **Custom 404 page** (`404.html`): GitHub Pages serves it for unknown paths. It carries the shared
+  header/nav, a command-palette search trigger (`data-cmdk`), and a grid linking to every major tool.
+  `noindex, follow`; excluded from `sitemap.xml`.
+- **One-click live price on the crypto profit pages:** a “Use live price” button fetches the current
+  ticker from Binance's public API (`data-api.binance.vision`, falling back to `api.binance.com`),
+  handles the MATIC→POL rename, fills the sell price, and reports failures gracefully. The FAQ text
+  for each coin was updated to match.
+
+### Changed
+
+- `tools/verify.mjs` and `tools/generate.mjs` now treat `404.html` as a private page (not sitemapped).
+
 ## [2.0.1] — 2026-10-14
 
 ### Added

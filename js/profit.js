@@ -86,6 +86,55 @@ if (card) {
     card.elements.entry.value = b; card.elements.exit.value = a; compute();
   });
 
+  // Optional live market price (Binance public API; no key, no tracking).
+  // Ticker symbols sometimes differ on an exchange, so a couple of aliases are handled here.
+  const TICKER_ALIAS = { MATIC: "POL" };
+  const HOSTS = ["https://data-api.binance.vision", "https://api.binance.com"];
+  const liveBtn = card.querySelector("#live-price");
+  const liveNote = $("live-note");
+
+  async function fetchLivePrice(sym) {
+    const ticker = (TICKER_ALIAS[sym] || sym) + "USDT";
+    for (const host of HOSTS) {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 6000);
+        const res = await fetch(`${host}/api/v3/ticker/price?symbol=${ticker}`, { signal: ctrl.signal });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const price = Number((await res.json()).price);
+        if (!Number.isFinite(price) || price <= 0) throw new Error("bad price");
+        return price;
+      } catch { /* try the next host */ }
+    }
+    return null;
+  }
+
+  liveBtn?.addEventListener("click", async () => {
+    liveNote?.classList.remove("is-error");
+    if (liveNote) liveNote.textContent = "Fetching the live price…";
+    liveBtn.disabled = true;
+    const price = await fetchLivePrice(symbol);
+    liveBtn.disabled = false;
+
+    if (price == null) {
+      if (liveNote) {
+        liveNote.textContent = "Couldn't reach the market data (offline, blocked or rate-limited). Enter your own prices — the calculator still works.";
+        liveNote.classList.add("is-error");
+      }
+      return;
+    }
+
+    // Fill the sell price, and the buy price too if it is still empty.
+    setField("exit", Number(price.toFixed(price < 1 ? 6 : 2)));
+    if (!(Number(card.elements.entry?.value) > 0)) setField("entry", Number(price.toFixed(price < 1 ? 6 : 2)));
+    compute();
+    if (liveNote) {
+      const when = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      liveNote.textContent = `Live ${symbol} price ${fmtMoney(price)} (Binance, ${when}). Update the numbers to match your own trade.`;
+    }
+  });
+
   compute();
 
   // Live share card with the current numbers.

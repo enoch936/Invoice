@@ -26,7 +26,8 @@ A browser-first business toolkit for freelancers, built with semantic HTML, mode
 - **Rest & Remembrance:** sanitized `?name=&dates=&message=&theme=` memorial pages with candle animation and share card
 - **Advanced math:** scientific calculator, descriptive statistics, correlation, linear/polynomial regression, Welch/paired t-tests, chi-square, a function plotter (numeric derivative + integral), 2×2–n×n matrix arithmetic and base converter
 - **Money planner upgrades:** fixed-rate loan amortization with a yearly schedule, VAT/sales-tax add-or-extract, margin vs markup and break-even volume
-- **Crypto profit calculators:** programmatically generated `profit-<coin>.html` pages (BTC, ETH, SOL, XRP, ADA, DOGE, BNB, LTC, DOT, MATIC, LINK, TRX) with net P/L after fees, ROI, break-even price and a what-if table
+- **Crypto profit calculators:** programmatically generated `profit-<coin>.html` pages (BTC, ETH, SOL, XRP, ADA, DOGE, BNB, LTC, DOT, MATIC, LINK, TRX) with net P/L after fees, ROI, break-even price and a what-if table — plus a one-click **live price** from Binance's public API (no key, no tracking)
+- **Custom 404 page** (`404.html`) that GitHub Pages serves automatically, with a command-palette search trigger and links to every major tool
 - **Command palette** (⌘K / Ctrl-K, or `/`) to jump between every tool and action
 - **Viral share cards:** canvas-rendered, branded PNGs generated locally and shared via the Web Share API
 - **Social preview:** a real 1200×630 PNG (`icons/og.png`) generated with a dependency-free Node encoder, wired to every page's `og:image` / `twitter:image`
@@ -66,7 +67,7 @@ Open `http://localhost:8080`. (`python -m http.server 8080` also works.)
 Invoice/
 ├── index.html, invoice.html, quote.html, calculators.html, money.html,
 │   trading.html, chart.html, math.html, student.html, memorial.html,
-│   convert.html, rates.html, profit.html, offline.html, privacy.html, terms.html
+│   convert.html, rates.html, profit.html, offline.html, 404.html, privacy.html, terms.html
 ├── profit-<coin>.html            # generated programmatic-SEO pages
 ├── convert-<from>-to-<to>.html   # generated currency pairs
 ├── rates-<cur>-hourly-to-salary.html
@@ -123,7 +124,7 @@ Run tests with `node tests/quant.test.mjs` (or `node tools/verify.mjs` for the f
 ## Not built yet
 
 - Next.js migration, `html2pdf` export, premium license validation, WebSocket multi-pane charts, ambient audio for memorial pages, and country tax estimators (these need verified data).
-- Live spot prices on the profit pages (they take user-entered prices by design).
+- Streaming prices on the profit pages (there is a one-click live price, but it does not stream), portfolio import, and tax-lot tracking.
 
 ## Monetization roadmap
 
