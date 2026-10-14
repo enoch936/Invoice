@@ -37,7 +37,14 @@ function calcLiq() {
 }
 function calcEdge() {
   const f = $("edge-form");
-  const p = val(f, "win") / 100, b = val(f, "rr");
+  const winRaw = String(f.elements.win?.value ?? "").trim();
+  const rrRaw = String(f.elements.rr?.value ?? "").trim();
+  const p = Number(winRaw) / 100, b = Number(rrRaw);
+  if (winRaw === "" || rrRaw === "" || !(p >= 0 && p <= 1) || !(b > 0)) {
+    set("edge-result", "—");
+    set("edge-detail", "Enter your win rate and average reward : risk to see the break-even win rate and Kelly sizing.");
+    return;
+  }
   const be = breakevenWinRate(b) * 100, ex = expectancyR(p, b), k = kelly(p, b) * 100;
   set("edge-result", Number.isFinite(ex) ? fmt(ex, 3) + " R per trade" : "—");
   set("edge-detail", `Break-even win rate ${fmt(be, 1)}% · full Kelly ${fmt(k, 1)}% · half Kelly ${fmt(k / 2, 1)}% of equity per trade (before fees). Kelly assumes your inputs are exact; they never are.`);
@@ -63,6 +70,13 @@ function drawFan(res) {
 }
 function calcMc() {
   const f = $("mc-form");
+  const winRaw = String(f.elements.win?.value ?? "").trim();
+  const rrRaw = String(f.elements.rr?.value ?? "").trim();
+  if (winRaw === "" || rrRaw === "") {
+    set("mc-result", "—");
+    set("mc-detail", "Enter your win rate and reward : risk to run the Monte Carlo simulation.");
+    return;
+  }
   const res = monteCarlo({ p: val(f, "win") / 100, b: val(f, "rr"), riskFrac: val(f, "risk") / 100, trades: Math.min(500, Math.max(10, val(f, "trades") || 100)), paths: 1000, seed: 42, ruinPct: val(f, "ruin") / 100 });
   if (!res) { set("mc-result", "—"); set("mc-detail", "Win rate must be 0–100%, reward:risk above 0, risk between 0% and 100%."); return; }
   set("mc-result", `${fmt(res.probRuin * 100, 1)}% chance of ruin`);

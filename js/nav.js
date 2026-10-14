@@ -22,7 +22,7 @@ export const TOOLS = [
 ];
 
 /** Hrefs shown in the top navigation, in order. */
-export const NAV_HREFS = ["invoice.html", "quote.html", "calculators.html", "money.html", "trading.html", "chart.html", "math.html", "student.html"];
+export const NAV_HREFS = ["invoice.html", "quote.html", "calculators.html", "money.html", "trading.html", "chart.html", "terminal.html", "math.html", "student.html"];
 
 /** Short labels for the top navigation. */
 export const NAV_LABELS = {
@@ -32,6 +32,7 @@ export const NAV_LABELS = {
   "money.html": "Money",
   "trading.html": "Risk",
   "chart.html": "Charts",
+  "terminal.html": "Terminal",
   "math.html": "Math",
   "student.html": "Student",
 };
