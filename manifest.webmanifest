@@ -1,7 +1,7 @@
 {
   "name": "PARCHXA Toolkit",
   "short_name": "PARCHXA",
-  "description": "Client-side invoices, quotes, freelance, trading-risk, money, math, student calculators and a real-time crypto charting terminal. Free, private, no sign-up.",
+  "description": "Client-side invoices, quotes, freelance, trading-risk, money, math, student calculators and a real-time crypto, fiat and forex charting terminal. Free, private, no sign-up.",
   "id": "/Invoice/",
   "start_url": "./index.html",
   "scope": "./",

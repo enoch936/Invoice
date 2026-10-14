@@ -25,25 +25,34 @@ const INTERVAL_MS = {
   "1h": 3600000, "2h": 7200000, "4h": 14400000, "6h": 21600000, "8h": 28800000, "12h": 43200000,
   "1d": 86400000, "3d": 259200000, "1w": 604800000, "1M": 2592000000,
 };
-const TIMEFRAMES = MD.PROVIDERS.binance.timeframes;
 const CHARTSETTINGS_KEY = "parchxa.terminal.drawings.v1";
 const stream = new MD.BinanceKlineStream();
 const drawerKey = CHARTSETTINGS_KEY; // drawings storage key (kept local for clarity)
 
 const state = {
   settings: store.loadSettings(),
+  keys: store.loadKeys(),
   watchlist: store.loadWatchlist(),
   alerts: store.loadAlerts(),
   tickers: new Map(),
   instruments: [],
+  binanceFiat: [],
+  fiatSet: new Set(),
   instrumentsLoaded: false,
   instrumentsLoading: false,
   fx: MD.listFxInstruments(),
+  twelve: MD.listTwelveFxInstruments(),
   panes: [],
   focus: 0,
   layout: "1",
   symMode: "pane",
   tickerTimer: null,
+};
+
+/** Timeframes the given provider actually serves (erapi is quote-only, so it serves none). */
+const providerTimeframes = (provider) => {
+  const p = MD.PROVIDERS[provider];
+  return p && Array.isArray(p.timeframes) ? p.timeframes : MD.PROVIDERS.binance.timeframes;
 };
 
 // ---------------------------------------------------------------- DOM helper
@@ -122,6 +131,7 @@ function buildPane(index, seed) {
     paneEl, head, headSym, headTf, headPrice, chartEl,
     engine: null, model: null, _recompute: null,
     replay: { active: false, index: 0, playing: false, timer: null, speed: 1 },
+    pollTimer: null,
   };
 
   pane.engine = new ChartEngine(chartEl, {
@@ -150,7 +160,7 @@ function applyEngineOptions(pane) {
 }
 
 function setLayout(count, seeds) {
-  for (const pane of state.panes) { try { pane.engine.destroy(); } catch { } clearTimeout(pane.replay.timer); clearTimeout(pane._recompute); }
+  for (const pane of state.panes) { try { pane.engine.destroy(); } catch { } clearTimeout(pane.replay.timer); clearTimeout(pane._recompute); clearInterval(pane.pollTimer); }
   state.panes = [];
   const charts = $("ts-charts");
   charts.replaceChildren();
@@ -194,10 +204,27 @@ function syncToolbarToFocused() {
   $("ts-symbol-label").textContent = pane.label;
   $("ts-symbol-provider").textContent = MD.PROVIDERS[pane.provider]?.label || pane.provider;
   $("ts-type").value = pane.chartType;
-  for (const btn of $("ts-intervals").querySelectorAll("button")) btn.setAttribute("aria-pressed", String(btn.dataset.tf === pane.interval));
+  renderIntervals(pane);
   $("ts-ind-count").textContent = pane.indicators.length ? String(pane.indicators.length) : "";
   updatePaneHead(pane);
   renderInfo(pane);
+}
+
+/** Build the timeframe buttons for the focused pane's provider (providers serve different sets). */
+function renderIntervals(pane) {
+  const list = providerTimeframes(pane?.provider);
+  const host = $("ts-intervals");
+  host.replaceChildren(...list.map((tf) => {
+    const b = h("button", { type: "button", "data-tf": tf, "aria-pressed": String(!!pane && pane.interval === tf), text: tf });
+    b.addEventListener("click", () => {
+      const p = focusedPane(); if (!p) return;
+      if (p.replay.active) exitReplay(p);
+      p.interval = tf;
+      loadPane(p);
+      syncToolbarToFocused();
+    });
+    return b;
+  }));
 }
 
 function updatePaneHead(pane) {
@@ -224,10 +251,12 @@ function updatePaneHead(pane) {
 async function loadPane(pane) {
   pane.loadedKey = "";
   teardownStream(pane);
+  teardownPoll(pane);
   pane.model = new DrawingModel(chartKey(pane), () => pane.engine._render());
   pane.engine.setModel(pane.model);
 
   if (pane.provider === "erapi") return loadFxPane(pane);
+  if (pane.provider === "twelvedata") return loadTwelvePane(pane);
 
   const key = chartKey(pane);
   pane.status = "connecting";
@@ -279,6 +308,77 @@ async function loadFxPane(pane) {
 }
 
 const paneSlice = (pane) => (pane.replay.active ? pane.candles.slice(0, pane.replay.index + 1) : pane.candles);
+
+// ---------------------------------------------------------------- forex (Twelve Data, polled)
+
+async function loadTwelvePane(pane) {
+  const key = state.keys.twelvedata;
+  if (!key) {
+    pane.candles = [];
+    pane.engine.setData([]);
+    pane.engine.setIndicators([]);
+    pane.status = "error";
+    setMessage(`${pane.label} needs a free Twelve Data API key. Open Settings → Forex data, paste one, then reload the pair. Until then no forex candles can be shown.`, "warn");
+    updateConn();
+    updatePaneHead(pane);
+    renderInfo(pane);
+    return;
+  }
+
+  const k = chartKey(pane);
+  pane.status = "connecting";
+  updateConn();
+  setMessage(`Loading ${pane.label} ${pane.interval} forex candles from Twelve Data…`);
+  try {
+    const candles = await MD.fetchTwelveCandles(pane.symbol, pane.interval, key, 500);
+    if (chartKey(pane) !== k) return;
+    pane.candles = candles;
+    pane.loadedKey = k;
+    pane.status = "delayed";
+    applyEngineOptions(pane);
+    pane.engine.setData(candles);
+    applyIndicators(pane);
+    setMessage(`${pane.label}: ${candles.length} real ${pane.interval} forex candles from Twelve Data. Refreshing every 15 s — their free tier is polled, not streamed, so this reads DELAYED, never LIVE.`, "warn");
+    updateConn();
+    updatePaneHead(pane);
+    renderInfo(pane);
+    if (!pane.replay.active) startTwelvePoll(pane);
+  } catch (error) {
+    if (chartKey(pane) !== k) return;
+    pane.candles = [];
+    pane.engine.setData([]);
+    pane.status = "error";
+    setMessage(`Could not load ${pane.label} from Twelve Data: ${error.message}. Check the key in Settings — no substitute data is shown.`, "error");
+    updateConn();
+  }
+}
+
+function teardownPoll(pane) { clearInterval(pane.pollTimer); pane.pollTimer = null; }
+
+/** Poll Twelve Data for the freshest candles and merge them into the real series (no synthesis). */
+function startTwelvePoll(pane) {
+  teardownPoll(pane);
+  const key = state.keys.twelvedata;
+  if (!key) return;
+  pane.pollTimer = setInterval(async () => {
+    if (pane.replay.active || document.hidden || chartKey(pane) !== pane.loadedKey) return;
+    try {
+      const latest = await MD.fetchTwelveCandles(pane.symbol, pane.interval, key, 2);
+      if (pane.replay.active || chartKey(pane) !== pane.loadedKey) return;
+      let changed = false;
+      for (const c of latest) {
+        const arr = pane.candles;
+        const last = arr[arr.length - 1];
+        if (last && c.time === last.time) { arr[arr.length - 1] = c; changed = true; }
+        else if (!last || c.time > last.time) { arr.push(c); if (arr.length > 1200) arr.shift(); changed = true; }
+      }
+      if (!changed) return;
+      pane.engine.updateLast(pane.candles[pane.candles.length - 1]);
+      if (pane === focusedPane()) { pane.status = "delayed"; updateConn(); }
+      updatePaneHead(pane);
+    } catch { /* transient network/rate-limit error — keep the last real candles on screen */ }
+  }, 15000);
+}
 
 function applyIndicators(pane) {
   const slice = paneSlice(pane);
@@ -356,7 +456,8 @@ function renderInfo(pane) {
   add("Provider", prov ? prov.label : pane.provider);
   add("State", (pane.status || "cached").toUpperCase());
   if (prov?.realtime) add("Feed", "WebSocket (real-time)");
-  else if (prov?.delayed) add("Feed", "Reference quote (delayed)");
+  else if (prov?.polled) add("Feed", "REST poll every 15 s (delayed)");
+  else if (prov?.delayed) add("Feed", "Reference quote (daily, no candles)");
   if (t) { add("Last", nf(t.price, precision(t.price))); add("24h change", Number.isFinite(t.changePct) ? `${t.changePct >= 0 ? "+" : ""}${t.changePct.toFixed(2)}%` : "—"); add("24h volume", compact(t.quoteVolume)); }
   if (pane.quote) add("Reference", nf(pane.quote.price, 6));
   if (pane.candles.length) add("Candles loaded", String(pane.candles.length));
@@ -478,6 +579,8 @@ function setFocusedSymbol(inst) {
   pane.label = inst.label || inst.id;
   const parts = (inst.base && inst.quote) ? { base: inst.base, quote: inst.quote } : guessParts(inst.id);
   pane.baseCcy = parts.base; pane.quoteCcy = parts.quote;
+  const tfs = providerTimeframes(pane.provider);
+  if (tfs.length && !tfs.includes(pane.interval)) pane.interval = tfs.includes("1h") ? "1h" : tfs[0];
   pane.candles = []; pane.quote = null;
   pane.headSym.textContent = pane.label;
   syncToolbarToFocused();
@@ -488,23 +591,42 @@ async function loadInstruments() {
   if (state.instrumentsLoaded || state.instrumentsLoading) return;
   state.instrumentsLoading = true;
   $("ts-symbol-note").textContent = "Loading the Binance instrument list…";
-  try { state.instruments = await MD.listCryptoInstruments(); state.instrumentsLoaded = true; }
-  catch (error) { $("ts-symbol-note").textContent = `Could not load the Binance instrument list (${error.message}). You can still search FX pairs and type a Binance symbol directly.`; }
+  try {
+    state.instruments = await MD.listCryptoInstruments();
+    state.binanceFiat = await MD.listBinanceFiatInstruments().catch(() => []);
+    state.fiatSet = new Set(state.binanceFiat.map((f) => f.id));
+    state.instrumentsLoaded = true;
+  }
+  catch (error) { $("ts-symbol-note").textContent = `Could not load the Binance instrument list (${error.message}). You can still search forex pairs (with a key) and type a Binance symbol directly.`; }
   finally { state.instrumentsLoading = false; renderSymbolResults($("ts-symbol-search").value); }
+}
+
+function instrumentSuffix(inst) {
+  const prov = MD.PROVIDERS[inst.provider]?.label || inst.provider;
+  if (inst.provider === "erapi") return `${prov} · reference quote`;
+  if (inst.provider === "twelvedata") return `${prov} · forex${state.keys.twelvedata ? "" : " · key needed"}`;
+  if (inst.provider === "binance" && state.fiatSet.has(inst.id)) return `${prov} · live fiat`;
+  return prov;
 }
 
 function renderSymbolResults(query) {
   const q = String(query || "").trim().toUpperCase();
   const list = $("ts-symbol-results");
-  const all = [...state.instruments, ...state.fx];
-  let rows = q ? all.filter((i) => i.id.includes(q) || (i.label || "").toUpperCase().includes(q) || (i.base || "").includes(q)) : all.slice(0, 60);
+  const seen = new Set();
+  const all = [...state.instruments, ...state.binanceFiat, ...state.twelve, ...state.fx]
+    .filter((i) => { const k = `${i.provider}:${i.id}`; if (seen.has(k)) return false; seen.add(k); return true; });
+  const norm = (s) => String(s).replace(/[^A-Z0-9]/gi, "").toUpperCase();
+  const qn = norm(q);
+  let rows = q
+    ? all.filter((i) => norm(i.id).includes(qn) || (i.label || "").toUpperCase().includes(q) || (i.base || "").includes(q))
+    : all.slice(0, 60);
   rows = rows.slice(0, 80);
 
   const nodes = rows.map((inst) => h("li", {}, h("button", {
     onclick: () => selectInstrument(inst),
   },
     h("span", { text: inst.label || inst.id }),
-    h("span", { class: "ts-list-sub", text: (MD.PROVIDERS[inst.provider]?.label || inst.provider) + (inst.kind === "fx" ? " · quote only" : "") }),
+    h("span", { class: "ts-list-sub", text: instrumentSuffix(inst) }),
   )));
 
   if (q && /^[A-Z0-9]{5,20}$/.test(q) && !rows.some((r) => r.id === q)) {
@@ -518,8 +640,18 @@ function renderSymbolResults(query) {
 function selectInstrument(inst) {
   if (state.symMode === "watch") {
     if ((inst.provider || "binance") === "binance") addToWatchlist(inst.id);
-    else setMessage("The watchlist shows live Binance prices; FX reference pairs are quote-only and cannot be listed there.", "warn");
-  } else setFocusedSymbol(inst);
+    else setMessage("The watchlist shows live Binance prices only; forex pairs are not listed there.", "warn");
+    $("ts-symbol-dialog").close();
+    return;
+  }
+  if (inst.provider === "twelvedata" && !state.keys.twelvedata) {
+    $("ts-symbol-dialog").close();
+    setMessage("Forex pairs from Twelve Data need a free API key. Paste one under Settings → Forex data, then pick the pair again.", "warn");
+    fillSettingsForm();
+    $("ts-settings-dialog").showModal();
+    return;
+  }
+  setFocusedSymbol(inst);
   $("ts-symbol-dialog").close();
 }
 
@@ -635,8 +767,9 @@ function notify(title, body) { try { if ("Notification" in window && Notificatio
 // ---------------------------------------------------------------- replay
 function enterReplay() {
   const pane = focusedPane();
-  if (!pane || pane.provider !== "binance" || pane.candles.length < 10) { setMessage("Replay needs loaded crypto candle history. Load a chart first.", "warn"); return; }
+  if (!pane || !["binance", "twelvedata"].includes(pane.provider) || pane.candles.length < 10) { setMessage("Replay needs loaded candle history (crypto or forex). Load a chart first.", "warn"); return; }
   teardownStream(pane);
+  teardownPoll(pane);
   pane.replay.active = true;
   pane.replay.index = Math.max(1, pane.candles.length - 80);
   pane.replay.speed = Number($("ts-replay-speed").value) || 1;
@@ -698,6 +831,7 @@ function exitReplay(pane) {
   updatePaneHead(pane);
   setMessage("Replay ended. Live data resumed.");
   if (pane.provider === "binance" && pane.candles.length) subscribeStream(pane);
+  else if (pane.provider === "twelvedata" && pane.candles.length) startTwelvePoll(pane);
 }
 
 // ---------------------------------------------------------------- settings / io
@@ -727,6 +861,46 @@ function fillSettingsForm() {
   $("set-up").value = s.upColor;
   $("set-down").value = s.downColor;
   $("set-timezone").value = s.timezone;
+  const tdKey = $("set-td-key");
+  if (tdKey) tdKey.value = state.keys.twelvedata;
+  const tdStatus = $("set-td-status");
+  if (tdStatus) tdStatus.textContent = state.keys.twelvedata ? "A key is saved on this device." : "";
+}
+
+function saveTwelveKey() {
+  const input = $("set-td-key");
+  if (!input) return;
+  state.keys.twelvedata = input.value.trim();
+  store.saveKeys(state.keys);
+  $("set-td-status").textContent = state.keys.twelvedata
+    ? "Saved. Pick a forex pair from the symbol search — it refreshes every 15 s (delayed)."
+    : "Key cleared. Forex pairs will not load without a key.";
+  reloadFocusedForexPane();
+}
+
+async function testTwelveKey() {
+  const input = $("set-td-key");
+  const status = $("set-td-status");
+  if (!input || !status) return;
+  const key = input.value.trim();
+  status.textContent = "Testing the key against Twelve Data…";
+  try {
+    const candles = await MD.fetchTwelveCandles("EUR/USD", "1h", key, 2);
+    state.keys.twelvedata = key;
+    store.saveKeys(state.keys);
+    status.textContent = `Key works — fetched ${candles.length} real EUR/USD candles.`;
+    reloadFocusedForexPane();
+  } catch (error) {
+    status.textContent = `Test failed: ${error.message}`;
+  }
+}
+
+/** If the focused chart is a forex pane, apply a freshly saved/cleared key straight away. */
+function reloadFocusedForexPane() {
+  const pane = focusedPane();
+  if (!pane || pane.provider !== "twelvedata") return;
+  if (pane.replay.active) exitReplay(pane);
+  loadPane(pane);
 }
 
 function exportAll() {
@@ -766,18 +940,6 @@ function importAll(text) {
 
 // ---------------------------------------------------------------- toolbar
 function buildToolbar() {
-  $("ts-intervals").replaceChildren(...TIMEFRAMES.map((tf) => {
-    const b = h("button", { type: "button", "data-tf": tf, "aria-pressed": "false", text: tf });
-    b.addEventListener("click", () => {
-      const pane = focusedPane(); if (!pane) return;
-      if (pane.replay.active) exitReplay(pane);
-      pane.interval = tf;
-      loadPane(pane);
-      syncToolbarToFocused();
-    });
-    return b;
-  }));
-
   const sel = $("ts-type");
   sel.replaceChildren(...CHART_TYPES.map((t) => h("option", { value: t.id, text: t.label })));
   sel.value = state.settings.chartType;
@@ -819,6 +981,8 @@ function buildToolbar() {
   }
   on("set-export", exportAll);
   on("set-import", () => $("set-import-file").click());
+  on("set-td-save", saveTwelveKey);
+  on("set-td-test", testTwelveKey);
   $("set-import-file").addEventListener("change", async (e) => {
     const file = e.target.files?.[0];
     if (file) importAll(await file.text());
@@ -883,9 +1047,11 @@ function cycleChartType() {
 
 function cycleTimeframe(dir) {
   const pane = focusedPane(); if (!pane) return;
+  const tfs = providerTimeframes(pane.provider);
+  if (!tfs.length) return;
   if (pane.replay.active) exitReplay(pane);
-  const i = TIMEFRAMES.indexOf(pane.interval);
-  pane.interval = TIMEFRAMES[(i + dir + TIMEFRAMES.length) % TIMEFRAMES.length];
+  const i = tfs.indexOf(pane.interval);
+  pane.interval = tfs[(i + dir + tfs.length) % tfs.length];
   loadPane(pane);
   syncToolbarToFocused();
 }

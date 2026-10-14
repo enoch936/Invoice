@@ -8,16 +8,17 @@
 //
 // connect-src lists every origin the pages may fetch or open a socket to. The Binance REST hosts
 // and WebSocket endpoints are required by the charting terminal (the WebSocket kline feed is
-// genuinely real-time); open.er-api.com serves the FX reference quote; frankfurter hosts are
-// listed for completeness. Without this directive the browser falls back to `default-src 'self'`
-// and blocks every market-data request.
+// genuinely real-time); open.er-api.com serves the daily FX reference quote; api.twelvedata.com
+// serves optional forex candles when the visitor supplies their own free key; frankfurter hosts
+// are listed for completeness. Without this directive the browser falls back to `default-src
+// 'self'` and blocks every market-data request.
 export const CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: https:",
-  "connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is",
+  "connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.twelvedata.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is",
   "object-src 'none'",
   "frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
   "base-uri 'self'",

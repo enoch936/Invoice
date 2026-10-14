@@ -9,6 +9,7 @@ const KEYS = {
   watchlist: "parchxa.terminal.watchlist.v1",
   alerts: "parchxa.terminal.alerts.v1",
   layout: "parchxa.terminal.layout.v1",
+  keys: "parchxa.terminal.keys.v1",
 };
 
 function read(key, fallback) {
@@ -101,6 +102,25 @@ export function loadLayout() {
 }
 
 export function saveLayout(l) { return write(KEYS.layout, l); }
+
+// ---------------------------------------------------------------- optional provider API keys
+//
+// Keys belong to the visitor, are used only for direct browser→provider calls and are kept in
+// local storage on this device. They are never sent anywhere else. Everything is trimmed and
+// length-capped on read so a corrupt value cannot break the app.
+
+export const DEFAULT_KEYS = { twelvedata: "" };
+
+export function loadKeys() {
+  const k = read(KEYS.keys, {});
+  const td = typeof k.twelvedata === "string" ? k.twelvedata.trim().slice(0, 64) : "";
+  return { twelvedata: /^[A-Za-z0-9]{8,64}$/.test(td) ? td : "" };
+}
+
+export function saveKeys(k) {
+  const td = typeof k?.twelvedata === "string" ? k.twelvedata.trim().slice(0, 64) : "";
+  return write(KEYS.keys, { twelvedata: /^[A-Za-z0-9]{8,64}$/.test(td) ? td : "" });
+}
 
 export function migrate() {
   // Placeholder for future schema migrations. Unknown/legacy keys are simply ignored

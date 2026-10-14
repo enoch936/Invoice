@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Real-Time Multi-Market Charting Terminal — PARCHXA</title>
-<meta name="description" content="A free in-browser charting terminal: real-time crypto candles, many chart types, 20+ indicators, drawing tools, watchlist, alerts and non-look-ahead bar replay. Educational tool, not financial advice.">
+<meta name="description" content="A free in-browser charting terminal: real-time crypto and fiat candles, true forex pairs with a free key, many chart types, 20+ indicators, drawing tools, watchlist, alerts and non-look-ahead bar replay. Educational tool, not financial advice.">
 <link rel="canonical" href="https://enoch936.github.io/Invoice/terminal.html">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0b1120">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is; object-src 'none'; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.twelvedata.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is; object-src 'none'; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="Real-Time Multi-Market Charting Terminal — PARCHXA"><meta property="og:description" content="Real-time crypto candles, many chart types, 20+ indicators, drawing tools, watchlist, alerts and non-look-ahead bar replay. Educational tool, not financial advice."><meta property="og:url" content="https://enoch936.github.io/Invoice/terminal.html">
+<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="Real-Time Multi-Market Charting Terminal — PARCHXA"><meta property="og:description" content="Real-time crypto and fiat candles, true forex pairs with a free key, many chart types, 20+ indicators, drawing tools, watchlist, alerts and non-look-ahead bar replay. Educational tool, not financial advice."><meta property="og:url" content="https://enoch936.github.io/Invoice/terminal.html">
 <meta property="og:image" content="https://enoch936.github.io/Invoice/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:image" content="https://enoch936.github.io/Invoice/icons/og.png">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Real-Time Multi-Market Charting Terminal — PARCHXA"><meta name="twitter:description" content="Real-time crypto candles, many chart types, 20+ indicators, drawing tools, watchlist, alerts and non-look-ahead bar replay. Educational tool, not financial advice.">
 <link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css"><link rel="stylesheet" href="css/terminal.css">
@@ -92,20 +92,21 @@
 <section class="container content-block">
   <h2>What this terminal does</h2>
   <p>The terminal renders <strong>real exchange candles streamed over a WebSocket</strong> and calculates every study from that data with the same pure engine used across the site. It is a workspace, not a broker: there is no order routing and no account connection.</p>
-  <p><strong>Coverage, stated honestly.</strong> Crypto spot instruments from Binance are real-time with full OHLCV history. FX pairs show a daily reference quote from open.er-api.com, clearly labelled DELAYED, with no candle history. Stocks, ETFs, indices, commodities and bond yields are not connected — they need a keyed data vendor or a server-side proxy that a static GitHub Pages site cannot safely keep a secret for, so they are never simulated.</p>
+  <p><strong>Coverage, stated honestly.</strong> Crypto spot instruments from Binance are real-time with full OHLCV history. Binance's fiat markets (EUR/USDT, USDT/TRY, USDT/BRL and so on) stream over the same real-time WebSocket, quoted in a USD-pegged stablecoin rather than interbank rates. True forex pairs (EUR/USD, GBP/USD, USD/JPY and crosses) work when you add a free Twelve Data key in Settings: real OHLC, but polled every 15&nbsp;seconds and therefore labelled DELAYED, not LIVE. Stocks, ETFs, indices, commodities and bond yields are not connected — they need a keyed data vendor or a server-side proxy that a static GitHub Pages site cannot safely keep a secret for, so they are never simulated.</p>
 </section>
 <div data-affiliates="trading"></div>
 <div data-ad-slot class="ad-reserve" aria-hidden="true"></div>
 <section class="content-block"><h2>Frequently asked questions</h2>
-<details><summary>What markets does the terminal cover?</summary><p>Crypto spot markets from Binance stream in real time with full candle history. FX pairs show daily reference quotes from open.er-api.com with no candle history. Stocks, indices, commodities and bond yields are not wired because they require a keyed provider or a server-side proxy, which a static GitHub Pages site cannot safely hold.</p></details>
-<details><summary>Is the data live or delayed?</summary><p>Crypto is genuinely real-time over a WebSocket and the status badge reads LIVE. Everything else is labelled by its true state: DELAYED for the daily FX reference rates, CACHED for historical candles without a stream, and ERROR when a feed is unreachable. Nothing is ever labelled real-time unless it is streamed.</p></details>
+<details><summary>What markets does the terminal cover?</summary><p>Crypto and fiat spot markets from Binance stream in real time with full candle history. True forex pairs are fetched on a 15-second timer from Twelve Data when you supply your own free key and are labelled DELAYED. Stocks, indices, commodities and bond yields are not wired because they require a keyed provider or a server-side proxy, which a static GitHub Pages site cannot safely hold.</p></details>
+<details><summary>Can I get a live forex (EUR/USD) chart?</summary><p>Yes, with a caveat. Add a free Twelve Data API key under Settings → Forex data and open any pair from the symbol search. You get real forex candles and indicators, refreshed every 15 seconds. Because that free tier is polled rather than streamed, the status badge reads DELAYED, not LIVE. Binance's fiat markets (EUR/USDT and similar) do stream in real time, but they are quoted in a USD stablecoin, not interbank FX.</p></details>
+<details><summary>Is the data live or delayed?</summary><p>Crypto and Binance fiat markets are genuinely real-time over a WebSocket and the status badge reads LIVE. Everything else is labelled by its true state: DELAYED for polled forex and the daily FX reference rates, CACHED for historical candles without a stream, and ERROR when a feed is unreachable. Nothing is ever labelled real-time unless it is streamed.</p></details>
 <details><summary>Are the indicators and chart types calculated or faked?</summary><p>Every indicator is calculated from the loaded candles by the shared js/quant.js engine, and derived chart types such as Heikin-Ashi and Renko are computed from the source candles with documented formulas and labelled as derived. The terminal never generates substitute prices.</p></details>
 <details><summary>Does bar replay leak future data?</summary><p>No. During replay the engine and every indicator are computed only from candles up to the replay cursor, so future candles and future indicator values are never visible.</p></details>
 <details><summary>Where are my settings and drawings stored?</summary><p>Entirely in your browser using versioned local storage. They are validated on read, never uploaded, and can be exported and imported as JSON.</p></details>
 <details><summary>Can I trade from this page?</summary><p>No. Alerts run only while the page is open and the browser allows notifications. There is no order routing and no broker connection.</p></details>
 </section>
 <div data-support></div>
-<p class="updated container">Last updated October 2026 · Built by PARCHXA · Data: Binance public API and open.er-api.com</p>
+<p class="updated container">Last updated October 2026 · Built by PARCHXA · Data: Binance public API, Twelve Data (optional key) and open.er-api.com</p>
 </main>
 
 <!-- dialogs -->
@@ -150,7 +151,15 @@
       <button class="ts-btn" id="set-import">Import JSON</button>
       <input type="file" id="set-import-file" accept="application/json" class="visually-hidden">
     </div>
-    <p class="ts-warn" id="set-note">Settings, watchlists, alerts and drawings are stored only in this browser.</p>
+    <h3 style="margin:16px 0 6px;font:700 13px Manrope,sans-serif">Forex data (optional)</h3>
+    <label class="ts-field"><span>Twelve Data API key</span><input class="ts-input" id="set-td-key" placeholder="paste your free key" autocomplete="off" spellcheck="false"></label>
+    <div class="ts-row">
+      <button class="ts-btn" id="set-td-save">Save key</button>
+      <button class="ts-btn" id="set-td-test">Test key</button>
+    </div>
+    <p class="ts-warn">Adds real forex pairs (EUR/USD, GBP/USD, USD/JPY and crosses). Get a free key at <a href="https://twelvedata.com/pricing" target="_blank" rel="noopener">twelvedata.com</a>. The key is stored only in this browser and sent only to Twelve Data. That free tier is polled, not streamed, so forex charts read DELAYED — never LIVE.</p>
+    <p class="ts-warn" id="set-td-status" role="status" aria-live="polite"></p>
+    <p class="ts-warn" id="set-note">Settings, watchlists, alerts, drawings and any API key are stored only in this browser.</p>
   </div>
 </dialog>
 
