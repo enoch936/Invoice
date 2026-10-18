@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { SECURITY_META } from "./csp.mjs";
 import { buildCalculatorPages } from "./calc-pages.mjs";
+import { toolByHref, getCategory } from "../js/registry.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ORIGIN = "https://enoch936.github.io/Invoice";
@@ -132,6 +133,16 @@ const FOOTER = `<footer class="site-footer container"><a class="brand" href="ind
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+/** Visible breadcrumb derived from the shared registry (matches tools/apply-crumbs.mjs). */
+function crumbs(href) {
+  const tool = toolByHref(href);
+  const cat = tool ? getCategory(tool.category) : null;
+  const parts = [`<a href="directory.html">All tools</a>`];
+  if (cat) parts.push(`<span aria-hidden="true">/</span>`, `<a href="${cat.href}">${esc(cat.name)}</a>`);
+  parts.push(`<span aria-hidden="true">/</span>`, `<span aria-current="page">${esc(tool ? tool.title : href)}</span>`);
+  return `<nav class="crumbs" aria-label="Breadcrumb">${parts.join(" ")}</nav>`;
+}
+
 // ---------------------------------------------------------------- templates
 function coinPage(c) {
   const title = `${c.name} Profit Calculator (${c.symbol}): Fees, ROI & Break-even — PARCHXA`;
@@ -168,6 +179,7 @@ ${head({ title, description, canonical, jsonld, script: "js/profit.js" })}
 <body>
 ${HEADER}
 <main class="container page-main">
+${crumbs(canonical)}
 <div class="page-intro"><a class="back-link" href="profit.html">← All profit calculators</a><p class="eyebrow">CRYPTO PROFIT / ${c.symbol}</p><h1>${c.name} (${c.symbol}) profit <span class="text-gradient">calculator</span></h1><p>Enter your buy price, sell price and quantity to see net profit or loss in USD after fees, your return and the break-even sell price — using ${c.tagline}.</p></div>
 <form class="calculator-card calc-form" data-coin="${esc(c.name)}" data-symbol="${esc(c.symbol)}" data-slug="${esc(c.slug)}" novalidate>
   <div class="form-row">
@@ -220,6 +232,7 @@ ${head({ title, description, canonical, jsonld, script: "js/profit.js" })}
 <body>
 ${HEADER}
 <main class="container page-main">
+${crumbs(canonical)}
 <div class="page-intro"><a class="back-link" href="index.html">← All tools</a><p class="eyebrow">CRYPTO PROFIT CALCULATORS</p><h1>Profit &amp; loss calculators for <span class="text-gradient">major coins</span></h1><p>Pick a coin for net profit, ROI and break-even after fees. Every calculator works for any asset — just enter your own prices.</p></div>
 <section class="calculator-card wide"><p class="eyebrow">CHOOSE A COIN</p><div class="aff-grid">${cards}</div></section>
 <section class="content-block"><h2>How to use these calculators</h2><p>Each page computes (sell − buy) × quantity, subtracts estimated round-trip fees and shows the net result, the percentage return and the break-even sell price. There is also a small table showing what happens at several possible sell prices, which is useful for setting targets before you trade.</p><p>For risk and position sizing, pair these pages with the <a href="trading.html">trading risk suite</a> and the <a href="chart.html">live chart &amp; backtester</a>.</p></section>

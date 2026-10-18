@@ -67,6 +67,10 @@ if (!runNode(["tools/apply-head.mjs", "--check"])) failures.push("pages missing 
 step("Checking social preview tags on every page");
 if (!runNode(["tools/apply-og.mjs", "--check"])) failures.push("pages missing social preview tags");
 
+// 5b. breadcrumbs on every tool page
+step("Checking tool pages have breadcrumbs");
+if (!runNode(["tools/apply-crumbs.mjs", "--check"])) failures.push("tool pages missing breadcrumbs");
+
 // 6-9. per-page static checks
 step("Checking local assets, JSON-LD, OG images and sitemap coverage");
 const pages = readdirSync(ROOT).filter((f) => f.endsWith(".html")).sort();
