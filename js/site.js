@@ -3,7 +3,7 @@
 import { SITE } from "./config.js";
 import { affiliatesFor, AFFILIATE_DISCLOSURE, affiliateUrl } from "./affiliates.js";
 import { LEAD_MAGNETS, productsFor } from "./products.js";
-import { CATEGORIES, toolsInCategory, counts } from "./registry.js";
+import { CATEGORIES, toolsInCategory, counts, toolByHref } from "./registry.js";
 import { createSearch } from "./search.js";
 import { iconSvg, hydrateIcons } from "./icons.js";
 import { track, observeWebVitals, observeScrollDepth, trackClicks } from "./analytics.js";
@@ -148,6 +148,51 @@ if (nav) {
   drawer.addEventListener("click", (e) => { if (e.target.closest("a")) setDrawer(false); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !drawer.hidden) { setDrawer(false); burger.focus(); } });
 }
+// ---------------------------------------------------------------- common services bar
+// A persistent button bar of the most-used tools, plus one dropdown per main category whose
+// sub-items are the recommended tools in that category (derived from the shared registry).
+{
+  const header = document.querySelector(".site-header");
+  if (header && !document.querySelector(".svc-bar")) {
+    const QUICK = [
+      ["invoice.html", "Invoice"],
+      ["math.html", "Scientific"],
+      ["trading.html", "Risk"],
+      ["terminal.html", "Terminal"],
+      ["chart.html", "Chart"],
+      ["money.html", "Money"],
+      ["profit.html", "Crypto P/L"],
+      ["convert.html", "Convert"],
+      ["rates.html", "Salary"],
+      ["student.html", "GPA"],
+    ];
+    const inner = el("div", { class: "svc-inner" });
+    for (const [href, label] of QUICK) {
+      const tool = toolByHref(href);
+      if (!tool) continue;
+      const a = el("a", { class: "svc-link", href: tool.href, text: label });
+      if (here === tool.href) a.setAttribute("aria-current", "page");
+      inner.append(a);
+    }
+    inner.append(el("span", { class: "svc-sep", "aria-hidden": "true" }));
+    for (const cat of CATEGORIES) {
+      const items = toolsInCategory(cat.id);
+      if (!items.length) continue;
+      const rec = items.filter((t) => t.featured || t.popular);
+      const main = el("a", { class: "svc-main", href: cat.href },
+        el("span", { text: cat.name }), el("span", { class: "chev", html: iconSvg("chevron-down", 12) }));
+      if (here === cat.href) main.setAttribute("aria-current", "page");
+      const sub = el("div", { class: "svc-sub" },
+        el("p", { class: "svc-sub-head", text: "Recommended" }),
+        ...rec.slice(0, 6).map((t) => el("a", { href: t.href, text: t.title })),
+        el("a", { class: "svc-sub-all", href: cat.href, text: `All ${items.length} ${cat.name.toLowerCase()} tools →` }));
+      inner.append(el("div", { class: "svc-group" }, main, sub));
+    }
+    const bar = el("nav", { class: "svc-bar", "aria-label": "Common services" }, inner);
+    header.after(bar);
+  }
+}
+
 // A keyboard/deep-link entry point for the command palette in the header.
 if (SITE.features.commandPalette) {
   const slot = nav || document.querySelector(".site-header");
