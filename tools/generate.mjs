@@ -118,6 +118,7 @@ function head({ title, description, canonical, jsonld, script }) {
 <link rel="canonical" href="${url}">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0b1120">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("parchxa.theme.v1")==="light"?"light":"dark"}catch(e){}</script>
 ${SECURITY_META}
 <meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:url" content="${url}"><meta property="og:image" content="${ORIGIN}/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PARCHXA Toolkit — free tools for independent work">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="${description}"><meta name="twitter:image" content="${ORIGIN}/icons/og.png">

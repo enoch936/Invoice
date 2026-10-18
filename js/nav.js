@@ -52,3 +52,15 @@ export function matchTool(tool, query) {
   const haystack = `${tool.label} ${tool.group} ${tool.keywords} ${tool.desc || ""}`.toLowerCase();
   return q.split(/\s+/).every((term) => haystack.includes(term));
 }
+
+/** Home page categories. hrefs may include pages outside the TOOLS registry (they still exist). */
+export const TOOL_CATEGORIES = [
+  { id: "documents", label: "Documents", blurb: "Invoices and quotations", hrefs: ["invoice.html", "quote.html", "project-quote.html"] },
+  { id: "money", label: "Money", blurb: "Pricing, tax and loans", hrefs: ["money.html", "calculators.html", "freelance-rate.html", "rates.html", "compound-interest.html", "loan-payment.html", "profit-margin.html"] },
+  { id: "trading", label: "Trading", blurb: "Risk, charts and crypto", hrefs: ["trading.html", "chart.html", "terminal.html", "profit.html", "crypto-profit.html", "forex-pip-value.html"] },
+  { id: "math", label: "Math", blurb: "Statistics and algebra", hrefs: ["math.html", "percentage.html", "quadratic.html", "mean-median-mode.html"] },
+  { id: "productivity", label: "Productivity", blurb: "Study, convert and remember", hrefs: ["student.html", "convert.html", "memorial.html", "cpm.html"] },
+];
+
+/** Reverse lookup: page href → category id. */
+export const CATEGORY_BY_HREF = Object.fromEntries(TOOL_CATEGORIES.flatMap((c) => c.hrefs.map((h) => [h, c.id])));

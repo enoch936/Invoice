@@ -3,11 +3,11 @@
 import { SITE } from "./config.js";
 import { affiliatesFor, AFFILIATE_DISCLOSURE, affiliateUrl } from "./affiliates.js";
 import { LEAD_MAGNETS, productsFor } from "./products.js";
-import { NAV } from "./nav.js";
+import { TOOLS, TOOL_CATEGORIES, CATEGORY_BY_HREF } from "./nav.js";
+import { iconSvg, hydrateIcons } from "./icons.js";
 import { track, observeWebVitals, observeScrollDepth, trackClicks } from "./analytics.js";
 import { initCommandPalette } from "./command-palette.js";
 import { wireShareCards } from "./sharecard.js";
-import "./ui.js";
 
 const CONSENT_KEY = "parchxa.consent.v1";
 
@@ -16,6 +16,7 @@ const el = (tag, attrs = {}, ...kids) => {
   for (const [k, v] of Object.entries(attrs)) {
     if (k === "class") node.className = v;
     else if (k === "text") node.textContent = v;
+    else if (k === "html") node.innerHTML = v;
     else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
     else if (v !== false && v != null) node.setAttribute(k, v === true ? "" : v);
   }
@@ -35,18 +36,69 @@ export function toast(message, { timeout = 2600 } = {}) {
 }
 
 // ---------------------------------------------------------------- navigation
+const here = location.pathname.split("/").pop() || "index.html";
+const isHome = document.documentElement.hasAttribute("data-home") || here === "" || here === "index.html";
+
 const nav = document.querySelector(".nav-links");
 if (nav) {
-  nav.replaceChildren(...NAV.map(([href, label]) => {
-    const a = el("a", { href, text: label });
-    if (location.pathname.endsWith(href)) a.setAttribute("aria-current", "page");
-    return a;
-  }));
+  const links = [];
+
+  // "Tools" dropdown, grouped by category from the shared registry.
+  const menu = el("div", { class: "nav-menu" });
+  const toolsBtn = el("button", { type: "button", class: "nav-link", "aria-expanded": "false", "aria-controls": "nav-tools-panel" },
+    "Tools", el("span", { class: "chev", html: iconSvg("chevron-down", 13) }));
+  const panel = el("div", { class: "nav-panel", id: "nav-tools-panel", hidden: true });
+  const ungrouped = [];
+  TOOL_CATEGORIES.forEach((cat) => {
+    const items = TOOLS.filter((t) => CATEGORY_BY_HREF[t.href] === cat.id);
+    if (!items.length) return;
+    const group = el("div", { class: "nav-group" }, el("p", { class: "nav-group-label", text: cat.label }));
+    items.forEach((t) => {
+      const item = el("a", { class: "nav-item", href: t.href }, el("strong", { text: t.label }), el("span", { text: t.desc || cat.blurb }));
+      if (here === t.href) item.setAttribute("aria-current", "page");
+      group.append(item);
+    });
+    panel.append(group);
+  });
+  TOOLS.forEach((t) => { if (!CATEGORY_BY_HREF[t.href]) ungrouped.push(t); });
+  if (ungrouped.length) {
+    const group = el("div", { class: "nav-group" }, el("p", { class: "nav-group-label", text: "More" }));
+    ungrouped.forEach((t) => group.append(el("a", { class: "nav-item", href: t.href }, el("strong", { text: t.label }), el("span", { text: t.desc || "" }))));
+    panel.append(group);
+  }
+  panel.append(el("div", { class: "nav-panel-foot" },
+    el("a", { href: "directory.html", text: "All calculators →" }),
+    el("span", { class: "muted-copy", text: "Press ⌘K to search everything" })));
+  menu.append(toolsBtn, panel);
+  links.push(menu);
+
+  // Compact "Categories" link — anchors on the home page rail, otherwise returns to it.
+  links.push(el("a", { class: "nav-link", href: isHome ? "#categories" : "index.html#categories", text: "Categories" }));
+
+  // Icon theme toggle (text buttons without SVGs, e.g. the terminal, are relabelled only).
+  const themeBtn = el("button", { type: "button", class: "nav-icon-btn", "data-theme-toggle": true, "aria-label": "Switch theme" });
+  themeBtn.innerHTML = iconSvg("sun", 16, "theme-icon-sun") + iconSvg("moon", 16, "theme-icon-moon");
+  links.push(themeBtn);
+
+  nav.replaceChildren(...links);
+
+  const closeMenu = () => { panel.hidden = true; toolsBtn.setAttribute("aria-expanded", "false"); };
+  toolsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = panel.hidden;
+    panel.hidden = !open;
+    toolsBtn.setAttribute("aria-expanded", String(open));
+  });
+  panel.addEventListener("click", (e) => { if (e.target.closest("a")) closeMenu(); });
+  document.addEventListener("click", (e) => { if (!menu.contains(e.target)) closeMenu(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) { closeMenu(); toolsBtn.focus(); } });
 }
 // A keyboard/deep-link entry point for the command palette in the header.
-const header = document.querySelector(".site-header");
-if (header && SITE.features.commandPalette && !header.querySelector("[data-cmdk]")) {
-  header.append(el("button", { type: "button", class: "cmd-trigger", "data-cmdk": true, "aria-label": "Open command palette", text: "Search  ⌘K" }));
+if (SITE.features.commandPalette) {
+  const slot = nav || document.querySelector(".site-header");
+  if (slot && !slot.querySelector("[data-cmdk]")) {
+    slot.append(el("button", { type: "button", class: "cmd-trigger", "data-cmdk": true, "aria-label": "Open command palette", text: "Search  ⌘K" }));
+  }
 }
 
 // ---------------------------------------------------------------- footer compliance bar
@@ -179,6 +231,7 @@ function wireShareButtons() {
 // ---------------------------------------------------------------- boot
 renderMonetization();
 wireShareButtons();
+hydrateIcons();
 if (SITE.features.shareCards) {
   try {
     // Pages can register live specs on window.parchxaShareSpecs[id] = () => ({...}).

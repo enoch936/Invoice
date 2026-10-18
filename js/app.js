@@ -1,19 +1,11 @@
 import "./site.js";
+import { initTheme } from "./theme.js";
 document.querySelectorAll("[data-year]").forEach((node) => {
   node.textContent = String(new Date().getFullYear());
 });
-const themeToggle = document.querySelector("#theme-toggle");
-if (themeToggle) {
-  const stored = localStorage.getItem("parchxa.theme.v1") || "dark";
-  document.documentElement.dataset.theme = stored;
-  themeToggle.textContent = stored === "light" ? "Dark mode" : "Light mode";
-  themeToggle.addEventListener("click", () => {
-    const current = document.documentElement.dataset.theme || "dark";
-    const next = current === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem("parchxa.theme.v1", next);
-    themeToggle.textContent = next === "light" ? "Dark mode" : "Light mode";
-  });
+initTheme();
+if (document.querySelector("[data-tool-search]")) {
+  import("./home.js").then((m) => m.initHomeTools()).catch(() => {});
 }
 const exportJson = (name, data) => {
   try {

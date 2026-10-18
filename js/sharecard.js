@@ -1,8 +1,8 @@
 // PARCHXA viral share-card generator. Renders a branded PNG on <canvas> and shares or downloads it.
 // Everything happens locally: the card image never leaves the device unless the user shares it.
 const THEMES = {
-  night: { bg: "#0b1120", panel: "#111b2e", text: "#f2f5fb", muted: "#9ba9bd", accent: "#b5f36d", accent2: "#8dafff" },
-  dawn: { bg: "#f7f3ea", panel: "#ffffff", text: "#1c1a15", muted: "#6b6459", accent: "#7fb933", accent2: "#2563eb" },
+  night: { bg: "#0b1120", panel: "#111b2e", text: "#f2f5fb", muted: "#9ba9bd", accent: "#6c7cff", accent2: "#8b7cff" },
+  dawn: { bg: "#f7f3ea", panel: "#ffffff", text: "#1c1a15", muted: "#6b6459", accent: "#4f46e5", accent2: "#7c3aed" },
   forest: { bg: "#0b1f18", panel: "#10281f", text: "#eef6f0", muted: "#9fc0ae", accent: "#b5f36d", accent2: "#7fd6c0" },
 };
 
@@ -48,7 +48,7 @@ export function drawCard(canvas, spec = {}) {
 
   // brand row
   ctx.fillStyle = t.accent; ctx.fillRect(pad, pad, 40, 40);
-  ctx.fillStyle = "#111827"; ctx.font = `800 26px ${FONT}`; ctx.textAlign = "center";
+  ctx.fillStyle = "#ffffff"; ctx.font = `800 26px ${FONT}`; ctx.textAlign = "center";
   ctx.fillText("P", pad + 20, pad + 7);
   ctx.textAlign = "left"; ctx.fillStyle = t.text; ctx.font = `800 30px ${FONT}`;
   ctx.fillText("PARCHXA", pad + 56, pad + 4);

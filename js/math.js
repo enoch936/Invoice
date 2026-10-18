@@ -179,8 +179,9 @@ function plot() {
     deriv.push(`${i === 0 ? "M" : "L"}${X(x).toFixed(1)} ${Y(Number.isFinite(d) ? d : 0).toFixed(1)}`);
     prev = y;
   }
+  const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#6c7cff";
   svg.append(el("path", { d: deriv.join(" "), fill: "none", stroke: "#8dafff", "stroke-width": 1, "stroke-dasharray": "5 5", opacity: 0.7 }));
-  svg.append(el("path", { d: path.join(" "), fill: "none", stroke: "#b5f36d", "stroke-width": 2 }));
+  svg.append(el("path", { d: path.join(" "), fill: "none", stroke: accent, "stroke-width": 2 }));
   svg.append(el("text", { x: pad.l + 6, y: pad.t + 14, fill: "#9ba9bd", "font-size": 11 }, Object.assign(document.createElementNS(SVG_NS, "tspan"), { textContent: `f(x) = ${expr}` })));
   svg.append(el("text", { x: pad.l + 6, y: H - 8, fill: "#9ba9bd", "font-size": 10 }, Object.assign(document.createElementNS(SVG_NS, "tspan"), { textContent: `Approx ∫ from ${xmin} to ${xmax} ≈ ${Number(integral.toFixed(4))}` })));
   svg.setAttribute("aria-label", `Plot of f(x)=${expr} from ${xmin} to ${xmax}. Numeric integral ≈ ${integral.toFixed(3)}.`);

@@ -1,6 +1,7 @@
 // PARCHXA command palette (⌘K / Ctrl-K). Keyboard-first navigation across every tool plus quick actions.
 // Dependency-free, injected into the page by js/site.js. Respects prefers-reduced-motion for its animations via CSS.
 import { TOOLS, matchTool } from "./nav.js";
+import { toggleTheme } from "./theme.js";
 
 const el = (tag, attrs = {}, ...kids) => {
   const node = document.createElement(tag);
@@ -31,15 +32,6 @@ function buildCommands() {
     { id: "act:terms", label: "Terms of use", hint: "Legal", keywords: "terms legal disclaimer", run: () => { location.href = "terms.html"; } },
   ];
   return [...tools, ...actions];
-}
-
-function toggleTheme() {
-  const current = document.documentElement.dataset.theme || "dark";
-  const next = current === "dark" ? "light" : "dark";
-  document.documentElement.dataset.theme = next;
-  try { localStorage.setItem("parchxa.theme.v1", next); } catch { /* ignore */ }
-  const btn = document.querySelector("#theme-toggle");
-  if (btn) btn.textContent = next === "light" ? "Dark mode" : "Light mode";
 }
 
 async function copyLink() {

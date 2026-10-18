@@ -50,11 +50,12 @@ function lineChart(points, ctx, format = "currency") {
   const sy = (y) => H - pad - ((y - yMin) / (yMax - yMin || 1)) * (H - pad * 2);
   const path = valid.map((p, i) => `${i ? "L" : "M"}${sx(p.x).toFixed(1)},${sy(p.y).toFixed(1)}`).join(" ");
   const last = valid[valid.length - 1];
+  const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#6c7cff";
   const svg = `
     <svg class="calc-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Projection chart" preserveAspectRatio="none">
       <line x1="${pad}" y1="${sy(0)}" x2="${W - pad}" y2="${sy(0)}" stroke="#26334a" stroke-width="1"/>
-      <path d="${path}" fill="none" stroke="#b5f36d" stroke-width="2.5"/>
-      <circle cx="${sx(last.x).toFixed(1)}" cy="${sy(last.y).toFixed(1)}" r="4" fill="#b5f36d"/>
+      <path d="${path}" fill="none" stroke="${accent}" stroke-width="2.5"/>
+      <circle cx="${sx(last.x).toFixed(1)}" cy="${sy(last.y).toFixed(1)}" r="4" fill="${accent}"/>
       <text x="${pad}" y="16" fill="#9ba9bd" font-size="12">${escapeText(formatValue(yMax, format, ctx))}</text>
       <text x="${pad}" y="${H - 8}" fill="#9ba9bd" font-size="12">${escapeText(String(valid[0].x))}</text>
       <text x="${W - pad}" y="${H - 8}" text-anchor="end" fill="#9ba9bd" font-size="12">${escapeText(String(last.x))}</text>
