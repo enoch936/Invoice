@@ -327,6 +327,42 @@
 }
 .closing-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
+/* ---------------- scrollable selectors (index rails) ------------ */
+/* Filter chips, category tiles and tool cards are horizontal snap
+   rails: no wrapping, native touch/trackpad scrolling, thin peek of
+   the next card advertises the scroll. Desktop grid is replaced by
+   a single-row rail with equal-height cards. */
+.filter-chips,
+.cat-rail,
+#tools .tool-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  padding-bottom: 2px;
+}
+.filter-chips::-webkit-scrollbar,
+.cat-rail::-webkit-scrollbar,
+#tools .tool-grid::-webkit-scrollbar { display: none; }
+.filter-chip { flex: none; }
+/* chips live inside the .tool-controls flex box: let them shrink so the
+   rail scrolls internally instead of widening the page */
+.tool-controls .filter-chips { flex: 1 1 240px; min-width: 0; }
+.cat-tile {
+  flex: 0 0 clamp(196px, 30%, 244px);
+  scroll-snap-align: start;
+}
+#tools .tool-grid { gap: 16px; }
+#tools .tool-card {
+  flex: 0 0 min(300px, 78vw);
+  scroll-snap-align: start;
+}
+.cat-rail { gap: 12px; }
+
 /* ---------------- reveals (JS-gated only) ----------------------- */
 .js-anim [data-reveal] {
   opacity: 0;
@@ -381,4 +417,10 @@
   .doc-stage, .story-preview { display: none; }
   .hero { grid-template-columns: 1fr; }
   .story-grid, .split-showcase { display: block; }
+  .filter-chips, .cat-rail, #tools .tool-grid {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+  #tools .tool-card { flex: 1 1 45%; }
 }

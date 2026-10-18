@@ -2,7 +2,7 @@
 // hypothesis tests, a function plotter and matrix arithmetic. All computation is local.
 import "./app.js";
 import "./site.js";
-import { evaluateExpression, formatNumber } from "./advanced.js";
+import { evaluateExpression } from "./advanced.js";
 import {
   mean, median, mode, variance, stdev, skewness, kurtosis, quartiles,
   correlation, linearRegression, polynomialRegression,
@@ -24,25 +24,8 @@ function statRows(host, rows) {
 }
 
 // ---------------------------------------------------------------- scientific calculator
-(() => {
-  const input = $("sci-input"), output = $("sci-output");
-  if (!input || !output) return;
-  const state = { deg: true, ans: 0 };
-  const evaluate = () => {
-    const expr = input.value.trim();
-    if (!expr) { output.textContent = "0"; output.classList.remove("is-error"); return; }
-    try {
-      const value = evaluateExpression(expr, state);
-      if (!Number.isFinite(value)) throw new Error("Result is not a finite number");
-      state.ans = value;
-      output.textContent = formatNumber(value);
-      output.classList.remove("is-error");
-    } catch (error) { output.textContent = error.message; output.classList.add("is-error"); }
-  };
-  input.addEventListener("input", evaluate);
-  input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); evaluate(); } });
-  evaluate();
-})();
+// The keypad, DEG/RAD toggle and live evaluation are wired by
+// setupScientific() inside advanced.js (it activates when #sci-keys exists).
 
 // ---------------------------------------------------------------- descriptive statistics
 $("stats-form")?.addEventListener("submit", (e) => {

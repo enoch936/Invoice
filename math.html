@@ -30,9 +30,52 @@
 <div class="notice">Educational tool only. Not financial, tax or legal advice. Formulas are documented and results are computed locally.</div>
 
 <section class="calculator-card wide">
-  <p class="eyebrow">SCIENTIFIC CALCULATOR</p>
+  <div class="sci-toolbar"><p class="eyebrow" style="margin:0">SCIENTIFIC CALCULATOR</p><div class="angle-toggle" role="group" aria-label="Angle unit"><button type="button" data-angle="deg" aria-pressed="true">DEG</button><button type="button" data-angle="rad" aria-pressed="false">RAD</button></div></div>
   <input id="sci-input" class="sci-display" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-label="Expression" placeholder="e.g. sin(30)+log(100)*e^2">
   <div id="sci-output" class="sci-output" aria-live="polite">0</div>
+  <div class="sci-keys" id="sci-keys">
+    <button type="button" class="key-fn" data-ins="sin(">sin</button>
+    <button type="button" class="key-fn" data-ins="cos(">cos</button>
+    <button type="button" class="key-fn" data-ins="tan(">tan</button>
+    <button type="button" class="key-fn" data-ins="ln(">ln</button>
+    <button type="button" class="key-fn" data-ins="log(">log</button>
+    <button type="button" class="key-fn" data-ins="asin(">asin</button>
+    <button type="button" class="key-fn" data-ins="acos(">acos</button>
+    <button type="button" class="key-fn" data-ins="atan(">atan</button>
+    <button type="button" class="key-fn" data-ins="exp(">exp</button>
+    <button type="button" class="key-fn" data-ins="sqrt(">√</button>
+    <button type="button" class="key-fn" data-ins="^2">x²</button>
+    <button type="button" class="key-fn" data-ins="^">xʸ</button>
+    <button type="button" class="key-fn" data-ins="pi">π</button>
+    <button type="button" class="key-fn" data-ins="e">e</button>
+    <button type="button" class="key-op" data-ins="!">n!</button>
+    <button type="button" class="key-op" data-ins="(">(</button>
+    <button type="button" class="key-op" data-ins=")">)</button>
+    <button type="button" class="key-op" data-ins="%">%</button>
+    <button type="button" class="key-fn" data-ins="mod(">mod</button>
+    <button type="button" class="key-fn" data-ins="abs(">abs</button>
+    <button type="button" class="key-op" data-ins="7">7</button>
+    <button type="button" class="key-op" data-ins="8">8</button>
+    <button type="button" class="key-op" data-ins="9">9</button>
+    <button type="button" class="key-op" data-ins="/">÷</button>
+    <button type="button" class="key-util" data-act="backspace" aria-label="Backspace">⌫</button>
+    <button type="button" class="key-op" data-ins="4">4</button>
+    <button type="button" class="key-op" data-ins="5">5</button>
+    <button type="button" class="key-op" data-ins="6">6</button>
+    <button type="button" class="key-op" data-ins="*">×</button>
+    <button type="button" class="key-util" data-act="clear">C</button>
+    <button type="button" class="key-op" data-ins="1">1</button>
+    <button type="button" class="key-op" data-ins="2">2</button>
+    <button type="button" class="key-op" data-ins="3">3</button>
+    <button type="button" class="key-op" data-ins="-">−</button>
+    <button type="button" class="key-fn" data-ins="ans">ans</button>
+    <button type="button" class="key-op" data-ins="0">0</button>
+    <button type="button" class="key-op" data-ins=".">.</button>
+    <button type="button" class="key-util" data-act="sign">±</button>
+    <button type="button" class="key-op" data-ins="+">+</button>
+    <button type="button" class="key-eq" data-act="equals">=</button>
+  </div>
+  <p class="sci-hint">Supports + − × ÷ ^, roots, sin/cos/tan and inverses, ln/log/log₂, exp, factorial (!), π, e, φ, percent, mod(), abs(), and normal-distribution functions normpdf()/normcdf(). Use DEG/RAD for trigonometry.</p>
 </section>
 
 <div class="calculator-grid calc-grid-2">
