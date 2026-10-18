@@ -52,6 +52,7 @@ console.log(`  checked ${jsFiles.length} js files, service worker, ${toolFiles.l
 step("Running unit tests");
 if (!runNode(["tests/quant.test.mjs"])) failures.push("quant tests failed");
 if (!runNode(["tests/calc.test.mjs"])) failures.push("calculator tests failed");
+if (!runNode(["tests/mathengine.test.mjs"])) failures.push("math engine tests failed");
 
 // 3. generator up to date
 step("Checking generated pages are up to date");

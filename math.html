@@ -3,170 +3,401 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Advanced Math Calculator — Stats, Regression &amp; Plots — PARCHXA</title>
-<meta name="description" content="Advanced math tools in your browser: statistics, regression, t-tests, chi-square, matrices, a function plotter and converters. Free and private.">
+<meta name="description" content="Scientific calculator, graphing, polynomial and equation solvers, statistics, t-tests, matrices and converters — all in your browser. Free and private.">
 <link rel="canonical" href="https://enoch936.github.io/Invoice/math.html">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#ffffff">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("parchxa.theme.v1")==="dark"?"dark":"light"}catch(e){}</script>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.twelvedata.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is; object-src 'none'; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
-<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="Advanced Math Calculator — Statistics, Regression &amp; Plots — PARCHXA"><meta property="og:description" content="Descriptive statistics, regressions, t-tests, matrices, function plotter and unit/base converters. Runs locally, no sign-up."><meta property="og:url" content="https://enoch936.github.io/Invoice/math.html">
+<meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="Advanced Math Calculator — Statistics, Regression &amp; Plots — PARCHXA"><meta property="og:description" content="Scientific calculator, graphing, solvers, statistics, matrices and converters. Runs locally, no sign-up."><meta property="og:url" content="https://enoch936.github.io/Invoice/math.html">
 <meta property="og:image" content="https://enoch936.github.io/Invoice/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:image" content="https://enoch936.github.io/Invoice/icons/og.png">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Advanced Math Calculator — Statistics, Regression &amp; Plots — PARCHXA"><meta name="twitter:description" content="Descriptive statistics, regressions, t-tests, matrices, function plotter and unit/base converters. Runs locally, no sign-up.">
-<link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Advanced Math Calculator — Statistics, Regression &amp; Plots — PARCHXA"><meta name="twitter:description" content="Scientific calculator, graphing, solvers, statistics and converters. Runs locally, no sign-up.">
+<link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css"><link rel="stylesheet" href="css/mathlab.css"><link rel="stylesheet" href="vendor/katex/katex.min.css">
 <script type="application/ld+json">[
   {"@context":"https://schema.org","@type":"WebApplication","name":"Advanced Math Calculator","url":"https://enoch936.github.io/Invoice/math.html","applicationCategory":"EducationalApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"Is any data uploaded when I use these math tools?","acceptedAnswer":{"@type":"Answer","text":"No. All calculations run entirely in your browser, including statistics, matrices, regression and the function plotter."}},
+    {"@type":"Question","name":"Is any data uploaded when I use these math tools?","acceptedAnswer":{"@type":"Answer","text":"No. All calculations run entirely in your browser, including the scientific calculator, graphing, solvers, statistics, matrices and the function plotter."}},
     {"@type":"Question","name":"Can I paste large datasets?","acceptedAnswer":{"@type":"Answer","text":"Yes, you can paste space-, comma- or line-delimited numbers. x/y pairs are also supported (one pair per line)."}},
     {"@type":"Question","name":"How accurate are the statistical tests?","acceptedAnswer":{"@type":"Answer","text":"They use well-known approximations (t-test with Welch adjustment, chi-square, incomplete beta) for educational use. For critical decisions, verify with a statistics package."}}
   ]}
 ]</script>
 <script type="module" src="js/math.js"></script>
+<script type="module" src="js/mathlab.js"></script>
 </head>
 <body>
 <header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links" aria-label="Main navigation"></nav></header>
 <main class="container page-main">
-<div class="page-intro"><a class="back-link" href="index.html">← All tools</a><p class="eyebrow">TOOL 07 / ADVANCED MATH</p><h1>Advanced math — <span class="text-gradient">stats, matrices &amp; plotter</span></h1><p>Descriptive statistics, correlation, linear/polynomial regression, hypothesis tests, matrix arithmetic, a function plotter and practical converters.</p></div>
+<div class="page-intro"><a class="back-link" href="index.html">← All tools</a><p class="eyebrow">TOOL 07 / ADVANCED MATH</p><h1>Advanced math — <span class="text-gradient">stats, matrices &amp; plotter</span></h1><p>A professional mathematical workspace: scientific calculator with live preview, graphing, polynomial and equation solvers, complex numbers, calculus, statistics, matrices and converters.</p></div>
 <div class="notice">Educational tool only. Not financial, tax or legal advice. Formulas are documented and results are computed locally.</div>
 
-<section class="calculator-card wide">
-  <div class="sci-toolbar"><p class="eyebrow" style="margin:0">SCIENTIFIC CALCULATOR</p><div class="angle-toggle" role="group" aria-label="Angle unit"><button type="button" data-angle="deg" aria-pressed="true">DEG</button><button type="button" data-angle="rad" aria-pressed="false">RAD</button></div></div>
-  <input id="sci-input" class="sci-display" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-label="Expression" placeholder="e.g. sin(30)+log(100)*e^2">
-  <div id="sci-output" class="sci-output" aria-live="polite">0</div>
-  <div class="sci-keys" id="sci-keys">
-    <button type="button" class="key-fn" data-ins="sin(">sin</button>
-    <button type="button" class="key-fn" data-ins="cos(">cos</button>
-    <button type="button" class="key-fn" data-ins="tan(">tan</button>
-    <button type="button" class="key-fn" data-ins="ln(">ln</button>
-    <button type="button" class="key-fn" data-ins="log(">log</button>
-    <button type="button" class="key-fn" data-ins="asin(">asin</button>
-    <button type="button" class="key-fn" data-ins="acos(">acos</button>
-    <button type="button" class="key-fn" data-ins="atan(">atan</button>
-    <button type="button" class="key-fn" data-ins="exp(">exp</button>
-    <button type="button" class="key-fn" data-ins="sqrt(">√</button>
-    <button type="button" class="key-fn" data-ins="^2">x²</button>
-    <button type="button" class="key-fn" data-ins="^">xʸ</button>
-    <button type="button" class="key-fn" data-ins="pi">π</button>
-    <button type="button" class="key-fn" data-ins="e">e</button>
-    <button type="button" class="key-op" data-ins="!">n!</button>
-    <button type="button" class="key-op" data-ins="(">(</button>
-    <button type="button" class="key-op" data-ins=")">)</button>
-    <button type="button" class="key-op" data-ins="%">%</button>
-    <button type="button" class="key-fn" data-ins="mod(">mod</button>
-    <button type="button" class="key-fn" data-ins="abs(">abs</button>
-    <button type="button" class="key-op" data-ins="7">7</button>
-    <button type="button" class="key-op" data-ins="8">8</button>
-    <button type="button" class="key-op" data-ins="9">9</button>
-    <button type="button" class="key-op" data-ins="/">÷</button>
-    <button type="button" class="key-util" data-act="backspace" aria-label="Backspace">⌫</button>
-    <button type="button" class="key-op" data-ins="4">4</button>
-    <button type="button" class="key-op" data-ins="5">5</button>
-    <button type="button" class="key-op" data-ins="6">6</button>
-    <button type="button" class="key-op" data-ins="*">×</button>
-    <button type="button" class="key-util" data-act="clear">C</button>
-    <button type="button" class="key-op" data-ins="1">1</button>
-    <button type="button" class="key-op" data-ins="2">2</button>
-    <button type="button" class="key-op" data-ins="3">3</button>
-    <button type="button" class="key-op" data-ins="-">−</button>
-    <button type="button" class="key-fn" data-ins="ans">ans</button>
-    <button type="button" class="key-op" data-ins="0">0</button>
-    <button type="button" class="key-op" data-ins=".">.</button>
-    <button type="button" class="key-util" data-act="sign">±</button>
-    <button type="button" class="key-op" data-ins="+">+</button>
-    <button type="button" class="key-eq" data-act="equals">=</button>
+<div class="lab" id="mathlab">
+  <aside class="lab-rail" role="tablist" aria-label="Calculator modes">
+    <button type="button" class="lab-tab is-active" role="tab" id="tab-scientific" aria-controls="panel-scientific" aria-selected="true" data-mode="scientific">Scientific</button>
+    <button type="button" class="lab-tab" role="tab" id="tab-equations" aria-controls="panel-equations" aria-selected="false" data-mode="equations">Equations</button>
+    <button type="button" class="lab-tab" role="tab" id="tab-polynomial" aria-controls="panel-polynomial" aria-selected="false" data-mode="polynomial">Polynomial</button>
+    <button type="button" class="lab-tab" role="tab" id="tab-complex" aria-controls="panel-complex" aria-selected="false" data-mode="complex">Complex</button>
+    <button type="button" class="lab-tab" role="tab" id="tab-graphing" aria-controls="panel-graphing" aria-selected="false" data-mode="graphing">Graphing</button>
+    <button type="button" class="lab-tab" role="tab" id="tab-calculus" aria-controls="panel-calculus" aria-selected="false" data-mode="calculus">Calculus</button>
+    <button type="button" class="lab-tab" role="tab" id="tab-matrices" aria-controls="panel-matrices" aria-selected="false" data-mode="matrices">Matrices</button>
+    <button type="button" class="lab-tab" role="tab" id="tab-statistics" aria-controls="panel-statistics" aria-selected="false" data-mode="statistics">Statistics</button>
+    <button type="button" class="lab-tab" role="tab" id="tab-history" aria-controls="panel-history" aria-selected="false" data-mode="history">History</button>
+    <button type="button" class="lab-tab lab-tab-util" id="kbd-btn" aria-haspopup="dialog">⌨ Shortcuts</button>
+  </aside>
+
+  <div class="lab-work">
+    <section class="lab-panel is-active" id="panel-scientific" role="tabpanel" aria-labelledby="tab-scientific" data-panel="scientific">
+      <section class="calculator-card wide">
+        <div class="sci-toolbar"><p class="eyebrow" style="margin:0">SCIENTIFIC CALCULATOR</p>
+          <div class="sci-toolbar-right">
+            <span id="mem-badge" class="mem-badge" hidden title="Stored memory">M</span>
+            <label class="visually-hidden-label" for="sci-precision">Precision</label>
+            <select id="sci-precision" aria-label="Display precision"><option value="auto" selected>Auto</option><option value="4">4 sig</option><option value="6">6 sig</option><option value="10">10 sig</option><option value="15">15 sig</option></select>
+            <div class="angle-toggle" role="group" aria-label="Angle unit"><button type="button" data-angle="deg" aria-pressed="true">DEG</button><button type="button" data-angle="rad" aria-pressed="false">RAD</button></div>
+          </div>
+        </div>
+        <input id="sci-input" class="sci-display" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-label="Expression" placeholder="e.g. sin(30)+log(100)*e^2 or (2+3i)/(1-i)">
+        <div id="sci-preview" class="sci-preview" aria-hidden="true"></div>
+        <div id="sci-output" class="sci-output" aria-live="polite">0</div>
+        <div class="sci-keys" id="sci-keys">
+          <button type="button" class="key-fn" data-ins="sin(">sin</button>
+          <button type="button" class="key-fn" data-ins="cos(">cos</button>
+          <button type="button" class="key-fn" data-ins="tan(">tan</button>
+          <button type="button" class="key-fn" data-ins="ln(">ln</button>
+          <button type="button" class="key-fn" data-ins="log(">log</button>
+          <button type="button" class="key-fn" data-ins="asin(">asin</button>
+          <button type="button" class="key-fn" data-ins="acos(">acos</button>
+          <button type="button" class="key-fn" data-ins="atan(">atan</button>
+          <button type="button" class="key-fn" data-ins="exp(">exp</button>
+          <button type="button" class="key-fn" data-ins="sqrt(">√</button>
+          <button type="button" class="key-fn" data-ins="^2">x²</button>
+          <button type="button" class="key-fn" data-ins="^">xʸ</button>
+          <button type="button" class="key-fn" data-ins="pi">π</button>
+          <button type="button" class="key-fn" data-ins="e">e</button>
+          <button type="button" class="key-op" data-ins="!">n!</button>
+          <button type="button" class="key-op" data-ins="(">(</button>
+          <button type="button" class="key-op" data-ins=")">)</button>
+          <button type="button" class="key-op" data-ins="%">%</button>
+          <button type="button" class="key-fn" data-ins="mod(">mod</button>
+          <button type="button" class="key-fn" data-ins="abs(">abs</button>
+          <button type="button" class="key-op" data-ins="7">7</button>
+          <button type="button" class="key-op" data-ins="8">8</button>
+          <button type="button" class="key-op" data-ins="9">9</button>
+          <button type="button" class="key-op" data-ins="/">÷</button>
+          <button type="button" class="key-util" data-act="backspace" aria-label="Backspace">⌫</button>
+          <button type="button" class="key-op" data-ins="4">4</button>
+          <button type="button" class="key-op" data-ins="5">5</button>
+          <button type="button" class="key-op" data-ins="6">6</button>
+          <button type="button" class="key-op" data-ins="*">×</button>
+          <button type="button" class="key-util" data-act="clear">C</button>
+          <button type="button" class="key-op" data-ins="1">1</button>
+          <button type="button" class="key-op" data-ins="2">2</button>
+          <button type="button" class="key-op" data-ins="3">3</button>
+          <button type="button" class="key-op" data-ins="-">−</button>
+          <button type="button" class="key-fn" data-ins="ans">ans</button>
+          <button type="button" class="key-op" data-ins="0">0</button>
+          <button type="button" class="key-op" data-ins=".">.</button>
+          <button type="button" class="key-util" data-act="sign">±</button>
+          <button type="button" class="key-op" data-ins="+">+</button>
+          <button type="button" class="key-eq" data-act="equals">=</button>
+          <button type="button" class="key-fn" data-ins="i">i</button>
+          <button type="button" class="key-fn" data-ins="phi">φ</button>
+          <button type="button" class="key-fn" data-ins="atan2(">atan2</button>
+          <button type="button" class="key-fn" data-ins="hypot(">hypot</button>
+        </div>
+        <div class="sci-aux-row">
+          <button type="button" class="key-util" data-act="mem-clear">MC</button>
+          <button type="button" class="key-util" data-act="mem-recall">MR</button>
+          <button type="button" class="key-util" data-act="mem-add">M+</button>
+          <button type="button" class="key-util" data-act="mem-sub">M−</button>
+          <span class="sci-aux-note">Memory stores the last result · press ? for shortcuts</span>
+        </div>
+        <p class="sci-hint">Supports + − × ÷ ^, roots, sin/cos/tan and inverses, ln/log/log₂, exp, factorial (!), π, e, φ, percent, mod(), abs(), complex numbers (i, conj(), arg(), re(), imag()) and normal-distribution functions normpdf()/normcdf(). Type to see a live formatted preview; ↑ recalls history.</p>
+      </section>
+
+      <section class="calculator-card"><p class="eyebrow">NUMBER THEORY</p>
+        <div class="form-row">
+          <label for="nt-a">Number a<input id="nt-a" type="text" value="360" spellcheck="false"></label>
+          <label for="nt-b">Number b<input id="nt-b" type="text" value="84" spellcheck="false"></label>
+          <label for="nt-e">Exponent e<input id="nt-e" type="text" value="17" spellcheck="false"></label>
+          <label for="nt-m">Modulus m<input id="nt-m" type="text" value="1000000007" spellcheck="false"></label>
+        </div>
+        <div class="actions-row">
+          <button type="button" id="nt-factors" class="button button-secondary button-small">Prime factors(a)</button>
+          <button type="button" id="nt-prime" class="button button-secondary button-small">Is a prime?</button>
+          <button type="button" id="nt-gcd" class="button button-secondary button-small">GCD(a, b)</button>
+          <button type="button" id="nt-lcm" class="button button-secondary button-small">LCM(a, b)</button>
+          <button type="button" id="nt-modpow" class="button button-secondary button-small">a^e mod m</button>
+        </div>
+        <pre id="nt-out" class="muted-copy" aria-live="polite">Results appear here.</pre>
+      </section>
+
+      <section class="calculator-card"><p class="eyebrow">BASE CONVERTER</p>
+        <div class="form-row">
+          <label for="base-num">Base converter: number<input id="base-num" type="text" value="255"></label>
+          <label>From<select id="base-from"><option value="10">Decimal</option><option value="2">Binary</option><option value="8">Octal</option><option value="16">Hex</option><option value="36">Base36</option></select></label>
+          <label>To<select id="base-to"><option value="2">Binary</option><option value="8">Octal</option><option value="10" selected>Decimal</option><option value="16">Hex</option><option value="36">Base36</option></select></label>
+        </div>
+        <p id="base-out" class="result-panel" aria-live="polite">255</p>
+      </section>
+    </section>
+
+    <section class="lab-panel" id="panel-equations" role="tabpanel" aria-labelledby="tab-equations" data-panel="equations">
+      <section class="calculator-card"><p class="eyebrow">LINEAR EQUATION SYSTEMS</p>
+        <label>Equations (one per line, up to 6 unknowns)<textarea id="eq-input" rows="5" spellcheck="false" placeholder="x + y = 5&#10;x - y = 1"></textarea></label>
+        <div class="actions-row">
+          <button type="button" class="button button-primary" id="eq-solve">Solve exactly</button>
+          <button type="button" class="button button-secondary button-small" data-eq-ex="x + y = 5&#10;x - y = 1">Example: 2×2</button>
+          <button type="button" class="button button-secondary button-small" data-eq-ex="x + y + z = 6&#10;2y + 3z = 8&#10;z = 2">Example: 3×3</button>
+          <button type="button" class="button button-secondary button-small" data-eq-ex="2x + 2y = 4&#10;x + y = 3">Example: no solution</button>
+          <button type="button" class="button button-secondary button-small" data-eq-ex="x + y = 2&#10;2x + 2y = 4">Example: infinite</button>
+        </div>
+        <div id="eq-result" class="solver-result" aria-live="polite"></div>
+        <ol id="eq-steps" class="steps-list"></ol>
+        <p class="muted-copy">Exact rational arithmetic — fractions like 8/5 stay exact. Rows are eliminated with recorded row operations; consistency is decided by comparing rank(A) with rank([A|b]).</p>
+      </section>
+    </section>
+
+    <section class="lab-panel" id="panel-polynomial" role="tabpanel" aria-labelledby="tab-polynomial" data-panel="polynomial">
+      <section class="calculator-card"><p class="eyebrow">POLYNOMIAL ROOT FINDER</p>
+        <div class="form-row">
+          <label for="poly-input">Polynomial or equation<input id="poly-input" type="text" spellcheck="false" placeholder="x^2 - 5x + 6  (or  x^3 - 1 = 0)"></label>
+          <label>Variable<select id="poly-var"><option value="x" selected>x</option><option value="y">y</option><option value="t">t</option></select></label>
+        </div>
+        <div class="actions-row">
+          <button type="button" class="button button-primary" id="poly-solve">Find roots</button>
+          <button type="button" class="button button-secondary button-small" data-poly-ex="x^2 - 5x + 6">x²−5x+6</button>
+          <button type="button" class="button button-secondary button-small" data-poly-ex="x^2 + 1">x²+1</button>
+          <button type="button" class="button button-secondary button-small" data-poly-ex="x^3 - 1">x³−1</button>
+          <button type="button" class="button button-secondary button-small" data-poly-ex="(x - 1)^2">(x−1)²</button>
+          <button type="button" class="button button-secondary button-small" data-poly-ex="x^4 - 1">x⁴−1</button>
+        </div>
+        <div id="poly-result" class="solver-result" aria-live="polite"></div>
+        <ol id="poly-steps" class="steps-list"></ol>
+        <p class="muted-copy">Degree 1–2 results are exact (with discriminant). Higher degrees: square-free reduction (gcd with the derivative) then the Durand–Kerner iterative method — every root is verified against |p(r)|. Real coefficients only.</p>
+      </section>
+    </section>
+
+    <section class="lab-panel" id="panel-complex" role="tabpanel" aria-labelledby="tab-complex" data-panel="complex">
+      <section class="calculator-card"><p class="eyebrow">COMPLEX NUMBER CALCULATOR</p>
+        <div class="form-row">
+          <label for="cx-input">Expression in i<input id="cx-input" type="text" spellcheck="false" placeholder="(2 + 3i) / (1 - i)"></label>
+        </div>
+        <div class="actions-row">
+          <button type="button" class="button button-primary" id="cx-eval">Evaluate</button>
+          <button type="button" class="button button-secondary button-small" data-cx-ins="conj(">conj( )</button>
+          <button type="button" class="button button-secondary button-small" data-cx-ins="abs(">abs( )</button>
+          <button type="button" class="button button-secondary button-small" data-cx-ins="arg(">arg( )</button>
+          <button type="button" class="button button-secondary button-small" data-cx-ins="re(">re( )</button>
+          <button type="button" class="button button-secondary button-small" data-cx-ins="imag(">imag( )</button>
+          <button type="button" class="button button-secondary button-small" data-cx-ins="sqrt(">√( )</button>
+        </div>
+        <div id="cx-result" class="solver-result" aria-live="polite"></div>
+        <dl class="stat-grid" id="cx-meta"></dl>
+        <canvas id="cx-canvas" class="argand-canvas" width="420" height="420" aria-label="Argand diagram of the result" role="img"></canvas>
+        <p class="muted-copy">Square root, logarithm and powers use the principal complex branch. The Argand diagram shows z (solid), its conjugate (dashed) and the |z| circle.</p>
+      </section>
+    </section>
+
+    <section class="lab-panel" id="panel-graphing" role="tabpanel" aria-labelledby="tab-graphing" data-panel="graphing">
+      <section class="calculator-card wide"><p class="eyebrow">GRAPHING WORKSPACE</p>
+        <div class="graph-toolbar">
+          <label>Mode<select id="g-mode"><option value="fn" selected>y = f(x)</option><option value="polar">polar r(θ)</option><option value="param">parametric x(t), y(t)</option></select></label>
+          <label for="g-x0">X min<input id="g-x0" type="number" value="-10" step="any"></label>
+          <label for="g-x1">X max<input id="g-x1" type="number" value="10" step="any"></label>
+          <label for="g-y0">Y min<input id="g-y0" type="number" value="-10" step="any"></label>
+          <label for="g-y1">Y max<input id="g-y1" type="number" value="10" step="any"></label>
+          <button type="button" id="g-apply" class="button button-secondary button-small">Apply view</button>
+          <button type="button" id="g-fit" class="button button-secondary button-small">Fit Y</button>
+          <button type="button" id="g-reset" class="button button-secondary button-small">Reset</button>
+        </div>
+        <div id="g-list" class="fn-list"></div>
+        <div class="actions-row">
+          <button type="button" id="g-add" class="button button-secondary button-small">+ Add function</button>
+          <button type="button" id="g-roots" class="button button-secondary button-small">Find roots</button>
+          <button type="button" id="g-inter" class="button button-secondary button-small">Intersections</button>
+          <button type="button" id="g-ext" class="button button-secondary button-small">Extrema</button>
+          <button type="button" id="g-export" class="button button-secondary button-small">Export PNG</button>
+        </div>
+        <div class="graph-stage">
+          <canvas id="g-canvas" class="graph-canvas" aria-label="Function graph" role="img"></canvas>
+          <div id="g-readout" class="graph-readout">—</div>
+        </div>
+        <div class="trace-row">
+          <label for="g-trace">Trace</label>
+          <input id="g-trace" type="range" min="0" max="1000" value="500" step="1">
+          <span id="g-trace-out" class="muted-copy">off</span>
+        </div>
+        <ol id="g-findings" class="steps-list"></ol>
+        <p class="muted-copy">Drag to pan, wheel or pinch to zoom (the page still scrolls outside the canvas). Curves break at discontinuities — y = 1/x never draws a false line through x = 0. Roots/extrema/intersections are computed numerically over the visible range.</p>
+      </section>
+      <section class="calculator-card"><p class="eyebrow">QUICK SVG PLOT</p>
+        <form id="plot-form" class="calc-form">
+          <label>Expression f(x)<input name="expr" type="text" value="sin(x)" spellcheck="false"></label>
+          <div class="form-row">
+            <label>X min<input name="xmin" type="number" value="-10" step="0.1"></label>
+            <label>X max<input name="xmax" type="number" value="10" step="0.1"></label>
+            <label>Y min<input name="ymin" type="number" value="-2" step="0.1"></label>
+            <label>Y max<input name="ymax" type="number" value="2" step="0.1"></label>
+            <label>Points<input name="points" type="number" min="50" max="400" value="180" step="1"></label>
+          </div>
+          <button class="button button-primary" type="submit">Plot</button>
+        </form>
+        <svg id="plot" class="chart tall" width="100%" height="420" aria-label="Function plot" role="img"></svg>
+        <p class="muted-copy">Uses the scientific expression engine (sin/cos/tan, ln/log/exp, ^, pi, e). Variables: x.</p>
+      </section>
+    </section>
+
+    <section class="lab-panel" id="panel-calculus" role="tabpanel" aria-labelledby="tab-calculus" data-panel="calculus">
+      <section class="calculator-card"><p class="eyebrow">DERIVATIVE</p>
+        <div class="form-row">
+          <label for="d-expr">f(x)<input id="d-expr" type="text" value="sin(x^2)*x" spellcheck="false"></label>
+          <label for="d-x">at x =<input id="d-x" type="text" value="1.2" spellcheck="false"></label>
+        </div>
+        <div class="actions-row"><button type="button" id="d-go" class="button button-primary button-small">Differentiate</button></div>
+        <div id="d-result" class="solver-result" aria-live="polite"></div>
+      </section>
+      <section class="calculator-card"><p class="eyebrow">DEFINITE INTEGRAL</p>
+        <div class="form-row">
+          <label for="i-expr">f(x)<input id="i-expr" type="text" value="x^2" spellcheck="false"></label>
+          <label for="i-a">from a =<input id="i-a" type="text" value="0" spellcheck="false"></label>
+          <label for="i-b">to b =<input id="i-b" type="text" value="3" spellcheck="false"></label>
+        </div>
+        <div class="actions-row"><button type="button" id="i-go" class="button button-primary button-small">Integrate</button></div>
+        <div id="i-result" class="solver-result" aria-live="polite"></div>
+      </section>
+      <section class="calculator-card"><p class="eyebrow">LIMIT</p>
+        <div class="form-row">
+          <label for="l-expr">f(x)<input id="l-expr" type="text" value="sin(x)/x" spellcheck="false"></label>
+          <label for="l-x">as x →<input id="l-x" type="text" value="0" spellcheck="false"></label>
+        </div>
+        <div class="actions-row"><button type="button" id="l-go" class="button button-primary button-small">Evaluate limit</button></div>
+        <div id="l-result" class="solver-result" aria-live="polite"></div>
+      </section>
+      <section class="calculator-card"><p class="eyebrow">ROOTS IN INTERVAL</p>
+        <div class="form-row">
+          <label for="r-expr">f(x)<input id="r-expr" type="text" value="x^3 - 2x - 5" spellcheck="false"></label>
+          <label for="r-a">from<input id="r-a" type="text" value="-5" spellcheck="false"></label>
+          <label for="r-b">to<input id="r-b" type="text" value="5" spellcheck="false"></label>
+        </div>
+        <div class="actions-row"><button type="button" id="r-go" class="button button-primary button-small">Scan for roots</button></div>
+        <div id="r-result" class="solver-result" aria-live="polite"></div>
+        <p class="muted-copy">Derivatives: symbolic rule-based result when available, always cross-checked with a high-accuracy central difference. Integrals: adaptive Simpson with a convergence report. Limits: sampled from both sides — divergence is reported honestly, not guessed.</p>
+      </section>
+    </section>
+
+    <section class="lab-panel" id="panel-matrices" role="tabpanel" aria-labelledby="tab-matrices" data-panel="matrices">
+      <section class="calculator-card"><p class="eyebrow">MATRIX ARITHMETIC (2×2 &amp; 3×3)</p>
+        <div class="form-row">
+          <div>
+            <label>Matrix A<textarea id="mA" rows="3" spellcheck="false" placeholder="1, 2&#10;3, 4"></textarea></label>
+          </div>
+          <div>
+            <label>Matrix B<textarea id="mB" rows="3" spellcheck="false" placeholder="5, 6&#10;7, 8"></textarea></label>
+          </div>
+        </div>
+        <div class="actions-row">
+          <button type="button" id="m-add" class="button button-secondary button-small">A+B</button>
+          <button type="button" id="m-sub" class="button button-secondary button-small">A−B</button>
+          <button type="button" id="m-mul" class="button button-secondary button-small">A×B</button>
+          <button type="button" id="m-tA" class="button button-secondary button-small">T(A)</button>
+          <button type="button" id="m-tB" class="button button-secondary button-small">T(B)</button>
+          <button type="button" id="m-detA" class="button button-secondary button-small">det(A)</button>
+          <button type="button" id="m-detB" class="button button-secondary button-small">det(B)</button>
+          <button type="button" id="m-invA" class="button button-secondary button-small">inv(A)</button>
+          <button type="button" id="m-invB" class="button button-secondary button-small">inv(B)</button>
+        </div>
+        <pre id="m-out" class="muted-copy" aria-live="polite">Result will appear here.</pre>
+        <p class="muted-copy">Paste rows separated by newlines, columns by commas or spaces.</p>
+      </section>
+      <section class="calculator-card"><p class="eyebrow">MATRIX ANALYSIS (n × n, up to 6)</p>
+        <label>Matrix<textarea id="mx-input" rows="4" spellcheck="false" placeholder="2, 0, 1&#10;1, -3, 2&#10;4, -1, 1"></textarea></label>
+        <div class="actions-row">
+          <button type="button" id="mx-det" class="button button-secondary button-small">det</button>
+          <button type="button" id="mx-inv" class="button button-secondary button-small">inverse</button>
+          <button type="button" id="mx-rank" class="button button-secondary button-small">rank</button>
+          <button type="button" id="mx-tr" class="button button-secondary button-small">trace</button>
+          <button type="button" id="mx-t" class="button button-secondary button-small">transpose</button>
+          <button type="button" id="mx-eig" class="button button-primary button-small">eigenvalues &amp; vectors</button>
+        </div>
+        <pre id="mx-out" class="muted-copy" aria-live="polite">Result will appear here.</pre>
+        <p class="muted-copy">Determinants use partial-pivot elimination; eigen decomposition covers 1×1–3×3 via the characteristic polynomial, with each vector verified against Av = λv.</p>
+      </section>
+    </section>
+
+    <section class="lab-panel" id="panel-statistics" role="tabpanel" aria-labelledby="tab-statistics" data-panel="statistics">
+      <div class="calculator-grid calc-grid-2">
+        <section class="calculator-card"><p class="eyebrow">DESCRIPTIVE STATISTICS</p>
+          <form id="stats-form" class="calc-form">
+            <label>Data series<textarea name="series" rows="6" spellcheck="false" placeholder="10, 12, 11, 13, 14, 10, 12, 15"></textarea></label>
+            <button class="button button-primary" type="submit">Analyze</button>
+          </form>
+          <dl class="stat-grid" id="stats-grid"></dl>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>Quartile</th><th>Value</th></tr></thead><tbody id="stats-quartiles"></tbody></table></div>
+        </section>
+
+        <section class="calculator-card"><p class="eyebrow">CORRELATION &amp; REGRESSION</p>
+          <form id="corr-form" class="calc-form">
+            <label>X values<textarea name="x" rows="4" spellcheck="false" placeholder="1, 2, 3, 4, 5"></textarea></label>
+            <label>Y values<textarea name="y" rows="4" spellcheck="false" placeholder="2, 4, 6, 8, 10"></textarea></label>
+            <label>Polynomial degree<input name="degree" type="number" min="1" max="6" value="2"></label>
+            <button class="button button-primary" type="submit">Compute</button>
+          </form>
+          <dl class="stat-grid" id="corr-grid"></dl>
+          <p class="muted-copy" id="corr-eq"></p>
+        </section>
+
+        <section class="calculator-card"><p class="eyebrow">HYPOTHESIS TESTS</p>
+          <form id="ttest-form" class="calc-form">
+            <label>Sample A<textarea name="a" rows="3" spellcheck="false" placeholder="1, 2, 3, 4, 5"></textarea></label>
+            <label>Sample B (leave empty for one-sample)<textarea name="b" rows="3" spellcheck="false" placeholder="2, 3, 4, 5, 6"></textarea></label>
+            <label>Test type<select name="type"><option value="two">Two-sample Welch</option><option value="paired">Paired</option><option value="one">One-sample vs μ</option></select></label>
+            <label>Hypothesised μ<input name="mu" type="number" step="any" value="3"></label>
+            <button class="button button-primary" type="submit">Run test</button>
+          </form>
+          <dl class="stat-grid" id="ttest-grid"></dl>
+        </section>
+
+        <section class="calculator-card"><p class="eyebrow">CHI-SQUARE GOODNESS OF FIT</p>
+          <form id="chi-form" class="calc-form">
+            <label>Observed counts<textarea name="obs" rows="3" spellcheck="false" placeholder="20, 15, 15"></textarea></label>
+            <label>Expected counts (optional)<textarea name="exp" rows="3" spellcheck="false" placeholder="16.7, 16.7, 16.7"></textarea></label>
+            <button class="button button-primary" type="submit">Run test</button>
+          </form>
+          <dl class="stat-grid" id="chi-grid"></dl>
+        </section>
+      </div>
+    </section>
+
+    <section class="lab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history" data-panel="history">
+      <section class="calculator-card"><p class="eyebrow">HISTORY &amp; EXPORT</p>
+        <div class="graph-toolbar">
+          <label for="hist-search">Search<input id="hist-search" type="search" placeholder="filter expressions…"></label>
+          <button type="button" id="hist-export" class="button button-secondary button-small">Export .txt</button>
+          <button type="button" id="hist-export-tex" class="button button-secondary button-small">Export LaTeX</button>
+          <button type="button" id="hist-clear" class="button button-secondary button-small">Clear all…</button>
+        </div>
+        <div id="hist-list" class="hist-list" aria-live="polite"></div>
+        <p class="muted-copy">Stored only in this browser (localStorage key parchxa.calc.history.v1), newest first, up to 200 entries. Pinned entries survive Clear.</p>
+      </section>
+    </section>
   </div>
-  <p class="sci-hint">Supports + − × ÷ ^, roots, sin/cos/tan and inverses, ln/log/log₂, exp, factorial (!), π, e, φ, percent, mod(), abs(), and normal-distribution functions normpdf()/normcdf(). Use DEG/RAD for trigonometry.</p>
-</section>
+</div>
 
-<div class="calculator-grid calc-grid-2">
-  <section class="calculator-card"><p class="eyebrow">DESCRIPTIVE STATISTICS</p>
-    <form id="stats-form" class="calc-form">
-      <label>Data series<textarea name="series" rows="6" spellcheck="false" placeholder="10, 12, 11, 13, 14, 10, 12, 15"></textarea></label>
-      <button class="button button-primary" type="submit">Analyze</button>
-    </form>
-    <dl class="stat-grid" id="stats-grid"></dl>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Quartile</th><th>Value</th></tr></thead><tbody id="stats-quartiles"></tbody></table></div>
-  </section>
-
-  <section class="calculator-card"><p class="eyebrow">CORRELATION &amp; REGRESSION</p>
-    <form id="corr-form" class="calc-form">
-      <label>X values<textarea name="x" rows="4" spellcheck="false" placeholder="1, 2, 3, 4, 5"></textarea></label>
-      <label>Y values<textarea name="y" rows="4" spellcheck="false" placeholder="2, 4, 6, 8, 10"></textarea></label>
-      <label>Polynomial degree<input name="degree" type="number" min="1" max="6" value="2"></label>
-      <button class="button button-primary" type="submit">Compute</button>
-    </form>
-    <dl class="stat-grid" id="corr-grid"></dl>
-    <p class="muted-copy" id="corr-eq"></p>
-  </section>
-
-  <section class="calculator-card"><p class="eyebrow">HYPOTHESIS TESTS</p>
-    <form id="ttest-form" class="calc-form">
-      <label>Sample A<textarea name="a" rows="3" spellcheck="false" placeholder="1, 2, 3, 4, 5"></textarea></label>
-      <label>Sample B (leave empty for one-sample)<textarea name="b" rows="3" spellcheck="false" placeholder="2, 3, 4, 5, 6"></textarea></label>
-      <label>Test type<select name="type"><option value="two">Two-sample Welch</option><option value="paired">Paired</option><option value="one">One-sample vs μ</option></select></label>
-      <label>Hypothesised μ<input name="mu" type="number" step="any" value="3"></label>
-      <button class="button button-primary" type="submit">Run test</button>
-    </form>
-    <dl class="stat-grid" id="ttest-grid"></dl>
-  </section>
-
-  <section class="calculator-card"><p class="eyebrow">CHI-SQUARE GOODNESS OF FIT</p>
-    <form id="chi-form" class="calc-form">
-      <label>Observed counts<textarea name="obs" rows="3" spellcheck="false" placeholder="20, 15, 15"></textarea></label>
-      <label>Expected counts (optional)<textarea name="exp" rows="3" spellcheck="false" placeholder="16.7, 16.7, 16.7"></textarea></label>
-      <button class="button button-primary" type="submit">Run test</button>
-    </form>
-    <dl class="stat-grid" id="chi-grid"></dl>
-  </section>
-
-  <section class="calculator-card"><p class="eyebrow">FUNCTION PLOTTER</p>
-    <form id="plot-form" class="calc-form">
-      <label>Expression f(x)<input name="expr" type="text" value="sin(x)" spellcheck="false"></label>
-      <div class="form-row">
-        <label>X min<input name="xmin" type="number" value="-10" step="0.1"></label>
-        <label>X max<input name="xmax" type="number" value="10" step="0.1"></label>
-        <label>Y min<input name="ymin" type="number" value="-2" step="0.1"></label>
-        <label>Y max<input name="ymax" type="number" value="2" step="0.1"></label>
-        <label>Points<input name="points" type="number" min="50" max="400" value="180" step="1"></label>
-      </div>
-      <button class="button button-primary" type="submit">Plot</button>
-    </form>
-    <svg id="plot" class="chart tall" width="100%" height="420" aria-label="Function plot" role="img"></svg>
-    <p class="muted-copy">Uses the scientific expression engine (sin/cos/tan, ln/log/exp, ^, pi, e). Variables: x.</p>
-  </section>
-
-  <section class="calculator-card"><p class="eyebrow">MATRIX ARITHMETIC (2×2 &amp; 3×3)</p>
-    <div class="form-row">
-      <div>
-        <label>Matrix A<textarea id="mA" rows="3" spellcheck="false" placeholder="1, 2&#10;3, 4"></textarea></label>
-      </div>
-      <div>
-        <label>Matrix B<textarea id="mB" rows="3" spellcheck="false" placeholder="5, 6&#10;7, 8"></textarea></label>
-      </div>
-    </div>
-    <div class="actions-row">
-      <button type="button" id="m-add" class="button button-secondary button-small">A+B</button>
-      <button type="button" id="m-sub" class="button button-secondary button-small">A−B</button>
-      <button type="button" id="m-mul" class="button button-secondary button-small">A×B</button>
-      <button type="button" id="m-tA" class="button button-secondary button-small">T(A)</button>
-      <button type="button" id="m-tB" class="button button-secondary button-small">T(B)</button>
-      <button type="button" id="m-detA" class="button button-secondary button-small">det(A)</button>
-      <button type="button" id="m-detB" class="button button-secondary button-small">det(B)</button>
-      <button type="button" id="m-invA" class="button button-secondary button-small">inv(A)</button>
-      <button type="button" id="m-invB" class="button button-secondary button-small">inv(B)</button>
-    </div>
-    <pre id="m-out" class="muted-copy" aria-live="polite">Result will appear here.</pre>
-    <p class="muted-copy">Paste rows separated by newlines, columns by commas or spaces.</p>
-  </section>
-
-  <section class="calculator-card"><p class="eyebrow">BASE &amp; UNIT CONVERTERS</p>
-    <div class="form-row">
-      <label>Base converter: number<input id="base-num" type="text" value="255"></label>
-      <label>From<select id="base-from"><option value="10">Decimal</option><option value="2">Binary</option><option value="8">Octal</option><option value="16">Hex</option><option value="36">Base36</option></select></label>
-      <label>To<select id="base-to"><option value="2">Binary</option><option value="8">Octal</option><option value="10" selected>Decimal</option><option value="16">Hex</option><option value="36">Base36</option></select></label>
-    </div>
-    <p id="base-out" class="result-panel" aria-live="polite">255</p>
-  </section>
+<div id="kbd-pop" class="kbd-pop" hidden>
+  <div class="kbd-card" role="dialog" aria-modal="true" aria-labelledby="kbd-title">
+    <div class="kbd-head"><p class="eyebrow" id="kbd-title">KEYBOARD SHORTCUTS</p><button type="button" id="kbd-close" class="button button-secondary button-small">Close</button></div>
+    <dl class="kbd-grid">
+      <dt>Enter</dt><dd>Evaluate (adds to history)</dd>
+      <dt>Esc</dt><dd>Close suggestions / clear the expression</dd>
+      <dt>Tab</dt><dd>Accept the highlighted suggestion</dd>
+      <dt>↑ / ↓</dt><dd>Navigate suggestions, otherwise recall history</dd>
+      <dt>Ctrl/Cmd + Z</dt><dd>Undo in the expression editor</dd>
+      <dt>Ctrl/Cmd + Shift + Z</dt><dd>Redo</dd>
+      <dt>?</dt><dd>Open this shortcuts panel</dd>
+      <dt>Mouse wheel</dt><dd>Zoom the graph (over the canvas)</dd>
+      <dt>Drag</dt><dd>Pan the graph (over the canvas)</dd>
+    </dl>
+  </div>
 </div>
 
 <div data-affiliates="math"></div>
@@ -174,5 +405,7 @@
 <p class="updated">Last updated October 2026 · Built by PARCHXA</p>
 </main>
 <footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA</a><span>Useful tools for independent work.</span><nav class="footer-links" aria-label="Legal and contact"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="privacy.html#contact">Contact</a></nav><span>© <span data-year></span> PARCHXA</span></footer>
+<script src="vendor/nerdamer.min.js"></script>
+<script src="vendor/katex/katex.min.js"></script>
 </body>
 </html>
