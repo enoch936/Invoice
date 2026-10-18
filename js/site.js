@@ -55,6 +55,47 @@ if (nav) {
   const links = [];
   const total = counts().total;
 
+  // The most-used services, surfaced first in the navigation.
+  const QUICK = [
+    ["invoice.html", "Invoice", "Create and print invoices"],
+    ["math.html", "Scientific", "Scientific calculator"],
+    ["trading.html", "Risk", "Position sizing and R-multiples"],
+    ["terminal.html", "Terminal", "Watchlist, charts and indicators"],
+    ["chart.html", "Chart", "Trading chart with backtests"],
+    ["money.html", "Money", "Budgeting and cashflow"],
+    ["profit.html", "Crypto P/L", "Crypto profit and break-even"],
+    ["convert.html", "Convert", "Currency converter"],
+    ["rates.html", "Salary", "Salary and net pay"],
+    ["student.html", "GPA", "Grade point average"],
+  ];
+
+  // "Common" menu: the common services followed by every main category.
+  const commonMenu = el("div", { class: "nav-menu" });
+  const commonBtn = el("button", { type: "button", class: "nav-link", "aria-expanded": "false", "aria-controls": "nav-common-panel" },
+    "Common", el("span", { class: "chev", html: iconSvg("chevron-down", 13) }));
+  const commonPanel = el("div", { class: "nav-panel", id: "nav-common-panel", hidden: true });
+  const svcGroup = el("div", { class: "nav-group" }, el("p", { class: "nav-group-label", text: "Common services" }));
+  QUICK.forEach(([href, label, desc]) => {
+    const t = toolByHref(href);
+    if (!t) return;
+    const item = el("a", { class: "nav-item", href: t.href }, el("strong", { text: label }), el("span", { text: desc }));
+    if (here === t.href) item.setAttribute("aria-current", "page");
+    svcGroup.append(item);
+  });
+  const catGroup = el("div", { class: "nav-group" }, el("p", { class: "nav-group-label", text: "Categories" }));
+  CATEGORIES.forEach((cat) => {
+    const items = toolsInCategory(cat.id);
+    if (!items.length) return;
+    const item = el("a", { class: "nav-item", href: cat.href }, el("strong", { text: cat.name }), el("span", { text: `${items.length} tools` }));
+    if (here === cat.href) item.setAttribute("aria-current", "page");
+    catGroup.append(item);
+  });
+  commonPanel.append(svcGroup, catGroup, el("div", { class: "nav-panel-foot" },
+    el("a", { href: "directory.html", text: `Open the full directory (${total} tools)` }),
+    el("span", { class: "muted-copy", text: "Press ⌘K to search" })));
+  commonMenu.append(commonBtn, commonPanel);
+  links.push(commonMenu);
+
   // "Tools" mega menu, grouped by registry category.
   const menu = el("div", { class: "nav-menu" });
   const toolsBtn = el("button", { type: "button", class: "nav-link", "aria-expanded": "false", "aria-controls": "nav-tools-panel" },
@@ -100,17 +141,25 @@ if (nav) {
 
   nav.replaceChildren(...links);
 
-  const closeMenu = () => { panel.hidden = true; toolsBtn.setAttribute("aria-expanded", "false"); };
-  toolsBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const open = panel.hidden;
-    panel.hidden = !open;
-    toolsBtn.setAttribute("aria-expanded", String(open));
+  const menus = [
+    { menu: commonMenu, btn: commonBtn, panel: commonPanel },
+    { menu, btn: toolsBtn, panel },
+  ];
+  const closeMenus = () => menus.forEach((m) => { m.panel.hidden = true; m.btn.setAttribute("aria-expanded", "false"); });
+  menus.forEach((m) => {
+    m.btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = m.panel.hidden;
+      closeMenus();
+      m.panel.hidden = !open;
+      m.btn.setAttribute("aria-expanded", String(open));
+    });
+    m.panel.addEventListener("click", (e) => { if (e.target.closest("a")) closeMenus(); });
   });
-  panel.addEventListener("click", (e) => { if (e.target.closest("a")) closeMenu(); });
-  document.addEventListener("click", (e) => { if (!menu.contains(e.target)) closeMenu(); });
+  document.addEventListener("click", (e) => { if (!e.target.closest(".nav-menu")) closeMenus(); });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !panel.hidden) { closeMenu(); toolsBtn.focus(); }
+    const openMenu = menus.find((m) => !m.panel.hidden);
+    if (e.key === "Escape" && openMenu) { closeMenus(); openMenu.btn.focus(); }
     else if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || "")) {
       e.preventDefault();
       (search.input.offsetParent ? search.input : burger).focus();
@@ -148,53 +197,6 @@ if (nav) {
   drawer.addEventListener("click", (e) => { if (e.target.closest("a")) setDrawer(false); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !drawer.hidden) { setDrawer(false); burger.focus(); } });
 }
-// ---------------------------------------------------------------- common services bar
-// A persistent button bar of the most-used tools, plus one dropdown per main category whose
-// sub-items are the recommended tools in that category (derived from the shared registry).
-{
-  const header = document.querySelector(".site-header");
-  if (header && !document.querySelector(".svc-bar")) {
-    const QUICK = [
-      ["invoice.html", "Invoice"],
-      ["math.html", "Scientific"],
-      ["trading.html", "Risk"],
-      ["terminal.html", "Terminal"],
-      ["chart.html", "Chart"],
-      ["money.html", "Money"],
-      ["profit.html", "Crypto P/L"],
-      ["convert.html", "Convert"],
-      ["rates.html", "Salary"],
-      ["student.html", "GPA"],
-    ];
-    const inner = el("div", { class: "svc-inner" },
-      el("span", { class: "svc-label", text: "Common" }),
-      el("a", { class: "svc-link svc-all", href: "directory.html", text: "All" }));
-    for (const [href, label] of QUICK) {
-      const tool = toolByHref(href);
-      if (!tool) continue;
-      const a = el("a", { class: "svc-link", href: tool.href, text: label });
-      if (here === tool.href) a.setAttribute("aria-current", "page");
-      inner.append(a);
-    }
-    inner.append(el("span", { class: "svc-sep", "aria-hidden": "true" }));
-    for (const cat of CATEGORIES) {
-      const items = toolsInCategory(cat.id);
-      if (!items.length) continue;
-      const rec = items.filter((t) => t.featured || t.popular);
-      const main = el("a", { class: "svc-main", href: cat.href },
-        el("span", { text: cat.name }), el("span", { class: "chev", html: iconSvg("chevron-down", 12) }));
-      if (here === cat.href) main.setAttribute("aria-current", "page");
-      const sub = el("div", { class: "svc-sub" },
-        el("p", { class: "svc-sub-head", text: "Recommended" }),
-        ...rec.slice(0, 6).map((t) => el("a", { href: t.href, text: t.title })),
-        el("a", { class: "svc-sub-all", href: cat.href, text: `All ${items.length} ${cat.name.toLowerCase()} tools →` }));
-      inner.append(el("div", { class: "svc-group" }, main, sub));
-    }
-    const bar = el("nav", { class: "svc-bar", "aria-label": "Common services" }, inner);
-    header.after(bar);
-  }
-}
-
 // A keyboard/deep-link entry point for the command palette in the header.
 if (SITE.features.commandPalette) {
   const slot = nav || document.querySelector(".site-header");
