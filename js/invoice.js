@@ -1,6 +1,8 @@
 ﻿import { getDrafts, saveDraft, deleteDraft } from "./storage.js";
 import { populateCountrySelects, readParty, fillParty, renderParty, sanitizeParty } from "./parties.js";
 import "./app.js";
+import { confirmDialog } from "./iv-dialog.js";
+import { validateAll } from "./invoice-validate.js";
 
 const form = document.querySelector("#invoice-form");
 const itemHost = document.querySelector("#line-items");
@@ -11,6 +13,10 @@ const logoUrlInput = document.querySelector("#logo-url");
 const logoFileInput = document.querySelector("#logo-file");
 const logoClear = document.querySelector("#logo-clear");
 let currentDraftId = null;
+let dirty = false;
+const emit = (type, detail = {}) => document.dispatchEvent(new CustomEvent("parchxa:invoice", { detail: { type, ...detail } }));
+function setDirty(next) { dirty = next; emit(next ? "dirty" : "clean"); }
+addEventListener("beforeunload", (event) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } });
 let logo = "";
 
 const money = (amount, currency) => {
@@ -27,24 +33,44 @@ const escapeHTML = (text) => String(text ?? "").replace(/[&<>"']/g, (char) => ({
 function addLineItem(item = {}) {
   const row = document.createElement("div");
   row.className = "line-item-row";
-  row.innerHTML = `<input aria-label="Item description" class="item-description" placeholder="Service / item" value="">
-<input aria-label="Quantity" class="item-quantity" type="number" min="0" step="0.1" value="">
-<input aria-label="Unit price" class="item-price" type="number" min="0" step="0.01" value="">
-<button type="button" class="remove-item" aria-label="Remove line item">×</button>`;
+  row.innerHTML = `<textarea aria-label="Item description" class="item-description" rows="1" placeholder="Service or product" autocomplete="off" spellcheck="true"></textarea>
+<input aria-label="Quantity" class="item-quantity" type="number" min="0" step="any" inputmode="decimal" placeholder="Qty">
+<input aria-label="Unit price" class="item-price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Price">
+<output class="item-amount" aria-label="Line amount">0.00</output>
+<button type="button" class="remove-item" aria-label="Remove line item" title="Remove item">×</button>`;
+  const blank = (v) => v === undefined || v === null || v === "";
+  row.querySelector(".item-description").value = String(item.description ?? "");
+  row.querySelector(".item-quantity").value = blank(item.quantity) ? "1" : String(item.quantity);
+  row.querySelector(".item-price").value = blank(item.price) ? "" : String(item.price);
   row.querySelector(".remove-item").addEventListener("click", () => {
-    if (itemHost.children.length > 1) {
-      row.remove();
-    } else {
-      row.querySelector(".item-description").value = "";
-      row.querySelector(".item-quantity").value = "1";
-      row.querySelector(".item-price").value = "0";
-    }
+    if (row.nextElementSibling?.classList?.contains("iv-row-msg")) row.nextElementSibling.remove();
+    row.remove();
+    setDirty(true);
     render();
+    document.querySelector("#add-item")?.focus();
   });
-  row.querySelectorAll("input").forEach((input) => input.addEventListener("input", render));
+  row.querySelectorAll("input, textarea").forEach((input) => input.addEventListener("input", render));
+  row.querySelector(".item-description").addEventListener("input", (event) => fitTextarea(event.target));
+  row.querySelector(".item-price").addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && row === itemHost.lastElementChild) {
+      event.preventDefault();
+      addLineItem();
+      setDirty(true);
+      render();
+      itemHost.lastElementChild.querySelector(".item-description").focus();
+    }
+  });
   itemHost.append(row);
+  fitTextarea(row.querySelector(".item-description"));
 }
-
+// Description fields grow with their content so long text is never clipped (skipped while hidden).
+function fitTextarea(area) {
+  if (!area || area.offsetParent === null) return;
+  area.style.height = "auto";
+  area.style.height = `${area.scrollHeight + 2}px`;
+}
+document.querySelector('.iv-section[data-section="items"]')?.addEventListener("toggle", () => itemHost.querySelectorAll(".item-description").forEach(fitTextarea));
+window.addEventListener("resize", () => itemHost.querySelectorAll(".item-description").forEach(fitTextarea));
 function readItems() {
   return [...itemHost.querySelectorAll(".line-item-row")].map((row) => ({
     description: row.querySelector(".item-description").value.trim(),
@@ -89,11 +115,11 @@ logoFileInput?.addEventListener("change", () => {
   if (!/^image\//i.test(file.type)) { status.textContent = "Choose an image file (PNG, JPG, GIF, WebP or SVG)."; logoFileInput.value = ""; return; }
   if (file.size > 1500000) { status.textContent = "That image is larger than 1.5 MB. Use a smaller file or paste a URL."; logoFileInput.value = ""; return; }
   const reader = new FileReader();
-  reader.onload = () => { logo = String(reader.result || ""); if (logoUrlInput) logoUrlInput.value = ""; logoFileInput.value = ""; render(); status.textContent = "Logo added from file."; };
+  reader.onload = () => { logo = String(reader.result || ""); if (logoUrlInput) logoUrlInput.value = ""; logoFileInput.value = ""; setDirty(true); render(); status.textContent = "Logo added from file."; };
   reader.onerror = () => { status.textContent = "Could not read that image."; };
   reader.readAsDataURL(file);
 });
-logoClear?.addEventListener("click", () => { logo = ""; if (logoUrlInput) logoUrlInput.value = ""; if (logoFileInput) logoFileInput.value = ""; render(); status.textContent = "Logo removed."; });
+logoClear?.addEventListener("click", () => { setDirty(true); logo = ""; if (logoUrlInput) logoUrlInput.value = ""; if (logoFileInput) logoFileInput.value = ""; render(); status.textContent = "Logo removed."; });
 
 function render() {
   const logoImg = document.getElementById("preview-logo");
@@ -106,6 +132,14 @@ function render() {
   const discount = subtotal * Math.min(100, data.discount) / 100;
   const tax = (subtotal - discount) * Math.min(100, data.tax) / 100;
   const total = subtotal - discount + tax;
+  const plain = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  [...itemHost.querySelectorAll(".line-item-row")].forEach((row, index) => {
+    const entry = data.items[index], out = row.querySelector(".item-amount");
+    if (out && entry) out.textContent = plain.format(entry.quantity * entry.price);
+  });
+  const emptyState = document.getElementById("items-empty"), itemsHead = document.querySelector(".line-items-head");
+  if (emptyState) emptyState.hidden = itemHost.children.length > 0;
+  if (itemsHead) { itemsHead.hidden = itemHost.children.length === 0; const label = itemsHead.querySelector("[data-amount-head]"); if (label) label.textContent = `Amount (${currency})`; }
   const text = (id, content) => {
     const node = document.getElementById(id);
     if (node) node.textContent = content || "—";
@@ -160,8 +194,10 @@ function setData(data) {
   fillParty(form, "business", data.businessDetails);
   fillParty(form, "client", data.clientDetails);
   itemHost.replaceChildren();
-  (data.items?.length ? data.items : [{}]).forEach(addLineItem);
+  (data.items?.length ? data.items : [{}]).forEach((entry) => addLineItem(entry));
   render();
+  dirty = false;
+  emit("loaded");
 }
 
 function renderDrafts() {
@@ -171,87 +207,115 @@ function renderDrafts() {
   if (!drafts.length) {
     const p = document.createElement("p");
     p.className = "muted-copy";
-    p.textContent = "No saved drafts yet.";
+    p.textContent = "No saved drafts yet. Save one and it will appear here.";
     savedHost.append(p);
     return;
   }
+  const totalOf = (d) => {
+    const sub = (d.items || []).reduce((sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.price) || 0), 0);
+    const disc = sub * Math.min(100, Number(d.discount) || 0) / 100;
+    return (sub - disc) * (1 + Math.min(100, Number(d.tax) || 0) / 100);
+  };
   drafts.forEach((draft) => {
     const row = document.createElement("div");
     row.className = "draft-row";
     const info = document.createElement("div");
+    info.className = "draft-info";
     const title = document.createElement("strong");
     title.textContent = draft.number || "Untitled invoice";
+    const state = ["draft", "sent", "paid"].includes(draft.status) ? draft.status : "draft";
+    const chip = document.createElement("span");
+    chip.className = "iv-chip";
+    chip.dataset.status = state;
+    chip.textContent = state.charAt(0).toUpperCase() + state.slice(1);
     const sub = document.createElement("small");
-    sub.textContent = `${draft.client || "No client"} · ${(draft.status || "draft").toUpperCase()} · ${new Date(draft.updatedAt).toLocaleDateString()}`;
-    info.append(title, sub);
+    sub.textContent = `${draft.client || "No client"} · ${new Date(draft.updatedAt).toLocaleDateString()}`;
+    const head = document.createElement("div");
+    head.className = "draft-head";
+    head.append(title, chip);
+    info.append(head, sub);
+    const amount = document.createElement("div");
+    amount.className = "draft-total";
+    amount.textContent = money(totalOf(draft), draft.currency || "USD");
     const actions = document.createElement("div");
     actions.className = "draft-actions";
     const load = document.createElement("button");
     load.type = "button";
-    load.textContent = "Load";
-    load.addEventListener("click", () => {
+    load.textContent = "Open";
+    load.addEventListener("click", async () => {
+      if (dirty && !(await confirmDialog({ title: "Discard unsaved changes?", message: `Opening ${draft.number || "this draft"} replaces the invoice you are editing.`, confirmLabel: "Open draft" }))) return;
       setData(draft);
-      status.textContent = "Draft loaded.";
+      status.textContent = "Draft opened.";
     });
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "delete-draft";
     remove.textContent = "Delete";
-    remove.addEventListener("click", () => {
+    remove.addEventListener("click", async () => {
+      if (!(await confirmDialog({ title: `Delete ${draft.number || "this draft"}?`, message: "This removes the saved draft from this browser. It can't be undone.", confirmLabel: "Delete draft", danger: true }))) return;
       deleteDraft(draft.id);
       if (currentDraftId === draft.id) currentDraftId = null;
       renderDrafts();
       status.textContent = "Draft deleted.";
     });
     actions.append(load, remove);
-    row.append(info, actions);
+    row.append(info, amount, actions);
     savedHost.append(row);
   });
 }
-
-form.addEventListener("input", render);
-form.addEventListener("change", render);
+form.addEventListener("input", () => { setDirty(true); render(); });
+form.addEventListener("change", () => { setDirty(true); render(); });
 
 document.querySelector("#add-item")?.addEventListener("click", () => {
   addLineItem();
+  setDirty(true);
   render();
+  itemHost.lastElementChild?.querySelector(".item-description")?.focus();
 });
 
 document.querySelector("#save-draft")?.addEventListener("click", () => {
-  if (!value("number").trim()) {
-    status.textContent = "Add an invoice number before saving.";
-    form.elements.namedItem("number")?.focus();
+  const issues = validateAll(form, itemHost, true);
+  const blocking = issues.find((issue) => issue.blocking);
+  if (blocking) {
+    status.textContent = blocking.message;
+    document.dispatchEvent(new CustomEvent("parchxa:focus-issue", { detail: { section: blocking.section } }));
+    blocking.el?.focus();
     return;
   }
   try {
     const saved = saveDraft(getData());
     currentDraftId = saved.id;
+    dirty = false;
     renderDrafts();
-    status.textContent = "Draft saved in this browser.";
+    emit("saved", { at: saved.updatedAt });
+    status.textContent = issues.length ? `Draft saved. ${issues.length} field${issues.length > 1 ? "s" : ""} still need attention.` : "Draft saved in this browser.";
   } catch {
     status.textContent = "Could not save. Check your browser storage settings.";
   }
 });
-
 document.querySelector("#print-invoice")?.addEventListener("click", () => {
   render();
   window.print();
 });
 
-document.querySelector("#clear-form")?.addEventListener("click", () => {
-  if (confirm("Clear all invoice fields?")) {
-    form.reset();
-    currentDraftId = null;
-    logo = "";
-    if (logoUrlInput) logoUrlInput.value = "";
-    if (logoFileInput) logoFileInput.value = "";
-    itemHost.replaceChildren();
-    addLineItem();
-    const today = new Date().toISOString().slice(0, 10);
-    form.elements.namedItem("date")?.setAttribute("value", today);
-    render();
-    status.textContent = "Form cleared.";
-  }
+document.querySelector("#clear-form")?.addEventListener("click", async () => {
+  const ok = await confirmDialog({ title: "Clear this invoice?", message: dirty ? "Every field will be reset and your unsaved changes will be lost." : "Every field will be reset. Saved drafts are not affected.", confirmLabel: "Clear invoice", danger: true });
+  if (!ok) return;
+  form.reset();
+  currentDraftId = null;
+  logo = "";
+  if (logoUrlInput) logoUrlInput.value = "";
+  if (logoFileInput) logoFileInput.value = "";
+  form.querySelectorAll(".iv-error").forEach((node) => { node.textContent = ""; });
+  form.querySelectorAll(".iv-row-msg").forEach((node) => node.remove());
+  form.querySelectorAll("[aria-invalid]").forEach((node) => node.removeAttribute("aria-invalid"));
+  itemHost.replaceChildren();
+  addLineItem();
+  form.elements.namedItem("date").value = new Date().toISOString().slice(0, 10);
+  render();
+  dirty = false;
+  emit("cleared");
+  status.textContent = "Invoice cleared.";
 });
 
 const today = new Date().toISOString().slice(0, 10);

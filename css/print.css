@@ -14,3 +14,6 @@
   .invoice-paper{margin:0;padding:14mm!important;background:#fff!important;color:#111!important;box-shadow:none!important}
   .invoice-footer{margin-top:35px}
 }
+@media print{
+  body .site-footer,body .compliance-bar,body .consent-banner,body .scroll-progress,body .to-top{display:none!important}
+}

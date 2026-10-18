@@ -52,7 +52,7 @@ if (header && SITE.features.commandPalette && !header.querySelector("[data-cmdk]
 // ---------------------------------------------------------------- footer compliance bar
 const footer = document.querySelector(".site-footer");
 if (footer && !document.querySelector(".compliance-bar")) {
-  const bar = el("div", { class: "compliance-bar container" });
+  const bar = el("div", { class: "compliance-bar container", role: "region", "aria-label": "Disclaimers and legal links" });
   bar.append(el("p", {}, "Educational tools only. Not financial, tax, legal or trading advice. Results are estimates you should verify. Some links are affiliate links; we may earn a commission at no extra cost to you."));
   const links = el("p", {});
   links.append("PARCHXA · ", el("a", { href: "privacy.html", text: "Privacy" }), " · ", el("a", { href: "terms.html", text: "Terms" }), " · ");

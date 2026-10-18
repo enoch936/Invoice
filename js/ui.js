@@ -11,7 +11,7 @@ const el = (tag, attrs = {}, ...kids) => { const n = document.createElement(tag)
 // ---- theme (light is only offered on pages whose layouts are fully themed) ----
 if (!isTerminal) {
   let stored = "dark"; try { stored = localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark"; } catch {}
-  root.dataset.theme = hasInvoiceUi ? "dark" : stored;
+  root.dataset.theme = hasInvoiceUi ? "light" : stored;
 }
 const header = document.querySelector(".site-header");
 if (header && !isTerminal) {
@@ -49,7 +49,7 @@ if (!isTerminal) {
 }
 
 // ---- reveal on scroll ----
-if (!reduce && !isTerminal && "IntersectionObserver" in window) {
+if (!reduce && !isTerminal && !hasInvoiceUi && "IntersectionObserver" in window) {
   const SEL = ".page-intro, .section-heading, .tool-card, .calculator-card, .value-strip > div, .stats-row > div, .hv-window, .content-block, .aff-card, .dir-search, .dir-chips, .marquee, .notice, .actions-row";
   const items = [...document.querySelectorAll(SEL)].filter((n) => !n.closest(".iv-app, [hidden]"));
   const counters = new Map();
@@ -77,7 +77,7 @@ if (finePointer && !isTerminal) {
 
 // ---- button ripple ----
 document.addEventListener("pointerdown", (e) => {
-  const b = e.target.closest?.(".button"); if (!b || reduce) return;
+  const b = e.target.closest?.(".button"); if (!b || reduce || hasInvoiceUi) return;
   const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height), s = el("span", { class: "ripple" });
   s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
   b.append(s); setTimeout(() => s.remove(), 650);

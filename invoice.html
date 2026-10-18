@@ -14,14 +14,15 @@
   <meta name="twitter:title" content="Invoice Builder — PARCHXA Toolkit">
   <meta name="twitter:description" content="Create, save, and print a professional freelance invoice.">
   <title>Invoice Builder — PARCHXA Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pro.css"><link rel="stylesheet" href="css/invoice-ui.css"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/print.css">
   <script type="module" src="js/invoice.js"></script><script type="module" src="js/invoice-dashboard.js"></script><script type="module" src="js/invoice-workspace.js"></script>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://open.er-api.com https://api.binance.com https://data-api.binance.vision wss://data-stream.binance.vision wss://stream.binance.com:9443 wss://stream.binance.com https://api.twelvedata.com https://api.frankfurter.app https://api.frankfurter.dev https://plausible.io https://*.umami.is; object-src 'none'; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
 </head>
-<body>
+<body class="iv-page">
   <header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">P</span>PARCHXA<span class="brand-muted"> / toolkit</span></a><nav class="nav-links"><a href="index.html">Home</a><a href="quote.html">Quotation</a><a href="calculators.html">Calculators</a></nav></header>
   <main class="container page-main iv-main">
-    <div class="page-intro"><a class="back-link" href="index.html">← All tools</a><p class="eyebrow">TOOL 01 / GET PAID</p><h1>Invoice builder</h1><p>Create a clean invoice, save a draft in this browser, and print it or save it as a PDF.</p></div>
+    <div class="iv-pagehead"><nav class="iv-crumbs" aria-label="Breadcrumb"><a href="index.html">Tools</a><span aria-hidden="true">/</span><span aria-current="page">Invoice builder</span></nav><h1>Invoice builder</h1><p>Create an invoice, see it update live, then print it or save it as a PDF. Drafts stay in this browser.</p></div>
     <div class="iv-app" data-view="edit">
       <div class="iv-tabs" role="tablist" aria-label="Editor and preview">
         <button type="button" role="tab" data-view="edit" aria-selected="true">Edit</button>
@@ -41,13 +42,12 @@
       <section class="iv-editor" aria-label="Invoice editor">
         <div class="iv-actionbar">
           <div class="iv-head">
-            <span class="iv-doc-title" id="iv-doc-title">INV-001</span>
-            <span class="iv-status" id="iv-status" data-status="draft">Draft</span>
+            <div class="iv-head-main"><span class="iv-doc-title" id="iv-doc-title">INV-001</span><span class="iv-status" id="iv-status" data-status="draft">Draft</span></div>
+            <div class="iv-head-meta"><span class="iv-save-state" id="iv-save-state" data-state="new" role="status">Not saved yet</span><span class="iv-head-sep" aria-hidden="true">·</span><span class="iv-head-total"><span class="iv-sr">Total </span><strong id="iv-head-total">—</strong></span></div>
           </div>
           <div class="iv-head-actions">
-            <button type="button" id="clear-form" class="button button-small button-ghost">Clear</button>
-            <button type="button" id="save-draft" class="button button-small button-secondary">Save draft</button>
-            <button type="button" id="share-invoice" class="button button-small button-secondary">Share</button>
+            <button type="button" id="save-draft" class="button button-small button-secondary" title="Save draft (Ctrl or Cmd + S)">Save draft</button>
+            <button type="button" id="share-invoice" class="button button-small button-secondary" title="Copy a link that contains this invoice">Share</button>
             <button type="button" id="print-invoice" class="button button-small button-primary">Print / PDF</button>
           </div>
         </div>
@@ -74,7 +74,7 @@
               <svg class="iv-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
             </summary>
             <div class="iv-section-body">
-              <h4 class="iv-subhead">Your business</h4>
+              <h2 class="iv-subhead">Your business</h2>
               <div class="form-grid">
                 <label>Business / your name<input name="business" placeholder="Your business name" autocomplete="organization"></label>
                 <label class="span-2">Business address<input name="business-address" autocomplete="street-address" placeholder="Street, building, PO box"></label>
@@ -84,7 +84,7 @@
                 <label>Phone<input name="business-phone" type="tel" autocomplete="tel" placeholder="+251 900 000 000"></label>
                 <label class="span-2">Tax / VAT / TIN ID<input name="business-tax" autocomplete="off" placeholder="Optional tax registration number"></label>
               </div>
-              <h4 class="iv-subhead">Client</h4>
+              <h2 class="iv-subhead">Client</h2>
               <div class="form-grid">
                 <label>Client name<input name="client" placeholder="Client or company" autocomplete="name"></label>
                 <label class="span-2">Client address<input name="client-address" autocomplete="street-address" placeholder="Street, building, PO box"></label>
@@ -102,8 +102,9 @@
               <svg class="iv-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
             </summary>
             <div class="iv-section-body">
-              <div class="line-items-head" aria-hidden="true"><span>Description</span><span>Qty</span><span>Rate</span><span></span></div>
+              <div class="line-items-head" aria-hidden="true"><span>Description</span><span>Qty</span><span>Unit price</span><span data-amount-head>Amount</span><span></span></div>
               <div id="line-items" class="line-items"></div>
+              <div id="items-empty" class="iv-empty" hidden><strong>No line items yet</strong><span>Add the first service or product you are billing for.</span></div>
               <button type="button" id="add-item" class="button button-small button-secondary iv-add">＋ Add item</button>
             </div>
           </details>
@@ -131,13 +132,13 @@
               <svg class="iv-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
             </summary>
             <div class="iv-section-body">
-              <h4 class="iv-subhead">Logo (optional)</h4>
+              <h2 class="iv-subhead">Logo (optional)</h2>
               <div class="form-grid">
                 <label>Logo image URL<input name="logo-url" id="logo-url" type="url" inputmode="url" autocomplete="off" placeholder="https://example.com/logo.png"></label>
                 <label>Or upload from your device<input type="file" id="logo-file" accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml"></label>
               </div>
               <p class="field-hint">Paste an image link or choose a file. A chosen file stays in this browser and is embedded in the document — it is never uploaded. <button type="button" class="button button-small button-ghost" id="logo-clear">Remove logo</button></p>
-              <h4 class="iv-subhead">Notes / payment instructions</h4>
+              <h2 class="iv-subhead">Notes / payment instructions</h2>
               <label class="iv-block"><textarea name="notes" rows="3" placeholder="Thank you for your business. Add payment instructions if needed."></textarea></label>
             </div>
           </details>
@@ -156,17 +157,17 @@
           </summary>
           <div class="iv-section-body"><div id="dash-stats" class="dash-stats"></div><canvas id="dash-chart" class="chart" height="200" role="img" aria-label="Paid revenue by month"></canvas><p class="muted-copy">Built from drafts saved in this browser. Set status to Paid to count revenue. Totals are shown per currency.</p></div>
         </details>
-        <p class="iv-note">Share links contain the invoice data inside the link itself (nothing is uploaded). Anyone with the link can read it, so avoid sensitive details.</p>
+        <div class="iv-foot"><p class="iv-note">Share links contain the invoice data inside the link itself (nothing is uploaded). Anyone with the link can read it, so avoid sensitive details.</p><button type="button" id="clear-form" class="button button-small button-ghost">Clear invoice</button></div>
       </section>
-      <aside class="iv-preview preview-panel" aria-label="Invoice preview">
-        <div class="preview-toolbar"><span><span class="status-dot"></span> LIVE PREVIEW</span><span class="preview-hint">Updates as you type</span></div>
-        <article id="invoice-preview" class="invoice-paper">
+      <aside class="iv-preview preview-panel" aria-label="Invoice preview" tabindex="0">
+        <div class="preview-toolbar"><span class="iv-live"><span class="iv-live-dot" aria-hidden="true"></span>Live preview</span><span class="preview-hint">A4 · updates as you type</span></div>
+        <div class="iv-canvas"><article id="invoice-preview" class="invoice-paper">
           <div class="invoice-top"><div><img id="preview-logo" class="invoice-logo" alt="Business logo" hidden><div class="invoice-brand">PARCHXA<span>.</span></div><p class="invoice-small">INVOICE</p></div><div class="invoice-number"><span>INVOICE NO.</span><strong id="preview-number">INV-001</strong><span>ISSUED</span><strong id="preview-date">—</strong></div></div>
-          <div class="invoice-parties"><div><span class="invoice-label">FROM</span><h3 id="preview-business">Your business name</h3><p id="preview-business-address" hidden></p><p id="preview-business-contact" hidden></p><p id="preview-business-tax" hidden></p></div><div><span class="invoice-label">BILL TO</span><h3 id="preview-client">Client name</h3><p id="preview-client-address" hidden></p><p id="preview-client-contact" hidden></p><p id="preview-client-tax" hidden></p><p>Due <span id="preview-due">—</span></p></div></div>
+          <div class="invoice-parties"><div><span class="invoice-label">FROM</span><h2 id="preview-business">Your business name</h2><p id="preview-business-address" hidden></p><p id="preview-business-contact" hidden></p><p id="preview-business-tax" hidden></p></div><div><span class="invoice-label">BILL TO</span><h2 id="preview-client">Client name</h2><p id="preview-client-address" hidden></p><p id="preview-client-contact" hidden></p><p id="preview-client-tax" hidden></p><p>Due <span id="preview-due">—</span></p></div></div>
           <div class="invoice-table-wrap"><table class="invoice-table"><thead><tr><th>DESCRIPTION</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody id="preview-items"><tr><td>Service or product</td><td>1</td><td>0.00</td><td>0.00</td></tr></tbody></table></div>
           <div class="invoice-bottom"><div class="invoice-notes"><span class="invoice-label">NOTES</span><p id="preview-notes">Thank you for your business.</p></div><div class="invoice-totals"><div><span>Subtotal</span><strong id="preview-subtotal">0.00</strong></div><div><span>Discount</span><strong id="preview-discount">−0.00</strong></div><div><span>Tax</span><strong id="preview-tax">0.00</strong></div><div class="grand-total"><span>TOTAL</span><strong id="preview-total">USD 0.00</strong></div></div></div>
           <div class="invoice-footer">THANK YOU FOR YOUR BUSINESS <span>•</span> PARCHXA TOOLKIT</div>
-        </article>
+        </article></div>
         <p class="preview-disclaimer">This tool creates a document only. It does not collect payments or verify tax compliance.</p>
       </aside>
     </div>
