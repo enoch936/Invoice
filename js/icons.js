@@ -6,6 +6,8 @@ const ICONS = {
   "moon": '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
   "chevron-down": '<path d="m6 9 6 6 6-6"/>',
   "arrow-right": '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  "check": '<path d="M20 6 9 17l-5-5"/>',
+  "printer": '<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/>',
   "file-text": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
   "files": '<path d="M15 2H9a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V7z"/><path d="M15 2v5h5"/><path d="M5 8v12a2 2 0 0 0 2 2h9"/>',
   "wallet": '<path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M2 7V5a2 2 0 0 1 2-2h13v4"/><path d="M16 14h2"/>',

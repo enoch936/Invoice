@@ -727,7 +727,7 @@ export const FINANCE = [
     h1: "Loan payoff calculator",
     category: "finance",
     tags: ["loans", "debt", "extra payments"],
-    description: "See how much time and interest extra monthly payments save on a loan.",
+    description: "See how much time and interest extra monthly payments save on your loan.",
     intro: "Adding a little to every payment attacks the principal directly. Compare the scheduled payoff with a plan that pays extra.",
     currency: true,
     inputs: [

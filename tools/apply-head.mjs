@@ -15,8 +15,8 @@ import { CSP_META, REFERRER_META } from "./csp.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK = process.argv.includes("--check");
-const ANCHOR = `<meta name="theme-color" content="#0b1120">`;
-const THEME_BOOT = `<script>try{document.documentElement.dataset.theme=localStorage.getItem("parchxa.theme.v1")==="light"?"light":"dark"}catch(e){}</script>`;
+const ANCHOR = `<meta name="theme-color" content="#ffffff">`;
+const THEME_BOOT = `<script>try{document.documentElement.dataset.theme=localStorage.getItem("parchxa.theme.v1")==="dark"?"dark":"light"}catch(e){}</script>`;
 const CSP_META_RE = /<meta http-equiv="Content-Security-Policy" content="[^"]*">/;
 
 function canonicalize(html) {
@@ -30,6 +30,11 @@ function canonicalize(html) {
   if (!next.includes(REFERRER_META)) {
     if (next.includes(CSP_META)) next = next.replace(CSP_META, CSP_META + "\n" + REFERRER_META);
     else next = next.replace("</head>", REFERRER_META + "\n</head>");
+  }
+
+  // Guarantee the theme-color anchor so every page carries it before </head>.
+  if (!next.includes(ANCHOR) && next.includes("</head>")) {
+    next = next.replace("</head>", ANCHOR + "\n</head>");
   }
 
   // No-flash theme bootstrap: apply the stored theme before first paint.

@@ -18,6 +18,30 @@
 
 /* ---------------------------------------------------------------- tokens */
 :root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel2: #f5f7fc;
+  --line: #e7eaf2;
+  --line-strong: #d3dae7;
+  --text: #111a2b;
+  --muted: #55637a;
+  --accent: #4f46e5;
+  --accent2: #7c3aed;
+  --blue: #2563eb;
+  --on-accent: #ffffff;
+  --accent-weak: rgba(79, 70, 229, 0.08);
+  --accent-ring: rgba(79, 70, 229, 0.26);
+  --ring: rgba(79, 70, 229, 0.3);
+  --radius: 16px;
+  --shadow: 0 24px 60px rgba(16, 24, 40, 0.1);
+  --shadow-card: 0 14px 30px -22px rgba(16, 24, 40, 0.5);
+  --card: linear-gradient(180deg, #ffffff, #fbfcff);
+  --header-bg: rgba(255, 255, 255, 0.84);
+  --grad-accent: linear-gradient(120deg, var(--accent), var(--accent2));
+}
+
+[data-theme="dark"] {
   color-scheme: dark;
   --bg: #070a12;
   --panel: #0d1424;
@@ -33,34 +57,10 @@
   --accent-weak: rgba(108, 124, 255, 0.13);
   --accent-ring: rgba(108, 124, 255, 0.34);
   --ring: rgba(108, 124, 255, 0.4);
-  --radius: 16px;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 14px 34px -22px rgba(0, 0, 0, 0.95);
   --card: linear-gradient(180deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.01));
   --header-bg: rgba(7, 10, 18, 0.82);
-  --grad-accent: linear-gradient(120deg, var(--accent), var(--accent2));
-}
-
-[data-theme="light"] {
-  color-scheme: light;
-  --bg: #f6f7fb;
-  --panel: #ffffff;
-  --panel2: #f3f5fb;
-  --line: #e4e8f1;
-  --line-strong: #d3dae7;
-  --text: #111a2b;
-  --muted: #55637a;
-  --accent: #4f46e5;
-  --accent2: #7c3aed;
-  --blue: #2563eb;
-  --on-accent: #ffffff;
-  --accent-weak: rgba(79, 70, 229, 0.09);
-  --accent-ring: rgba(79, 70, 229, 0.28);
-  --ring: rgba(79, 70, 229, 0.3);
-  --shadow: 0 24px 60px rgba(16, 24, 40, 0.1);
-  --shadow-card: 0 14px 30px -22px rgba(16, 24, 40, 0.5);
-  --card: linear-gradient(180deg, #ffffff, #fbfcff);
-  --header-bg: rgba(255, 255, 255, 0.84);
 }
 
 /* ---------------------------------------------------------------- base */
@@ -70,8 +70,8 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   background:
-    radial-gradient(ellipse 70% 46% at 50% -8%, rgba(108, 124, 255, 0.16), transparent 68%),
-    radial-gradient(ellipse 50% 40% at 88% 6%, rgba(139, 124, 255, 0.1), transparent 70%),
+    radial-gradient(ellipse 70% 46% at 50% -8%, rgba(79, 70, 229, 0.07), transparent 68%),
+    radial-gradient(ellipse 50% 40% at 88% 6%, rgba(124, 58, 237, 0.05), transparent 70%),
     var(--bg);
   background-attachment: fixed;
   color: var(--text);
@@ -81,10 +81,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-[data-theme="light"] body {
+[data-theme="dark"] body {
   background:
-    radial-gradient(ellipse 70% 46% at 50% -8%, rgba(79, 70, 229, 0.1), transparent 68%),
-    radial-gradient(ellipse 50% 40% at 88% 6%, rgba(124, 58, 237, 0.07), transparent 70%),
+    radial-gradient(ellipse 70% 46% at 50% -8%, rgba(108, 124, 255, 0.16), transparent 68%),
+    radial-gradient(ellipse 50% 40% at 88% 6%, rgba(139, 124, 255, 0.1), transparent 70%),
     var(--bg);
 }
 
@@ -525,7 +525,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   font-weight: 700;
   margin: 0 0 8px;
 }
-.tool-card h3, .value-strip h3 { font: 700 15.5px/1.35 Manrope, sans-serif; letter-spacing: -0.015em; margin: 0 0 6px; }
+.tool-card h2, .tool-card h3, .value-strip h3 { font: 700 15.5px/1.35 Manrope, sans-serif; letter-spacing: -0.015em; margin: 0 0 6px; }
 .tool-card > p:not(.card-kicker) { font-size: 13px; line-height: 1.55; color: var(--muted); margin: 0 0 16px; }
 .text-link {
   display: inline-flex;
@@ -952,6 +952,24 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media print {

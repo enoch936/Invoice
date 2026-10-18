@@ -10,6 +10,7 @@
 //   5. every local href/src in every root *.html resolves to a real file
 //   6. every JSON-LD block parses as JSON
 //   7. every root page (except private ones) appears in sitemap.xml
+//   8. every page has one <h1>, a 50-160 char description and a <=70 char title
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -76,6 +77,17 @@ const imageRe = /<meta (?:property="og:image"|name="twitter:image") content="([^
 
 for (const page of pages) {
   const html = readFileSync(join(ROOT, page), "utf8");
+
+  // heading + metadata quality (rendered length: HTML entities count as one character)
+  const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || "";
+  const desc = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "";
+  const renderedLen = (s) => s.replace(/&[a-z]+;|&#\d+;/gi, "x").length;
+  if (!title) failures.push(`${page}: missing <title>`);
+  else if (renderedLen(title) > 70) failures.push(`${page}: <title> longer than 70 characters`);
+  if (!desc) failures.push(`${page}: missing meta description`);
+  else if (renderedLen(desc) < 50 || renderedLen(desc) > 160) failures.push(`${page}: meta description length ${renderedLen(desc)} (aim 50-160)`);
+  const h1Count = (html.match(/<h1[\s>]/g) || []).length;
+  if (h1Count !== 1) failures.push(`${page}: expected exactly one <h1>, found ${h1Count}`);
 
   for (const match of html.matchAll(attrRe)) {
     const value = match[1].trim();

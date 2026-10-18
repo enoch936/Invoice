@@ -117,8 +117,8 @@ function head({ title, description, canonical, jsonld, script }) {
 <meta name="description" content="${description}">
 <link rel="canonical" href="${url}">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#0b1120">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("parchxa.theme.v1")==="light"?"light":"dark"}catch(e){}</script>
+<meta name="theme-color" content="#ffffff">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("parchxa.theme.v1")==="dark"?"dark":"light"}catch(e){}</script>
 ${SECURITY_META}
 <meta property="og:type" content="website"><meta property="og:site_name" content="PARCHXA Toolkit"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:url" content="${url}"><meta property="og:image" content="${ORIGIN}/icons/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PARCHXA Toolkit — free tools for independent work">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="${description}"><meta name="twitter:image" content="${ORIGIN}/icons/og.png">
@@ -135,7 +135,7 @@ const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 // ---------------------------------------------------------------- templates
 function coinPage(c) {
   const title = `${c.name} Profit Calculator (${c.symbol}): Fees, ROI & Break-even — PARCHXA`;
-  const description = `Work out your ${c.name} (${c.symbol}) profit or loss in USD, including trading fees, percentage return and the break-even sell price. Free, private, runs in your browser.`;
+  const description = `Work out your ${c.name} profit or loss in USD, including fees, percentage return and the break-even sell price. Free and private in your browser.`;
   const canonical = `profit-${c.slug}.html`;
   const related = c.related.filter((s) => bySlug[s]).map((s) => {
     const r = bySlug[s];
@@ -211,7 +211,7 @@ function hubPage() {
     { "@context": "https://schema.org", "@type": "CollectionPage", name: title, url: `${ORIGIN}/${canonical}`, description },
     { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
   ];
-  const cards = COINS.map((c) => `<article class="aff-card"><h4>${c.name} (${c.symbol})</h4><p>${esc(c.tagline)}</p><a class="button button-secondary button-small" href="profit-${c.slug}.html">Open calculator</a></article>`).join("");
+  const cards = COINS.map((c) => `<article class="aff-card"><h2>${c.name} (${c.symbol})</h2><p>${esc(c.tagline)}</p><a class="button button-secondary button-small" href="profit-${c.slug}.html">Open calculator</a></article>`).join("");
   return `<!doctype html>
 <html lang="en">
 <head>
