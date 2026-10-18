@@ -303,6 +303,15 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   gap: 2px;
   padding: 7px max(20px, calc((100vw - 1200px) / 2));
 }
+.svc-label {
+  flex: none;
+  margin-right: 4px;
+  font: 700 9.5px 'DM Sans', sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.svc-all { color: var(--text); font-weight: 700; }
 .svc-link, .svc-main {
   flex: none;
   display: inline-flex;

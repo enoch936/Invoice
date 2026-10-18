@@ -166,7 +166,9 @@ if (nav) {
       ["rates.html", "Salary"],
       ["student.html", "GPA"],
     ];
-    const inner = el("div", { class: "svc-inner" });
+    const inner = el("div", { class: "svc-inner" },
+      el("span", { class: "svc-label", text: "Common" }),
+      el("a", { class: "svc-link svc-all", href: "directory.html", text: "All" }));
     for (const [href, label] of QUICK) {
       const tool = toolByHref(href);
       if (!tool) continue;
