@@ -99,6 +99,11 @@ function init() {
     );
   }
 
+  /** Plain, dense name-only link — the "List" view (just tool names, like a classic directory). */
+  function link(tool) {
+    return el("a", { class: "dir-link", href: tool.href, "data-type": tool.type, text: tool.title });
+  }
+
   function familyCard(familyId, members) {
     const family = FAMILY_BY_ID[familyId];
     const hub = family ? family.href : members[0].parent;
@@ -157,7 +162,8 @@ function init() {
       for (const [familyId, members] of grouped) nodes.push(familyCard(familyId, members));
       resultsBox.append(...nodes);
     } else {
-      resultsBox.append(...list.map((t) => (state.view === "grid" ? card(t) : row(t))));
+      const node = state.view === "grid" ? card : state.view === "list" ? link : row;
+      resultsBox.append(...list.map(node));
     }
   }
 

@@ -133,7 +133,9 @@
 .dir-card-tags { display: flex; align-items: center; gap: 7px; font-size: 10.5px; }
 .dir-type { color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 2px 8px; }
 .dir-cat { color: var(--accent); }
-.dir-results-list { display: grid; gap: 8px; }
+.dir-results-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1px 18px; }
+.dir-link { display: block; padding: 5px 6px; border-radius: 7px; font: 500 13px 'DM Sans', sans-serif; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dir-link:hover { color: var(--accent); background: var(--panel2); }
 .dir-results-compact { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; }
 .dir-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); transition: border-color .15s ease, background .15s ease; }
 .dir-row:hover { border-color: var(--accent); }
