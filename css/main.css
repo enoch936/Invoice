@@ -242,7 +242,15 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .nav-panel-foot a { color: var(--accent); font-weight: 700; }
 
 /* ---------------------------------------------------------------- mega menu */
-.mega-panel { width: min(980px, calc(100vw - 32px)); }
+/* Anchored to the viewport (not the Tools button) so a wide panel never spills off-screen. */
+.mega-panel {
+  position: fixed;
+  top: 78px;
+  right: max(16px, calc((100% - 1160px) / 2));
+  left: auto;
+  width: min(1160px, calc(100% - 32px));
+  max-height: calc(100vh - 100px);
+}
 .mega-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 22px; }
 .mega-col { display: flex; flex-direction: column; gap: 1px; padding-bottom: 6px; }
 .mega-col-head {

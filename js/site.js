@@ -65,7 +65,7 @@ if (nav) {
     const items = toolsInCategory(cat.id);
     if (!items.length) return;
     const heads = items.filter((t) => t.type === "app" || t.type === "hub");
-    const calcs = items.filter((t) => t.type === "calculator").slice(0, 5);
+    const calcs = items.filter((t) => t.type === "calculator").slice(0, 4);
     const col = el("div", { class: "mega-col" },
       el("a", { class: "mega-col-head", href: cat.href }, el("strong", { text: cat.name }), el("small", { text: `${items.length} tools` })));
     [...heads, ...calcs].forEach((t) => {
