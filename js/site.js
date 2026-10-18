@@ -3,7 +3,8 @@
 import { SITE } from "./config.js";
 import { affiliatesFor, AFFILIATE_DISCLOSURE, affiliateUrl } from "./affiliates.js";
 import { LEAD_MAGNETS, productsFor } from "./products.js";
-import { TOOLS, TOOL_CATEGORIES, CATEGORY_BY_HREF } from "./nav.js";
+import { CATEGORIES, toolsInCategory, counts } from "./registry.js";
+import { createSearch } from "./search.js";
 import { iconSvg, hydrateIcons } from "./icons.js";
 import { track, observeWebVitals, observeScrollDepth, trackClicks } from "./analytics.js";
 import { initCommandPalette } from "./command-palette.js";
@@ -37,48 +38,65 @@ export function toast(message, { timeout = 2600 } = {}) {
 
 // ---------------------------------------------------------------- navigation
 const here = location.pathname.split("/").pop() || "index.html";
-const isHome = document.documentElement.hasAttribute("data-home") || here === "" || here === "index.html";
+
+
+/** Compact header/drawer search control (no placeholder text — it carries an accessible label). */
+function searchControl(idPrefix, label = "Search all tools") {
+  const wrap = el("div", { class: "nav-search" });
+  const input = el("input", { id: `${idPrefix}-input`, type: "search", class: "nav-search-input", autocomplete: "off", spellcheck: "false", "aria-label": label });
+  const panel = el("div", { class: "search-panel", hidden: true });
+  wrap.append(el("span", { class: "nav-search-icon", html: iconSvg("search", 15) }), input, panel);
+  const found = createSearch({ input, panel });
+  return { wrap, input, panel, search: found };
+}
 
 const nav = document.querySelector(".nav-links");
 if (nav) {
   const links = [];
+  const total = counts().total;
 
-  // "Tools" dropdown, grouped by category from the shared registry.
+  // "Tools" mega menu, grouped by registry category.
   const menu = el("div", { class: "nav-menu" });
   const toolsBtn = el("button", { type: "button", class: "nav-link", "aria-expanded": "false", "aria-controls": "nav-tools-panel" },
     "Tools", el("span", { class: "chev", html: iconSvg("chevron-down", 13) }));
-  const panel = el("div", { class: "nav-panel", id: "nav-tools-panel", hidden: true });
-  const ungrouped = [];
-  TOOL_CATEGORIES.forEach((cat) => {
-    const items = TOOLS.filter((t) => CATEGORY_BY_HREF[t.href] === cat.id);
+  const panel = el("div", { class: "nav-panel mega-panel", id: "nav-tools-panel", hidden: true });
+  const grid = el("div", { class: "mega-grid" });
+  CATEGORIES.forEach((cat) => {
+    const items = toolsInCategory(cat.id);
     if (!items.length) return;
-    const group = el("div", { class: "nav-group" }, el("p", { class: "nav-group-label", text: cat.label }));
-    items.forEach((t) => {
-      const item = el("a", { class: "nav-item", href: t.href }, el("strong", { text: t.label }), el("span", { text: t.desc || cat.blurb }));
+    const heads = items.filter((t) => t.type === "app" || t.type === "hub");
+    const calcs = items.filter((t) => t.type === "calculator").slice(0, 5);
+    const col = el("div", { class: "mega-col" },
+      el("a", { class: "mega-col-head", href: cat.href }, el("strong", { text: cat.name }), el("small", { text: `${items.length} tools` })));
+    [...heads, ...calcs].forEach((t) => {
+      const item = el("a", { class: "mega-item", href: t.href }, el("strong", { text: t.title }), el("span", { text: t.description }));
       if (here === t.href) item.setAttribute("aria-current", "page");
-      group.append(item);
+      col.append(item);
     });
-    panel.append(group);
+    col.append(el("a", { class: "mega-more", href: cat.href, text: `All ${cat.name.toLowerCase()} tools →` }));
+    grid.append(col);
   });
-  TOOLS.forEach((t) => { if (!CATEGORY_BY_HREF[t.href]) ungrouped.push(t); });
-  if (ungrouped.length) {
-    const group = el("div", { class: "nav-group" }, el("p", { class: "nav-group-label", text: "More" }));
-    ungrouped.forEach((t) => group.append(el("a", { class: "nav-item", href: t.href }, el("strong", { text: t.label }), el("span", { text: t.desc || "" }))));
-    panel.append(group);
-  }
-  panel.append(el("div", { class: "nav-panel-foot" },
-    el("a", { href: "directory.html", text: "All calculators →" }),
-    el("span", { class: "muted-copy", text: "Press ⌘K to search everything" })));
+  panel.append(grid, el("div", { class: "mega-foot" },
+    el("a", { href: "directory.html", text: `Open the full directory (${total} tools)` }),
+    el("span", { class: "muted-copy", text: "Press ⌘K or / to search everything" })));
   menu.append(toolsBtn, panel);
   links.push(menu);
 
-  // Compact "Categories" link — anchors on the home page rail, otherwise returns to it.
-  links.push(el("a", { class: "nav-link", href: isHome ? "#categories" : "index.html#categories", text: "Categories" }));
+  links.push(el("a", { class: "nav-link", href: "directory.html", text: "Directory", "aria-current": here === "directory.html" ? "page" : null }));
+
+  // Header search (desktop) wired to the shared search engine.
+  const search = searchControl("nav-search");
+  links.push(search.wrap);
 
   // Icon theme toggle (text buttons without SVGs, e.g. the terminal, are relabelled only).
   const themeBtn = el("button", { type: "button", class: "nav-icon-btn", "data-theme-toggle": true, "aria-label": "Switch theme" });
   themeBtn.innerHTML = iconSvg("sun", 16, "theme-icon-sun") + iconSvg("moon", 16, "theme-icon-moon");
   links.push(themeBtn);
+
+  // Mobile menu toggle.
+  const burger = el("button", { type: "button", class: "nav-icon-btn nav-burger", "aria-label": "Open menu", "aria-expanded": "false", "aria-controls": "nav-drawer" });
+  burger.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>';
+  links.push(burger);
 
   nav.replaceChildren(...links);
 
@@ -91,7 +109,44 @@ if (nav) {
   });
   panel.addEventListener("click", (e) => { if (e.target.closest("a")) closeMenu(); });
   document.addEventListener("click", (e) => { if (!menu.contains(e.target)) closeMenu(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) { closeMenu(); toolsBtn.focus(); } });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !panel.hidden) { closeMenu(); toolsBtn.focus(); }
+    else if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || "")) {
+      e.preventDefault();
+      (search.input.offsetParent ? search.input : burger).focus();
+    }
+  });
+
+  // Mobile drawer: search + one collapsible group per category.
+  const drawer = el("div", { class: "nav-drawer", id: "nav-drawer", hidden: true, role: "dialog", "aria-label": "Menu" });
+  const drawerHead = el("div", { class: "nav-drawer-head" },
+    el("strong", { text: "Browse tools" }),
+    el("button", { type: "button", class: "nav-icon-btn", "aria-label": "Close menu", text: "✕" }));
+  drawer.append(drawerHead);
+  const drawerSearch = searchControl("drawer-search");
+  drawer.append(drawerSearch.wrap);
+  CATEGORIES.forEach((cat) => {
+    const items = toolsInCategory(cat.id);
+    if (!items.length) return;
+    const det = el("details", { class: "drawer-group" });
+    det.append(el("summary", {}, el("span", { text: cat.name }), el("small", { text: String(items.length) })));
+    const list = el("div", { class: "drawer-list" });
+    items.forEach((t) => list.append(el("a", { href: t.href, text: t.title })));
+    det.append(list);
+    drawer.append(det);
+  });
+  drawer.append(el("a", { class: "button button-primary button-small", href: "directory.html", text: `Open the full directory (${total})` }));
+  document.body.append(drawer);
+
+  const setDrawer = (open) => {
+    drawer.hidden = !open;
+    burger.setAttribute("aria-expanded", String(open));
+    document.documentElement.classList.toggle("drawer-open", open);
+  };
+  burger.addEventListener("click", () => setDrawer(drawer.hidden));
+  drawerHead.querySelector("button").addEventListener("click", () => setDrawer(false));
+  drawer.addEventListener("click", (e) => { if (e.target.closest("a")) setDrawer(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !drawer.hidden) { setDrawer(false); burger.focus(); } });
 }
 // A keyboard/deep-link entry point for the command palette in the header.
 if (SITE.features.commandPalette) {

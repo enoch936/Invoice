@@ -79,106 +79,88 @@
 </section>
 
 <section id="categories" class="container section-block">
-<div class="section-heading"><div><p class="eyebrow">CATEGORIES</p><h2>Start where the work is.</h2></div><p>Five groups, twenty-four tools. Pick a lane or search everything below.</p></div>
+<div class="section-heading"><div><p class="eyebrow">CATEGORIES</p><h2>Start where the work is.</h2></div><p>Six categories, <span data-home-total>161</span> tools. Pick a lane, open a category directory, or search everything below.</p></div>
 <div class="cat-rail">
-<a class="cat-tile" href="#tools" data-cat-link="documents"><span class="cat-icon" data-icon="file-text" data-icon-size="17"></span><span><strong>Documents</strong><span>3 tools · invoices and quotes</span></span></a>
-<a class="cat-tile" href="#tools" data-cat-link="money"><span class="cat-icon" data-icon="wallet" data-icon-size="17"></span><span><strong>Money</strong><span>7 tools · pricing, tax and loans</span></span></a>
-<a class="cat-tile" href="#tools" data-cat-link="trading"><span class="cat-icon" data-icon="trending-up" data-icon-size="17"></span><span><strong>Trading</strong><span>6 tools · risk, charts and crypto</span></span></a>
-<a class="cat-tile" href="#tools" data-cat-link="math"><span class="cat-icon" data-icon="sigma" data-icon-size="17"></span><span><strong>Math</strong><span>4 tools · statistics and algebra</span></span></a>
-<a class="cat-tile" href="#tools" data-cat-link="productivity"><span class="cat-icon" data-icon="zap" data-icon-size="17"></span><span><strong>Productivity</strong><span>4 tools · study, convert, remember</span></span></a>
+<a class="cat-tile" href="category-finance.html"><span class="cat-icon" data-icon="wallet" data-icon-size="17"></span><span><strong>Money &amp; finance</strong><span data-cat-count="finance">34 tools · loans, savings, income</span></span></a>
+<a class="cat-tile" href="category-business.html"><span class="cat-icon" data-icon="calculator" data-icon-size="17"></span><span><strong>Business &amp; freelancing</strong><span data-cat-count="business">19 tools · pricing, profit, taxes</span></span></a>
+<a class="cat-tile" href="category-monetization.html"><span class="cat-icon" data-icon="eye" data-icon-size="17"></span><span><strong>Website &amp; creator income</strong><span data-cat-count="monetization">9 tools · ads, RPM, affiliate</span></span></a>
+<a class="cat-tile" href="category-trading.html"><span class="cat-icon" data-icon="trending-up" data-icon-size="17"></span><span><strong>Trading, forex &amp; crypto</strong><span data-cat-count="trading">24 tools · pips, risk, P&amp;L</span></span></a>
+<a class="cat-tile" href="category-math.html"><span class="cat-icon" data-icon="sigma" data-icon-size="17"></span><span><strong>Math &amp; statistics</strong><span data-cat-count="math">10 tools · percent, stats, algebra</span></span></a>
+<a class="cat-tile" href="category-general.html"><span class="cat-icon" data-icon="repeat" data-icon-size="17"></span><span><strong>Converters, dates &amp; health</strong><span data-cat-count="general">65 tools · units, currency, dates</span></span></a>
 </div>
 </section>
 
 <section id="tools" class="container section-block">
-<div class="section-heading"><div><p class="eyebrow">TOOLS</p><h2>Everything in one place.</h2></div><p>Search or filter by category. Every tool runs entirely in your browser.</p></div>
+<div class="section-heading"><div><p class="eyebrow">TOOLS</p><h2>Everything in one place.</h2></div><p>Search or filter by category. Every tool runs entirely in your browser, and the full list lives in the <a href="directory.html">directory</a>.</p></div>
 <div class="tool-controls">
-<div class="tool-search"><span class="search-icon" data-icon="search" data-icon-size="15"></span><input type="search" data-tool-search placeholder="Search tools — try ‘invoice’, ‘pip’ or ‘GPA’" aria-label="Search tools"></div>
+<div class="tool-search"><span class="search-icon" data-icon="search" data-icon-size="15"></span><input type="search" data-tool-search aria-label="Search all tools"></div>
 <div class="filter-chips" role="group" aria-label="Filter tools by category">
 <button class="filter-chip" type="button" data-filter="all" aria-pressed="true">All</button>
-<button class="filter-chip" type="button" data-filter="documents" aria-pressed="false">Documents</button>
-<button class="filter-chip" type="button" data-filter="money" aria-pressed="false">Money</button>
+<button class="filter-chip" type="button" data-filter="finance" aria-pressed="false">Money</button>
+<button class="filter-chip" type="button" data-filter="business" aria-pressed="false">Business</button>
+<button class="filter-chip" type="button" data-filter="monetization" aria-pressed="false">Creator income</button>
 <button class="filter-chip" type="button" data-filter="trading" aria-pressed="false">Trading</button>
 <button class="filter-chip" type="button" data-filter="math" aria-pressed="false">Math</button>
-<button class="filter-chip" type="button" data-filter="productivity" aria-pressed="false">Productivity</button>
+<button class="filter-chip" type="button" data-filter="general" aria-pressed="false">Converters</button>
 </div>
 </div>
 <p class="tool-result" data-tool-result aria-live="polite"></p>
 
-<div class="cat-group" data-cat-group="documents">
-<div class="cat-head"><h3>Documents</h3><span class="cat-count">3 tools</span></div>
-<div class="tool-grid">
-<article class="tool-card tool-card-link" data-tool-card data-category="documents" data-search="invoice bill receipt client tax vat discount pdf status dashboard">
+<div class="tool-grid" data-home-results>
+<article class="tool-card tool-card-link" data-tool-card data-category="business" data-search="invoice bill receipt client tax vat discount pdf status dashboard">
 <div class="tool-icon" data-icon="file-text"></div>
 <h3>Invoice builder</h3>
 <p>Live-preview invoices with line items, tax, discounts and print-to-PDF.</p>
 <a class="text-link" href="invoice.html">Build an invoice <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="documents" data-search="quote quotation proposal estimate scope terms expiry">
+<article class="tool-card tool-card-link" data-tool-card data-category="business" data-search="quote quotation proposal estimate scope terms expiry">
 <div class="tool-icon" data-icon="files"></div>
 <h3>Quotation builder</h3>
 <p>Scope, pricing, payment terms and validity in one clean quote.</p>
 <a class="text-link" href="quote.html">Prepare a quotation <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="documents" data-search="project quote hours hourly rate contingency discount client">
+<article class="tool-card tool-card-link" data-tool-card data-category="business" data-search="project quote hours hourly rate contingency discount client">
 <div class="tool-icon" data-icon="calculator"></div>
 <h3>Project quote</h3>
 <p>Build a client quote from hours and rate, with contingency and discount.</p>
 <a class="text-link" href="project-quote.html">Estimate a project <span aria-hidden="true">→</span></a>
 </article>
-</div>
-</div>
-
-<div class="cat-group" data-cat-group="money">
-<div class="cat-head"><h3>Money</h3><span class="cat-count">7 tools</span></div>
-<div class="tool-grid">
-<article class="tool-card tool-card-link" data-tool-card data-category="money" data-search="money tax set-aside compound growth retainer hourly cagr planner">
+<article class="tool-card tool-card-link" data-tool-card data-category="finance" data-search="money tax set-aside compound growth retainer hourly cagr planner">
 <div class="tool-icon" data-icon="wallet"></div>
 <h3>Money planner</h3>
 <p>Tax set-aside, compound growth, retainer vs hourly and CAGR.</p>
 <a class="text-link" href="money.html">Plan your money <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="money" data-search="freelance calculators hourly rate project price profit margin contingency">
+<article class="tool-card tool-card-link" data-tool-card data-category="business" data-search="freelance calculators hourly rate project price profit margin contingency">
 <div class="tool-icon" data-icon="calculator"></div>
 <h3>Freelance calculators</h3>
 <p>Hourly rate, project price and profit before you commit to a job.</p>
 <a class="text-link" href="calculators.html">Run the numbers <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="money" data-search="freelance rate hourly take-home expenses tax salary">
-<div class="tool-icon" data-icon="clock"></div>
-<h3>Freelance rate</h3>
-<p>Work back from the take-home you need to an hourly rate.</p>
-<a class="text-link" href="freelance-rate.html">Open calculator <span aria-hidden="true">→</span></a>
-</article>
-<article class="tool-card tool-card-link" data-tool-card data-category="money" data-search="hourly salary annual pay wage currency usd eur gbp etb kes ngn">
+<article class="tool-card tool-card-link" data-tool-card data-category="finance" data-search="hourly salary annual pay wage currency usd eur gbp etb kes ngn">
 <div class="tool-icon" data-icon="banknote"></div>
 <h3>Hourly to salary</h3>
 <p>Turn an hourly rate into a yearly salary in 11 currencies.</p>
 <a class="text-link" href="rates.html">Open calculator <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="money" data-search="compound interest savings growth contributions yearly balance">
+<article class="tool-card tool-card-link" data-tool-card data-category="finance" data-search="compound interest savings growth contributions yearly balance">
 <div class="tool-icon" data-icon="trending-up"></div>
 <h3>Compound interest</h3>
 <p>Project a lump sum and contributions with a year-by-year balance.</p>
 <a class="text-link" href="compound-interest.html">Open calculator <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="money" data-search="loan payment amortization interest monthly schedule repayment">
+<article class="tool-card tool-card-link" data-tool-card data-category="finance" data-search="loan payment amortization interest monthly schedule repayment">
 <div class="tool-icon" data-icon="landmark"></div>
 <h3>Loan payment</h3>
 <p>Monthly payment, total interest and a year-by-year amortisation summary.</p>
 <a class="text-link" href="loan-payment.html">Open calculator <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="money" data-search="profit margin gross net revenue cost goods operating expenses">
+<article class="tool-card tool-card-link" data-tool-card data-category="business" data-search="profit margin gross net revenue cost goods operating expenses">
 <div class="tool-icon" data-icon="percent"></div>
 <h3>Profit margin</h3>
 <p>Gross and net margin from revenue, costs and operating expenses.</p>
 <a class="text-link" href="profit-margin.html">Open calculator <span aria-hidden="true">→</span></a>
 </article>
-</div>
-</div>
-
-<div class="cat-group" data-cat-group="trading">
-<div class="cat-head"><h3>Trading</h3><span class="cat-count">6 tools</span></div>
-<div class="tool-grid">
 <article class="tool-card tool-card-link" data-tool-card data-category="trading" data-search="trading risk position size liquidation kelly expectancy monte carlo ruin">
 <div class="tool-icon" data-icon="target"></div>
 <h3>Trading risk suite</h3>
@@ -215,12 +197,6 @@
 <p>Value per pip for any lot size and account currency.</p>
 <a class="text-link" href="forex-pip-value.html">Open calculator <span aria-hidden="true">→</span></a>
 </article>
-</div>
-</div>
-
-<div class="cat-group" data-cat-group="math">
-<div class="cat-head"><h3>Math</h3><span class="cat-count">4 tools</span></div>
-<div class="tool-grid">
 <article class="tool-card tool-card-link" data-tool-card data-category="math" data-search="math statistics matrix regression plotter t-test chi-square converter scientific">
 <div class="tool-icon" data-icon="sigma"></div>
 <h3>Advanced math</h3>
@@ -245,38 +221,32 @@
 <p>Centre and spread of any data set, with range and count.</p>
 <a class="text-link" href="mean-median-mode.html">Open calculator <span aria-hidden="true">→</span></a>
 </article>
-</div>
-</div>
-
-<div class="cat-group" data-cat-group="productivity">
-<div class="cat-head"><h3>Productivity</h3><span class="cat-count">4 tools</span></div>
-<div class="tool-grid">
-<article class="tool-card tool-card-link" data-tool-card data-category="productivity" data-search="student gpa cgpa grade planner study schedule citation">
+<article class="tool-card tool-card-link" data-tool-card data-category="math" data-search="student gpa cgpa grade planner study schedule citation">
 <div class="tool-icon" data-icon="graduation-cap"></div>
 <h3>Student toolkit</h3>
 <p>GPA on a 4.0 scale, grade planning and study tools.</p>
 <a class="text-link" href="student.html">Plan your grades <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="productivity" data-search="currency converter exchange rate fx usd eur gbp etb kes ngn inr zar">
+<article class="tool-card tool-card-link" data-tool-card data-category="general" data-search="currency converter exchange rate fx usd eur gbp etb kes ngn inr zar">
 <div class="tool-icon" data-icon="repeat"></div>
 <h3>Currency converter</h3>
 <p>56 currency pairs with an indicative mid-market rate.</p>
 <a class="text-link" href="convert.html">Convert currency <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="productivity" data-search="memorial candle tribute remembrance share card">
+<article class="tool-card tool-card-link" data-tool-card data-category="general" data-search="memorial candle tribute remembrance share card">
 <div class="tool-icon" data-icon="flame"></div>
 <h3>Rest &amp; remembrance</h3>
 <p>A candle-lit memorial page and downloadable share card, kept private.</p>
 <a class="text-link" href="memorial.html">Create a memorial <span aria-hidden="true">→</span></a>
 </article>
-<article class="tool-card tool-card-link" data-tool-card data-category="productivity" data-search="cpm rpm advertising impressions revenue ads pageviews monetization">
+<article class="tool-card tool-card-link" data-tool-card data-category="monetization" data-search="cpm rpm advertising impressions revenue ads pageviews monetization">
 <div class="tool-icon" data-icon="eye"></div>
 <h3>CPM &amp; RPM</h3>
 <p>Estimate ad revenue from impressions or pageviews at a given CPM.</p>
 <a class="text-link" href="cpm.html">Open calculator <span aria-hidden="true">→</span></a>
 </article>
 </div>
-</div>
+<p class="tool-more"><a class="button button-secondary" href="directory.html">Browse all <span data-home-total>161</span> tools →</a></p>
 </section>
 
 <section id="value" class="container section-block split-showcase">
@@ -312,8 +282,8 @@
 
 <section class="container section-block">
 <div class="section-heading"><div><p class="eyebrow">CALCULATORS</p><h2>Every formula, one directory.</h2></div><p>Finance, business, website income, trading, maths and everyday conversions — each a tested calculator that shows its formula and a worked example.</p></div>
-<form class="dir-search" data-calc-search action="directory.html" method="get" role="search"><input type="search" name="q" placeholder="Search calculators — try ‘loan’, ‘pip’, ‘margin’ or ‘VAT’" aria-label="Search calculators"><button class="button button-primary button-small" type="submit">Search</button></form>
-<div class="dir-chips"><a class="dir-chip" href="directory.html?category=finance">Finance</a><a class="dir-chip" href="directory.html?category=business">Business &amp; freelance</a><a class="dir-chip" href="directory.html?category=monetization">Website income</a><a class="dir-chip" href="directory.html?category=trading">Trading &amp; crypto</a><a class="dir-chip" href="directory.html?category=math">Maths</a><a class="dir-chip" href="directory.html?category=general">Converters &amp; dates</a><a class="dir-chip" href="directory.html">All calculators →</a></div>
+<form class="dir-search" data-calc-search action="directory.html" method="get" role="search"><label class="visually-hidden" for="home-calc-search">Search all tools</label><input id="home-calc-search" type="search" name="q" aria-label="Search all tools"><button class="button button-primary button-small" type="submit">Search</button></form>
+<div class="dir-chips"><a class="dir-chip" href="category-finance.html">Finance</a><a class="dir-chip" href="category-business.html">Business &amp; freelance</a><a class="dir-chip" href="category-monetization.html">Website income</a><a class="dir-chip" href="category-trading.html">Trading &amp; crypto</a><a class="dir-chip" href="category-math.html">Maths</a><a class="dir-chip" href="category-general.html">Converters &amp; dates</a><a class="dir-chip" href="directory.html">All tools →</a></div>
 </section>
 
 <section class="container value-strip"><div><span class="strip-number">01</span><div><h3>Private by design</h3><p>Calculations run in your browser. Nothing is uploaded.</p></div></div><div><span class="strip-number">02</span><div><h3>Honest numbers</h3><p>Every formula is shown, with clear risk and advice disclaimers.</p></div></div><div><span class="strip-number">03</span><div><h3>Made for real work</h3><p>Useful calculations and documents, not hype.</p></div></div></section>

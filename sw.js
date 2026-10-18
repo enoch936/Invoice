@@ -1,7 +1,7 @@
 // PARCHXA service worker.
 // Strategy: network-first for HTML navigations (so pages stay fresh), cache-first for static
 // assets (JS/CSS/icons). Bump VERSION to invalidate old caches on deploy.
-const VERSION = "parchxa-v15";
+const VERSION = "parchxa-v16";
 
 const ASSETS = [
   "./",
@@ -64,6 +64,11 @@ const ASSETS = [
   "js/terminal/drawings.js",
   "js/terminal/store.js",
   "css/calc.css",
+  "js/registry.js",
+  "js/search.js",
+  "js/directory-ui.js",
+  "js/data/tool-families.js",
+  "js/data/app-tools.js",
   "js/calc/format.js",
   "js/calc/math.js",
   "js/calc/catalog.js",

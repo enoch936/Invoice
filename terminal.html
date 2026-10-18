@@ -116,7 +116,7 @@
   <div class="ts-dialog-head"><h2>Find an instrument</h2><button class="ts-btn ts-btn--icon" data-close aria-label="Close dialog">×</button></div>
   <div class="ts-dialog-body">
     <label class="visually-hidden" for="ts-symbol-search">Search symbols</label>
-    <input class="ts-input" id="ts-symbol-search" type="search" placeholder="Search BTC, ETH, SOL, EUR/USD…" autocomplete="off">
+    <input class="ts-input" id="ts-symbol-search" type="search" aria-label="Search symbols" autocomplete="off" spellcheck="false">
     <p class="ts-warn" id="ts-symbol-note">Typing filters the instruments actually offered by the connected providers. Nothing outside that coverage is invented.</p>
     <ul class="ts-list" id="ts-symbol-results" role="listbox" aria-label="Instruments"></ul>
   </div>
@@ -125,7 +125,7 @@
 <dialog class="ts-dialog" id="ts-ind-dialog">
   <div class="ts-dialog-head"><h2>Indicators</h2><button class="ts-btn ts-btn--icon" data-close aria-label="Close">×</button></div>
   <div class="ts-dialog-body">
-    <label class="ts-field"><span>Add an indicator</span><input class="ts-input" id="ts-ind-filter" placeholder="Search indicators…" autocomplete="off"></label>
+    <label class="ts-field"><span>Add an indicator</span><input class="ts-input" id="ts-ind-filter" aria-label="Search indicators" autocomplete="off" spellcheck="false"></label>
     <ul class="ts-list" id="ts-ind-results" role="listbox" aria-label="Indicator catalogue"></ul>
     <h3 style="margin:14px 0 4px;font:700 13px Manrope,sans-serif">On this chart</h3>
     <div id="ts-ind-active"></div>

@@ -53,6 +53,7 @@ step("Running unit tests");
 if (!runNode(["tests/quant.test.mjs"])) failures.push("quant tests failed");
 if (!runNode(["tests/calc.test.mjs"])) failures.push("calculator tests failed");
 if (!runNode(["tests/mathengine.test.mjs"])) failures.push("math engine tests failed");
+if (!runNode(["tests/registry.test.mjs"])) failures.push("tool registry tests failed");
 
 // 3. generator up to date
 step("Checking generated pages are up to date");
@@ -89,6 +90,14 @@ for (const page of pages) {
   else if (renderedLen(desc) < 50 || renderedLen(desc) > 160) failures.push(`${page}: meta description length ${renderedLen(desc)} (aim 50-160)`);
   const h1Count = (html.match(/<h1[\s>]/g) || []).length;
   if (h1Count !== 1) failures.push(`${page}: expected exactly one <h1>, found ${h1Count}`);
+
+  // Search inputs carry an accessible label instead of placeholder text (product rule).
+  for (const input of html.matchAll(/<input\b[^>]*>/g)) {
+    const tag = input[0];
+    if (!/\btype\s*=\s*"search"/.test(tag)) continue;
+    const ph = tag.match(/\bplaceholder\s*=\s*"([^"]*)"/);
+    if (ph && ph[1].trim()) failures.push(`${page}: search input has placeholder text "${ph[1]}"`);
+  }
 
   for (const match of html.matchAll(attrRe)) {
     const value = match[1].trim();
