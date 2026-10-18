@@ -145,7 +145,7 @@ main{animation:pageIn .6s var(--ease) both}@keyframes pageIn{from{opacity:0;tran
 
 /* hero */
 .hero{position:relative;padding:84px 0 40px!important}
-.hero::before{content:"";position:absolute;inset:-40px -10% auto;height:520px;z-index:-1;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%),#b5f36d1f,transparent 60%)}
+.hero::before{content:"";position:absolute;inset:-40px 0 auto;height:520px;z-index:-1;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%),#b5f36d1f,transparent 60%)}
 .hero .eyebrow{display:inline-flex!important;padding:7px 14px;border:1px solid var(--glass-line-strong);border-radius:99px;background:#ffffff09;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-size:10.5px!important}
 .status-dot{animation:pulseDot 2.2s ease-in-out infinite}@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 #b5f36d88}50%{box-shadow:0 0 0 7px #b5f36d00}}
 .hero h1{font-size:clamp(40px,7.4vw,88px)!important;letter-spacing:-.065em!important;line-height:1.02!important;text-wrap:balance}
@@ -164,7 +164,8 @@ main{animation:pageIn .6s var(--ease) both}@keyframes pageIn{from{opacity:0;tran
 @keyframes draw{to{stroke-dashoffset:0}}@keyframes fadeIn{to{opacity:1}}
 .hv-gauge{width:100%;max-width:170px;display:block;margin:6px auto 0}.hv-gauge .arc{stroke-dasharray:157;stroke-dashoffset:157;animation:draw .9s 0s;animation:gauge 1.8s .6s var(--ease) forwards}@keyframes gauge{to{stroke-dashoffset:52}}
 .hv-chip{position:absolute;display:flex;gap:8px;align-items:center;padding:10px 14px;border:1px solid var(--glass-line-strong);border-radius:16px;background:var(--surface-solid);box-shadow:0 20px 40px -16px #000b;font-size:12px;animation:floaty 6s ease-in-out infinite}.hv-chip b{font-weight:700}
-.hv-chip.c1{left:-26px;top:90px}.hv-chip.c2{right:-22px;top:38%;animation-delay:-2s}.hv-chip.c3{left:12%;bottom:-24px;animation-delay:-4s}
+.hv-chip.c1{left:38%;top:-22px}.hv-chip.c2{right:-22px;top:42%;animation-delay:-2s}.hv-chip.c3{left:10%;bottom:-24px;animation-delay:-4s}
+@media(max-width:1100px){.hv-chip.c2{right:8px}}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 .sample-tag{position:absolute;right:16px;top:12px;font-size:9px;letter-spacing:.14em;color:var(--muted);border:1px solid var(--glass-line);padding:3px 8px;border-radius:99px}
 @media(max-width:760px){.hv-body{grid-template-columns:1fr}.hv-invoice{grid-row:auto}.hv-chip{display:none}}
